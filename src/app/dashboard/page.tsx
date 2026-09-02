@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { desc, eq, or, isNull } from "drizzle-orm";
 import { auth } from "@/auth";
@@ -40,6 +41,9 @@ export default async function DashboardPage() {
     <main style={{ maxWidth: 640, margin: "4rem auto", padding: "0 1rem" }}>
       <h1>Dashboard</h1>
       <p>Logged in as {session.user.email}</p>
+      <p>
+        <Link href="/dashboard/categories">Manage categories</Link>
+      </p>
 
       <AddExpenseForm categories={availableCategories} />
 
