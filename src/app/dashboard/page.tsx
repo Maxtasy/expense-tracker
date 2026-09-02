@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { categories, expenses } from "@/db/schema";
 import { logout } from "./actions";
 import { AddExpenseForm } from "./add-expense-form";
+import { ExpenseRow } from "./expense-row";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -26,6 +27,7 @@ export default async function DashboardPage() {
         amount: expenses.amount,
         date: expenses.date,
         description: expenses.description,
+        categoryId: expenses.categoryId,
         categoryName: categories.name,
       })
       .from(expenses)
@@ -52,16 +54,12 @@ export default async function DashboardPage() {
               <th style={{ textAlign: "left" }}>Category</th>
               <th style={{ textAlign: "left" }}>Description</th>
               <th style={{ textAlign: "right" }}>Amount</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {userExpenses.map((expense) => (
-              <tr key={expense.id}>
-                <td>{expense.date}</td>
-                <td>{expense.categoryName ?? "Uncategorized"}</td>
-                <td>{expense.description}</td>
-                <td style={{ textAlign: "right" }}>{expense.amount}</td>
-              </tr>
+              <ExpenseRow key={expense.id} expense={expense} categories={availableCategories} />
             ))}
           </tbody>
         </table>
