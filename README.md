@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Expense Tracker
 
-## Getting Started
+A personal expense tracker built with Next.js (App Router), TypeScript, Drizzle ORM, Supabase (Postgres), and Auth.js.
 
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
+cp .env.local.example .env.local   # fill in your own values
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Schema lives in [`src/db/schema.ts`](src/db/schema.ts). Migrations are generated and applied with `drizzle-kit`:
 
-## Learn More
+```bash
+npm run db:generate   # generate a migration from schema.ts changes
+npm run db:migrate    # apply pending migrations
+npm run db:seed       # insert default global categories (idempotent)
+npm run db:studio     # open Drizzle Studio to browse tables
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Two connection strings
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`.env.local` has both `DATABASE_URL` and `DATABASE_URL_MIGRATIONS`, pointing at different Supabase poolers:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `DATABASE_URL` — **Transaction pooler** (port `6543`), used by the app at runtime.
+- `DATABASE_URL_MIGRATIONS` — **Session pooler** (port `5432`), used only by `drizzle-kit`.
 
-## Deploy on Vercel
+Migrations need session-level features (e.g. advisory locks) that transaction-mode pooling doesn't support, so they're kept on a separate connection.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Gotcha: `drizzle-kit migrate` fails silently
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`npm run db:migrate` can exit with a non-zero code and **no error message at all** when a migration fails — you just see the spinner stop. This happened when a generated migration tried to `ALTER COLUMN ... SET DATA TYPE uuid` on a column that Postgres couldn't auto-cast (it needs an explicit `USING column::uuid`, even if every existing value is `NULL`); `drizzle-kit`'s CLI swallowed the real Postgres error and gave no clue why it failed.
+
+**If `db:migrate` fails without explanation**, don't just retry — run the migration through Drizzle's own migrator API directly to see the real error:
+
+```ts
+// scratch script, e.g. src/db/migrate-debug.ts (delete when done)
+import { drizzle } from "drizzle-orm/postgres-js";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
+import postgres from "postgres";
+
+const client = postgres(process.env.DATABASE_URL_MIGRATIONS!, { prepare: false, max: 1 });
+const db = drizzle(client);
+
+try {
+  await migrate(db, { migrationsFolder: "./drizzle" });
+  console.log("Migration succeeded");
+} catch (err) {
+  console.error("Migration failed with error:", err);
+} finally {
+  await client.end();
+  process.exit(0);
+}
+```
+
+Run with `node --env-file=.env.local --import tsx src/db/migrate-debug.ts`. Once you see the actual Postgres error, fix the generated SQL in `drizzle/*.sql` directly (e.g. add the `USING` clause) and re-run `npm run db:migrate` — the edited file will apply normally since it was never recorded as applied.
+
+## Auth
+
+Auth.js (`next-auth@5`) with a Credentials provider and JWT sessions (no adapter, no `sessions` table — see [`src/auth.ts`](src/auth.ts)). Signup is handled by our own Server Action (`src/app/signup/actions.ts`) since Auth.js only verifies logins, not registration.
+
+`AUTH_SECRET` in `.env.local` can be regenerated any time with:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
