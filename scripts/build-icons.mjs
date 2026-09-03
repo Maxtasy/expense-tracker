@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { writeFileSync } from "fs";
+import { writeFileSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
 
 const svgPath = fileURLToPath(new URL("../src/app/icon.svg", import.meta.url));
@@ -49,6 +49,24 @@ async function main() {
   const appleIcon = await sharp(svgPath).resize(180, 180).flatten({ color: "#0b0e14" }).png().toBuffer();
   writeFileSync(new URL("../src/app/apple-icon.png", import.meta.url), appleIcon);
   console.log("Wrote src/app/apple-icon.png");
+
+  mkdirSync(fileURLToPath(new URL("../public/icons", import.meta.url)), { recursive: true });
+
+  for (const size of [192, 512]) {
+    const pwaIcon = await sharp(svgPath).resize(size, size).flatten({ color: "#0b0e14" }).png().toBuffer();
+    writeFileSync(new URL(`../public/icons/icon-${size}.png`, import.meta.url), pwaIcon);
+    console.log(`Wrote public/icons/icon-${size}.png`);
+  }
+
+  // Maskable icon: pad the logo into a safe zone (~60% of the canvas) so Android's
+  // adaptive-icon mask doesn't crop it, per https://web.dev/maskable-icon/
+  const maskableLogo = await sharp(svgPath).resize(307, 307).png().toBuffer();
+  const maskableIcon = await sharp({ create: { width: 512, height: 512, channels: 4, background: "#0b0e14" } })
+    .composite([{ input: maskableLogo, gravity: "center" }])
+    .png()
+    .toBuffer();
+  writeFileSync(new URL("../public/icons/icon-512-maskable.png", import.meta.url), maskableIcon);
+  console.log("Wrote public/icons/icon-512-maskable.png");
 }
 
 main();
