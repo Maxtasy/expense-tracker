@@ -68,7 +68,7 @@ If you hit this with no real data to preserve, the practical fix is a clean rese
 
 ### Schema
 
-- `users`, `categories` (global when `user_id IS NULL`, personal otherwise; scoped by `type`: `"expense"` or `"income"`), `transactions` (also typed `"expense"` / `"income"`, amount always stored positive — sign is derived from `type` in the UI).
+- `users`, `categories` (global when `user_id IS NULL`, personal otherwise; scoped by `type`: `"expense"` or `"income"`), `transactions` (also typed `"expense"` / `"income"`, amount always stored positive — sign is derived from `type` in the UI), `recurring_transactions` (a rule; `transactions.recurring_transaction_id` links a materialized row back to the rule that generated it).
 
 ## Auth
 
@@ -79,3 +79,12 @@ Auth.js (`next-auth@5`) with a Credentials provider and JWT sessions (no adapter
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ```
+
+## Deployment
+
+Deployed on Vercel, connected to the GitHub repo for auto-deploy on every push to `main`.
+
+- **Database**: production uses the same Supabase project as development (this is a personal single-user app, no need for separate environments).
+- **Vercel environment variables**: only `DATABASE_URL` (the Transaction pooler string) and `AUTH_SECRET` (a separate secret from the dev one in `.env.local`, generated the same way). `DATABASE_URL_MIGRATIONS` is **not** set in Vercel — it's a `drizzle-kit`-only, local-machine concern.
+- **Schema changes going forward**: since there's no CI migration step, run `npm run db:migrate` locally (against the shared Supabase DB) before or right after pushing a change that depends on it — the deployed app and your local dev environment share the same database, so a migration applied locally is immediately live.
+- `trustHost: true` is set in [`src/auth.ts`](src/auth.ts) so Auth.js trusts the `Host`/`X-Forwarded-Host` headers Vercel's proxy sets, rather than requiring a hardcoded canonical URL.
