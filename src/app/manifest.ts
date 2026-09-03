@@ -25,5 +25,29 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
       { src: "/icons/icon-512-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
+    // Captured from a seeded demo account, not real user data.
+    screenshots: [
+      {
+        src: "/screenshots/dashboard.png",
+        sizes: "780x1688",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Monthly overview with income, expenses, and transactions",
+      },
+      {
+        src: "/screenshots/insights.png",
+        sizes: "780x1688",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Income and expense breakdown by category",
+      },
+      {
+        src: "/screenshots/categories.png",
+        sizes: "780x1688",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Manage expense and income categories",
+      },
+    ],
   };
 }
