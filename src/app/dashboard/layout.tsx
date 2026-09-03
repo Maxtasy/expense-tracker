@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LayoutList, Tags, Repeat, LogOut } from "lucide-react";
+import { Tags, Repeat, LogOut } from "lucide-react";
 import { auth } from "@/auth";
+import { Logo } from "@/components/logo";
 import { logout } from "./actions";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -14,7 +15,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <div className="min-h-dvh">
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
         <Link href="/dashboard" className="flex items-center gap-2 text-sm font-semibold">
-          <LayoutList size={18} className="text-accent" />
+          <Logo size={18} />
           Overview
         </Link>
         <nav className="flex items-center gap-4 text-fg-muted">
