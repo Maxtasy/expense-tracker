@@ -1,35 +1,35 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Pencil, Trash2, Repeat } from "lucide-react";
-import { updateTransaction, deleteTransaction } from "./actions";
+import { Pencil, Trash2 } from "lucide-react";
+import { updateRecurring, deleteRecurring } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 
 type TxType = "expense" | "income";
 type Category = { id: string; name: string; type: TxType };
-type Transaction = {
+type Recurring = {
   id: string;
   type: TxType;
   amount: string;
-  date: string;
   description: string | null;
   categoryId: string | null;
   categoryName: string | null;
-  recurringTransactionId: string | null;
+  startDate: string;
+  endDate: string | null;
 };
 
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-fg focus:border-accent focus:outline-none";
 
-export function TransactionRow({ transaction, categories }: { transaction: Transaction; categories: Category[] }) {
+export function RecurringRow({ recurring, categories }: { recurring: Recurring; categories: Category[] }) {
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | undefined>();
-  const [type, setType] = useState<TxType>(transaction.type);
+  const [type, setType] = useState<TxType>(recurring.type);
   const [isPending, startTransition] = useTransition();
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
-      const result = await updateTransaction(undefined, formData);
+      const result = await updateRecurring(null, formData);
       if (result?.error) {
         setError(result.error);
       } else {
@@ -40,35 +40,32 @@ export function TransactionRow({ transaction, categories }: { transaction: Trans
   }
 
   if (!isEditing) {
-    const isIncome = transaction.type === "income";
+    const isIncome = recurring.type === "income";
+    const day = recurring.startDate.split("-")[2];
     return (
       <div className="flex items-center gap-3 border-b border-border/60 px-1 py-2.5 last:border-b-0">
         <span
           className="h-1.5 w-1.5 shrink-0 rounded-full"
-          style={{ backgroundColor: categoryColor(transaction.categoryName) }}
+          style={{ backgroundColor: categoryColor(recurring.categoryName) }}
           aria-hidden="true"
         />
         <div className="min-w-0 flex-1">
-          <p className="flex items-center gap-1.5 truncate text-sm text-fg">
-            {transaction.description || transaction.categoryName || "Transaction"}
-            {transaction.recurringTransactionId && (
-              <Repeat size={11} className="shrink-0 text-fg-muted" aria-label="Recurring" />
-            )}
-          </p>
+          <p className="truncate text-sm text-fg">{recurring.description || recurring.categoryName || "Recurring"}</p>
           <p className="text-xs text-fg-muted">
-            {transaction.categoryName ?? "Uncategorized"} &middot; {transaction.date}
+            {recurring.categoryName ?? "Uncategorized"} &middot; Day {day} of month
+            {recurring.endDate ? ` · until ${recurring.endDate}` : ""}
           </p>
         </div>
         <span className={`shrink-0 text-sm font-medium ${isIncome ? "text-success" : "text-fg"}`}>
           {isIncome ? "+" : "-"}
-          {transaction.amount}
+          {recurring.amount}
         </span>
         <div className="flex shrink-0 items-center gap-2 text-fg-muted">
           <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="hover:text-fg">
             <Pencil size={15} />
           </button>
-          <form action={deleteTransaction} className="contents">
-            <input type="hidden" name="id" value={transaction.id} />
+          <form action={deleteRecurring} className="contents">
+            <input type="hidden" name="id" value={recurring.id} />
             <button type="submit" aria-label="Delete" className="hover:text-danger">
               <Trash2 size={15} />
             </button>
@@ -83,7 +80,7 @@ export function TransactionRow({ transaction, categories }: { transaction: Trans
   return (
     <div className="border-b border-border/60 py-2.5 last:border-b-0">
       <form action={handleSubmit} className="space-y-2">
-        <input type="hidden" name="id" value={transaction.id} />
+        <input type="hidden" name="id" value={recurring.id} />
         <div className="grid grid-cols-2 gap-2">
           <label
             className={`cursor-pointer rounded-lg border px-2.5 py-1.5 text-center text-xs font-medium transition ${
@@ -103,11 +100,11 @@ export function TransactionRow({ transaction, categories }: { transaction: Trans
           </label>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <input name="amount" type="number" step="0.01" min="0.01" required defaultValue={transaction.amount} className={inputClass} />
+          <input name="amount" type="number" step="0.01" min="0.01" required defaultValue={recurring.amount} className={inputClass} />
           <select
             key={type}
             name="categoryId"
-            defaultValue={transaction.type === type ? (transaction.categoryId ?? "") : ""}
+            defaultValue={recurring.type === type ? (recurring.categoryId ?? "") : ""}
             className={inputClass}
           >
             <option value="">Uncategorized</option>
@@ -118,9 +115,16 @@ export function TransactionRow({ transaction, categories }: { transaction: Trans
             ))}
           </select>
         </div>
+        <input name="description" type="text" defaultValue={recurring.description ?? ""} className={inputClass} />
         <div className="grid grid-cols-2 gap-2">
-          <input name="date" type="date" required defaultValue={transaction.date} className={inputClass} />
-          <input name="description" type="text" defaultValue={transaction.description ?? ""} className={inputClass} />
+          <label className="space-y-1">
+            <span className="block text-[11px] text-fg-muted">Starts on</span>
+            <input name="startDate" type="date" required defaultValue={recurring.startDate} className={inputClass} />
+          </label>
+          <label className="space-y-1">
+            <span className="block text-[11px] text-fg-muted">Ends on (optional)</span>
+            <input name="endDate" type="date" defaultValue={recurring.endDate ?? ""} className={inputClass} />
+          </label>
         </div>
         <div className="flex items-center gap-2">
           <button

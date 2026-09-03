@@ -7,6 +7,7 @@ import { TransactionRow } from "./transaction-row";
 import { TransactionFilters } from "./transaction-filters";
 import { MonthPager } from "./month-pager";
 import { MonthSummary } from "./month-summary";
+import { ensureRecurringGenerated } from "./generate-recurring";
 import { monthKey, monthLabel, monthRange, parseMonth } from "@/lib/month";
 
 type SearchParams = { category?: string; sort?: string; month?: string };
@@ -29,6 +30,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const sort = params.sort && SORT_OPTIONS[params.sort] ? params.sort : "date-desc";
   const current = parseMonth(params.month);
   const { from, to } = monthRange(current);
+
+  await ensureRecurringGenerated(userId, current);
 
   const [availableCategories, allTransactionCount, monthTotals] = await Promise.all([
     db
@@ -63,6 +66,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       description: transactions.description,
       categoryId: transactions.categoryId,
       categoryName: categories.name,
+      recurringTransactionId: transactions.recurringTransactionId,
     })
     .from(transactions)
     .leftJoin(categories, eq(transactions.categoryId, categories.id))

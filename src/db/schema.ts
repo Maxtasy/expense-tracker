@@ -17,6 +17,22 @@ export const categories = pgTable("categories", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const recurringTransactions = pgTable("recurring_transactions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  type: text("type", { enum: ["expense", "income"] }).notNull().default("expense"),
+  categoryId: uuid("category_id").references(() => categories.id, { onDelete: "set null" }),
+  amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
+  description: text("description"),
+  // day-of-month is derived from startDate; startDate's (year, month) is the first month it applies
+  startDate: date("start_date").notNull(),
+  // last (year, month) it applies to; null = recurs indefinitely
+  endDate: date("end_date"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const transactions = pgTable("transactions", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
@@ -24,6 +40,7 @@ export const transactions = pgTable("transactions", {
     .references(() => users.id, { onDelete: "cascade" }),
   type: text("type", { enum: ["expense", "income"] }).notNull().default("expense"),
   categoryId: uuid("category_id").references(() => categories.id, { onDelete: "set null" }),
+  recurringTransactionId: uuid("recurring_transaction_id").references(() => recurringTransactions.id, { onDelete: "set null" }),
   amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
   description: text("description"),
   date: date("date").notNull(),

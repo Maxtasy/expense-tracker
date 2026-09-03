@@ -18,11 +18,18 @@ export function shiftMonth({ year, month }: YearMonth, delta: number): YearMonth
   return { year: Math.floor(total / 12), month: (((total % 12) + 12) % 12) + 1 };
 }
 
+export function daysInMonth({ year, month }: YearMonth): number {
+  return new Date(year, month, 0).getDate();
+}
+
 export function monthRange({ year, month }: YearMonth): { from: string; to: string } {
   const from = `${year}-${String(month).padStart(2, "0")}-01`;
-  const lastDay = new Date(year, month, 0).getDate();
-  const to = `${year}-${String(month).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
+  const to = `${year}-${String(month).padStart(2, "0")}-${String(daysInMonth({ year, month })).padStart(2, "0")}`;
   return { from, to };
+}
+
+export function compareYearMonth(a: YearMonth, b: YearMonth): number {
+  return a.year * 12 + a.month - (b.year * 12 + b.month);
 }
 
 export function monthLabel({ year, month }: YearMonth, style: "short" | "long" = "long"): string {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LayoutList, Tags, LogOut } from "lucide-react";
+import { LayoutList, Tags, Repeat, LogOut } from "lucide-react";
 import { auth } from "@/auth";
 import { logout } from "./actions";
 
@@ -18,6 +18,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
           Overview
         </Link>
         <nav className="flex items-center gap-4 text-fg-muted">
+          <Link href="/dashboard/recurring" aria-label="Recurring transactions" className="hover:text-fg">
+            <Repeat size={18} />
+          </Link>
           <Link href="/dashboard/categories" aria-label="Categories" className="hover:text-fg">
             <Tags size={18} />
           </Link>
