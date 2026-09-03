@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import { eq, isNull, or } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
@@ -9,10 +7,7 @@ import { CategoryRow } from "./category-row";
 
 export default async function CategoriesPage() {
   const session = await auth();
-  if (!session?.user) {
-    redirect("/login");
-  }
-
+  if (!session?.user) return null;
   const userId = session.user.id;
 
   const allCategories = await db
@@ -22,19 +17,16 @@ export default async function CategoriesPage() {
     .orderBy(categories.name);
 
   return (
-    <main style={{ maxWidth: 480, margin: "4rem auto", padding: "0 1rem" }}>
-      <p>
-        <Link href="/dashboard">&larr; Back to dashboard</Link>
-      </p>
-      <h1>Categories</h1>
+    <div>
+      <h1 className="mb-3 text-sm font-semibold text-fg">Categories</h1>
 
       <AddCategoryForm />
 
-      <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+      <div className="rounded-xl border border-border bg-surface/30 px-3">
         {allCategories.map((category) => (
           <CategoryRow key={category.id} category={category} />
         ))}
-      </ul>
-    </main>
+      </div>
+    </div>
   );
 }

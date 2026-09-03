@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import { updateExpense, deleteExpense } from "./actions";
+import { categoryColor } from "@/lib/category-color";
 
 type Category = { id: string; name: string };
 type Expense = {
@@ -12,6 +14,9 @@ type Expense = {
   categoryId: string | null;
   categoryName: string | null;
 };
+
+const inputClass =
+  "w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-fg focus:border-accent focus:outline-none";
 
 export function ExpenseRow({ expense, categories }: { expense: Expense; categories: Category[] }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -32,61 +37,67 @@ export function ExpenseRow({ expense, categories }: { expense: Expense; categori
 
   if (!isEditing) {
     return (
-      <tr>
-        <td>{expense.date}</td>
-        <td>{expense.categoryName ?? "Uncategorized"}</td>
-        <td>{expense.description}</td>
-        <td style={{ textAlign: "right" }}>{expense.amount}</td>
-        <td>
-          <button type="button" onClick={() => setIsEditing(true)}>
-            Edit
+      <div className="flex items-center gap-3 border-b border-border/60 px-1 py-2.5 last:border-b-0">
+        <span
+          className="h-1.5 w-1.5 shrink-0 rounded-full"
+          style={{ backgroundColor: categoryColor(expense.categoryName) }}
+          aria-hidden="true"
+        />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm text-fg">{expense.description || expense.categoryName || "Expense"}</p>
+          <p className="text-xs text-fg-muted">
+            {expense.categoryName ?? "Uncategorized"} &middot; {expense.date}
+          </p>
+        </div>
+        <span className="shrink-0 text-sm font-medium text-fg">{expense.amount}</span>
+        <div className="flex shrink-0 items-center gap-2 text-fg-muted">
+          <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="hover:text-fg">
+            <Pencil size={15} />
           </button>
-          <form action={deleteExpense} style={{ display: "inline" }}>
+          <form action={deleteExpense} className="contents">
             <input type="hidden" name="id" value={expense.id} />
-            <button type="submit">Delete</button>
+            <button type="submit" aria-label="Delete" className="hover:text-danger">
+              <Trash2 size={15} />
+            </button>
           </form>
-        </td>
-      </tr>
+        </div>
+      </div>
     );
   }
 
   return (
-    <tr>
-      <td colSpan={5}>
-        <form action={handleSubmit} style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "flex-end" }}>
-          <input type="hidden" name="id" value={expense.id} />
-          <label>
-            Amount
-            <input name="amount" type="number" step="0.01" min="0.01" required defaultValue={expense.amount} style={{ display: "block" }} />
-          </label>
-          <label>
-            Date
-            <input name="date" type="date" required defaultValue={expense.date} style={{ display: "block" }} />
-          </label>
-          <label>
-            Category
-            <select name="categoryId" defaultValue={expense.categoryId ?? ""} style={{ display: "block" }}>
-              <option value="">Uncategorized</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Description
-            <input name="description" type="text" defaultValue={expense.description ?? ""} style={{ display: "block" }} />
-          </label>
-          <button type="submit" disabled={isPending}>
+    <div className="border-b border-border/60 py-2.5 last:border-b-0">
+      <form action={handleSubmit} className="space-y-2">
+        <input type="hidden" name="id" value={expense.id} />
+        <div className="grid grid-cols-2 gap-2">
+          <input name="amount" type="number" step="0.01" min="0.01" required defaultValue={expense.amount} className={inputClass} />
+          <select name="categoryId" defaultValue={expense.categoryId ?? ""} className={inputClass}>
+            <option value="">Uncategorized</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <input name="date" type="date" required defaultValue={expense.date} className={inputClass} />
+          <input name="description" type="text" defaultValue={expense.description ?? ""} className={inputClass} />
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="submit"
+            disabled={isPending}
+            className="rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-60"
+          >
             {isPending ? "Saving..." : "Save"}
           </button>
-          <button type="button" onClick={() => setIsEditing(false)}>
+          <button type="button" onClick={() => setIsEditing(false)} className="rounded-lg border border-border px-3 py-1.5 text-xs text-fg-muted hover:text-fg">
             Cancel
           </button>
-          {error && <p style={{ color: "red", width: "100%" }}>{error}</p>}
-        </form>
-      </td>
-    </tr>
+          {error && <span className="text-xs text-danger">{error}</span>}
+        </div>
+      </form>
+    </div>
   );
 }
