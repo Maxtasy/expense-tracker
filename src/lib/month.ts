@@ -35,3 +35,7 @@ export function compareYearMonth(a: YearMonth, b: YearMonth): number {
 export function monthLabel({ year, month }: YearMonth, style: "short" | "long" = "long"): string {
   return new Date(year, month - 1, 1).toLocaleDateString("en-US", { month: style, year: "numeric" });
 }
+
+export function yearRange(year: number): { from: string; to: string } {
+  return { from: `${year}-01-01`, to: `${year}-12-31` };
+}
