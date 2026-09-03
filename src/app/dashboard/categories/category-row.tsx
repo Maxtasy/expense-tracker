@@ -5,7 +5,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { updateCategory, deleteCategory } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 
-type Category = { id: string; name: string; userId: string | null };
+type Category = { id: string; name: string; type: "expense" | "income"; userId: string | null };
 
 const inputClass = "w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-fg focus:border-accent focus:outline-none";
 

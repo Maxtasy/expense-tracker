@@ -8,6 +8,7 @@ import { db } from "@/db";
 import { categories } from "@/db/schema";
 
 const nameSchema = z.string().trim().min(1, "Name is required").max(50, "Name is too long");
+const typeSchema = z.enum(["expense", "income"]);
 
 export type CategoryState = { error?: string } | null;
 
@@ -17,11 +18,16 @@ export async function createCategory(_prevState: CategoryState, formData: FormDa
     return { error: "You must be logged in" };
   }
 
-  const parsed = nameSchema.safeParse(formData.get("name"));
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0].message };
+  const nameParsed = nameSchema.safeParse(formData.get("name"));
+  if (!nameParsed.success) {
+    return { error: nameParsed.error.issues[0].message };
   }
-  const name = parsed.data;
+  const typeParsed = typeSchema.safeParse(formData.get("type"));
+  if (!typeParsed.success) {
+    return { error: "Invalid category type" };
+  }
+  const name = nameParsed.data;
+  const type = typeParsed.data;
   const userId = session.user.id;
 
   const [existing] = await db
@@ -34,7 +40,7 @@ export async function createCategory(_prevState: CategoryState, formData: FormDa
     return { error: "A category with that name already exists" };
   }
 
-  await db.insert(categories).values({ name, userId });
+  await db.insert(categories).values({ name, type, userId });
 
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard");

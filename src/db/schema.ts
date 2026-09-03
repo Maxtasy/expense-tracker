@@ -11,16 +11,18 @@ export const users = pgTable("users", {
 export const categories = pgTable("categories", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
+  type: text("type", { enum: ["expense", "income"] }).notNull().default("expense"),
   // null userId = global default category, shared by all users
   userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const expenses = pgTable("expenses", {
+export const transactions = pgTable("transactions", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  type: text("type", { enum: ["expense", "income"] }).notNull().default("expense"),
   categoryId: uuid("category_id").references(() => categories.id, { onDelete: "set null" }),
   amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
   description: text("description"),

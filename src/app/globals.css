@@ -12,6 +12,7 @@
   --color-accent-fg: #f5f5ff;
   --color-danger: #f87171;
   --color-danger-hover: #fca5a5;
+  --color-success: #34d399;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

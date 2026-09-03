@@ -60,6 +60,16 @@ try {
 
 Run with `node --env-file=.env.local --import tsx src/db/migrate-debug.ts`. Once you see the actual Postgres error, fix the generated SQL in `drizzle/*.sql` directly (e.g. add the `USING` clause) and re-run `npm run db:migrate` — the edited file will apply normally since it was never recorded as applied.
 
+### Gotcha: `drizzle-kit generate` can't resolve table renames non-interactively
+
+When a table is renamed in `schema.ts` (e.g. `expenses` → `transactions`), `drizzle-kit generate` needs to ask "was this a rename or a drop+create?" via an interactive terminal prompt. In a non-TTY environment (CI, an agent's sandboxed shell, etc.) this just crashes with `Interactive prompts require a TTY terminal`, and there's no flag to answer it non-interactively.
+
+If you hit this with no real data to preserve, the practical fix is a clean reset: drop the `public` and `drizzle` schemas, delete everything under `drizzle/` (the `.sql` files and `meta/`), then run `npm run db:generate` again — with no prior snapshot to diff against, it generates one fresh baseline migration matching the current `schema.ts` exactly, no prompt needed. Apply it with `npm run db:migrate` and reseed.
+
+### Schema
+
+- `users`, `categories` (global when `user_id IS NULL`, personal otherwise; scoped by `type`: `"expense"` or `"income"`), `transactions` (also typed `"expense"` / `"income"`, amount always stored positive — sign is derived from `type` in the UI).
+
 ## Auth
 
 Auth.js (`next-auth@5`) with a Credentials provider and JWT sessions (no adapter, no `sessions` table — see [`src/auth.ts`](src/auth.ts)). Signup is handled by our own Server Action (`src/app/signup/actions.ts`) since Auth.js only verifies logins, not registration.

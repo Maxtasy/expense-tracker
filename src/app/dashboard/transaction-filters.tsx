@@ -1,9 +1,9 @@
-type Category = { id: string; name: string };
+type Category = { id: string; name: string; type: "expense" | "income" };
 
 const fieldClass =
   "w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-fg focus:border-accent focus:outline-none";
 
-export function ExpenseFilters({
+export function TransactionFilters({
   categories,
   category,
   sort,

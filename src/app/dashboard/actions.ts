@@ -5,28 +5,30 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth, signOut } from "@/auth";
 import { db } from "@/db";
-import { expenses } from "@/db/schema";
+import { transactions } from "@/db/schema";
 
 export async function logout() {
   await signOut({ redirectTo: "/login" });
 }
 
-const expenseSchema = z.object({
+const transactionSchema = z.object({
+  type: z.enum(["expense", "income"]),
   amount: z.coerce.number().positive("Amount must be greater than 0"),
   date: z.string().min(1, "Date is required"),
   description: z.string().trim().optional(),
   categoryId: z.union([z.string().uuid(), z.literal("")]),
 });
 
-export type CreateExpenseState = { error: string } | undefined;
+export type TransactionState = { error?: string } | undefined;
 
-export async function createExpense(_prevState: CreateExpenseState, formData: FormData): Promise<CreateExpenseState> {
+export async function createTransaction(_prevState: TransactionState, formData: FormData): Promise<TransactionState> {
   const session = await auth();
   if (!session?.user) {
     return { error: "You must be logged in" };
   }
 
-  const parsed = expenseSchema.safeParse({
+  const parsed = transactionSchema.safeParse({
+    type: formData.get("type"),
     amount: formData.get("amount"),
     date: formData.get("date"),
     description: formData.get("description"),
@@ -37,10 +39,11 @@ export async function createExpense(_prevState: CreateExpenseState, formData: Fo
     return { error: parsed.error.issues[0].message };
   }
 
-  const { amount, date, description, categoryId } = parsed.data;
+  const { type, amount, date, description, categoryId } = parsed.data;
 
-  await db.insert(expenses).values({
+  await db.insert(transactions).values({
     userId: session.user.id,
+    type,
     amount: amount.toFixed(2),
     date,
     description: description || null,
@@ -50,9 +53,7 @@ export async function createExpense(_prevState: CreateExpenseState, formData: Fo
   revalidatePath("/dashboard");
 }
 
-export type UpdateExpenseState = { error?: string } | null;
-
-export async function updateExpense(_prevState: UpdateExpenseState, formData: FormData): Promise<UpdateExpenseState> {
+export async function updateTransaction(_prevState: TransactionState, formData: FormData): Promise<TransactionState> {
   const session = await auth();
   if (!session?.user) {
     return { error: "You must be logged in" };
@@ -60,10 +61,11 @@ export async function updateExpense(_prevState: UpdateExpenseState, formData: Fo
 
   const id = formData.get("id");
   if (typeof id !== "string" || !id) {
-    return { error: "Missing expense id" };
+    return { error: "Missing transaction id" };
   }
 
-  const parsed = expenseSchema.safeParse({
+  const parsed = transactionSchema.safeParse({
+    type: formData.get("type"),
     amount: formData.get("amount"),
     date: formData.get("date"),
     description: formData.get("description"),
@@ -74,35 +76,36 @@ export async function updateExpense(_prevState: UpdateExpenseState, formData: Fo
     return { error: parsed.error.issues[0].message };
   }
 
-  const { amount, date, description, categoryId } = parsed.data;
+  const { type, amount, date, description, categoryId } = parsed.data;
 
   const updated = await db
-    .update(expenses)
+    .update(transactions)
     .set({
+      type,
       amount: amount.toFixed(2),
       date,
       description: description || null,
       categoryId: categoryId || null,
     })
-    .where(and(eq(expenses.id, id), eq(expenses.userId, session.user.id)))
-    .returning({ id: expenses.id });
+    .where(and(eq(transactions.id, id), eq(transactions.userId, session.user.id)))
+    .returning({ id: transactions.id });
 
   if (updated.length === 0) {
-    return { error: "Expense not found" };
+    return { error: "Transaction not found" };
   }
 
   revalidatePath("/dashboard");
   return { error: undefined };
 }
 
-export async function deleteExpense(formData: FormData) {
+export async function deleteTransaction(formData: FormData) {
   const session = await auth();
   if (!session?.user) return;
 
   const id = formData.get("id");
   if (typeof id !== "string" || !id) return;
 
-  await db.delete(expenses).where(and(eq(expenses.id, id), eq(expenses.userId, session.user.id)));
+  await db.delete(transactions).where(and(eq(transactions.id, id), eq(transactions.userId, session.user.id)));
 
   revalidatePath("/dashboard");
 }

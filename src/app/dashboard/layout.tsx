@@ -15,7 +15,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
         <Link href="/dashboard" className="flex items-center gap-2 text-sm font-semibold">
           <LayoutList size={18} className="text-accent" />
-          Expenses
+          Overview
         </Link>
         <nav className="flex items-center gap-4 text-fg-muted">
           <Link href="/dashboard/categories" aria-label="Categories" className="hover:text-fg">

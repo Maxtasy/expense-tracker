@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Expense Tracker",
-  description: "Track and categorize your personal expenses",
+  description: "Track and categorize your personal income and expenses",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
