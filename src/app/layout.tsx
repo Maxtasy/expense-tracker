@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { RegisterServiceWorker } from "./register-service-worker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,10 +27,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-fg">
-        <RegisterServiceWorker />
-        {children}
-      </body>
+      <head>
+        {/* Registered from a raw inline script, not a React effect: PWA/store-listing
+            crawlers (e.g. PWABuilder) check for a service worker within a fixed window
+            and won't wait for the JS bundle to hydrate first. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js").catch(function () {}); }`,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-background text-fg">{children}</body>
     </html>
   );
 }
