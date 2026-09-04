@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { createTransaction } from "./actions";
 
 type Category = { id: string; name: string; type: "expense" | "income" };
@@ -9,13 +9,29 @@ type TxType = "expense" | "income";
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
 
-export function AddTransactionForm({ categories }: { categories: Category[] }) {
-  const [state, formAction, pending] = useActionState(createTransaction, undefined);
+export function AddTransactionForm({ categories, onSuccess }: { categories: Category[]; onSuccess?: () => void }) {
+  const formRef = useRef<HTMLFormElement>(null);
   const [type, setType] = useState<TxType>("expense");
+  const [error, setError] = useState<string | undefined>();
+  const [isPending, startTransition] = useTransition();
   const filteredCategories = categories.filter((c) => c.type === type);
 
+  function handleSubmit(formData: FormData) {
+    startTransition(async () => {
+      const result = await createTransaction(undefined, formData);
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        setError(undefined);
+        formRef.current?.reset();
+        setType("expense");
+        onSuccess?.();
+      }
+    });
+  }
+
   return (
-    <form action={formAction} className="mb-4 space-y-2 rounded-xl border border-border bg-surface/50 p-3">
+    <form ref={formRef} action={handleSubmit} className="space-y-2">
       <div className="grid grid-cols-2 gap-2">
         <label
           className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${
@@ -51,12 +67,12 @@ export function AddTransactionForm({ categories }: { categories: Category[] }) {
       </div>
       <button
         type="submit"
-        disabled={pending}
+        disabled={isPending}
         className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg transition hover:bg-accent-hover disabled:opacity-60"
       >
-        {pending ? "Adding..." : "Add"}
+        {isPending ? "Adding..." : "Add"}
       </button>
-      {state?.error && <p className="text-sm text-danger">{state.error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
     </form>
   );
 }

@@ -2,7 +2,7 @@ import { and, asc, desc, eq, gte, isNull, lte, or, sql, SQL } from "drizzle-orm"
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
-import { AddTransactionForm } from "./add-transaction-form";
+import { AddTransactionModal } from "./add-transaction-modal";
 import { TransactionRow } from "./transaction-row";
 import { TransactionFilters } from "./transaction-filters";
 import { MonthPager } from "./month-pager";
@@ -78,7 +78,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <MonthPager current={current} category={category} sort={sort} />
       <MonthSummary income={income} expense={expense} />
 
-      <AddTransactionForm categories={availableCategories} />
+      <AddTransactionModal categories={availableCategories} />
 
       {allTransactionCount > 0 && (
         <TransactionFilters categories={availableCategories} category={category} sort={sort} month={monthKey(current)} />
