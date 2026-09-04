@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeftRight, CalendarDays, Repeat } from "lucide-react";
+import { ArrowLeftRight, CalendarDays, FileSpreadsheet, Repeat } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 const FEATURES = [
@@ -19,6 +19,11 @@ const FEATURES = [
     title: "Recurring made easy",
     description: "Set up salary, rent, or subscriptions once — they show up automatically every month.",
   },
+  {
+    icon: FileSpreadsheet,
+    title: "Your data, backed up",
+    description: "Export everything to CSV any time, and restore it in a couple of clicks whenever you need to.",
+  },
 ];
 
 const SCREENSHOTS = [
@@ -31,6 +36,11 @@ const SCREENSHOTS = [
     src: "/landing/insights.png",
     alt: "Insights page showing income and expenses broken down by category in pie charts",
     caption: "Category breakdown",
+  },
+  {
+    src: "/landing/settings.png",
+    alt: "Settings page with CSV export links for categories, recurring transactions, and transactions, and an import form",
+    caption: "Export & import your data",
   },
 ];
 
@@ -70,7 +80,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-3 text-left sm:grid-cols-3">
+        <div className="mt-12 grid gap-3 text-left sm:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map(({ icon: Icon, title, description }) => (
             <div key={title} className="rounded-xl border border-border bg-surface/30 p-4">
               <Icon size={18} className="text-accent" />
@@ -82,7 +92,7 @@ export default function Home() {
 
         <div className="mt-24 sm:mt-28">
           <h2 className="text-lg font-semibold text-fg sm:text-xl">See it in action</h2>
-          <div className="mt-6 flex flex-col items-center gap-8 sm:flex-row sm:justify-center">
+          <div className="mt-6 flex flex-col flex-wrap items-center justify-center gap-8 sm:flex-row">
             {SCREENSHOTS.map(({ src, alt, caption }) => (
               <figure key={src} className="w-full max-w-[220px]">
                 <div className="overflow-hidden rounded-[1.75rem] border border-border shadow-2xl shadow-black/40">

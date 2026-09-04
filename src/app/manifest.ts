@@ -48,6 +48,20 @@ export default function manifest(): MetadataRoute.Manifest {
         form_factor: "narrow",
         label: "Manage expense and income categories",
       },
+      {
+        src: "/screenshots/recurring.png",
+        sizes: "780x1688",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Set up recurring income and expenses",
+      },
+      {
+        src: "/screenshots/settings.png",
+        sizes: "780x1688",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Export and import your data as CSV",
+      },
     ],
   };
 }

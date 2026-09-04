@@ -12,10 +12,13 @@
     "db:studio": "node --env-file=.env.local node_modules/.bin/drizzle-kit studio",
     "db:test-connection": "node --env-file=.env.local --import tsx src/db/test-connection.ts",
     "db:seed": "node --env-file=.env.local --import tsx src/db/seed.ts",
+    "db:seed-demo": "node --env-file=.env.local --import tsx src/db/seed-demo.ts",
     "icons:build": "node scripts/build-icons.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "csv-parse": "^7.0.2",
+    "csv-stringify": "^6.8.3",
     "drizzle-orm": "^0.45.2",
     "lucide-react": "^1.39.0",
     "next": "16.3.4",

@@ -27,7 +27,8 @@ See [README.md](README.md) for setup, the full schema, and detailed gotchas — 
 
 ## Testing conventions
 
-- After browser-testing a feature with a throwaway account, delete it afterward (a one-off script deleting from `users` by email — cascades clean up everything else). Don't leave test accounts in the shared database.
+- For routine browser-testing and screenshots, use the standing demo account (`DEMO_ACCOUNT_EMAIL` / `DEMO_ACCOUNT_PASSWORD` in `.env.local` — never in this file or memory, since `.env.local` is the only one that's gitignored). Run `npm run db:seed-demo` to reset it to a clean, realistic dataset before use — it wipes and rebuilds only that one account's data, so it's safe to re-run any time.
+- Fall back to a throwaway account (sign up, test, then delete via a one-off script by email — cascades clean up everything else) only when a scenario specifically needs a fresh/empty user, e.g. testing signup itself, or anything you don't want to run against the demo account's data. Don't leave throwaway accounts in the shared database.
 - `src/db/test-connection.ts` is a scratch script — repurpose it for one-off queries during debugging, then restore it to the simple `SELECT 1` check when done.
 
 ## Conventions

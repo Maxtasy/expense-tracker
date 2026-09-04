@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Tags, Repeat, PieChart, LogOut } from "lucide-react";
+import { Tags, Repeat, PieChart, Settings, LogOut } from "lucide-react";
 import { auth } from "@/auth";
 import { Logo } from "@/components/logo";
 import { logout } from "./actions";
@@ -27,6 +27,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </Link>
           <Link href="/dashboard/categories" aria-label="Categories" className="hover:text-fg">
             <Tags size={18} />
+          </Link>
+          <Link href="/dashboard/settings" aria-label="Settings" className="hover:text-fg">
+            <Settings size={18} />
           </Link>
           <form action={logout} className="contents">
             <button type="submit" aria-label="Log out" className="hover:text-fg">

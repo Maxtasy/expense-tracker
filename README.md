@@ -20,8 +20,11 @@ Schema lives in [`src/db/schema.ts`](src/db/schema.ts). Migrations are generated
 npm run db:generate   # generate a migration from schema.ts changes
 npm run db:migrate    # apply pending migrations
 npm run db:seed       # insert default global categories (idempotent)
+npm run db:seed-demo  # (re)create a standing demo account with sample data, for testing/screenshots
 npm run db:studio     # open Drizzle Studio to browse tables
 ```
+
+`db:seed-demo` reads `DEMO_ACCOUNT_EMAIL` / `DEMO_ACCOUNT_PASSWORD` from `.env.local` and wipes + rebuilds just that one account's data — safe to re-run any time you need a clean, realistic dataset.
 
 ### Two connection strings
 
