@@ -2,6 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeftRight, CalendarDays, FileSpreadsheet, Repeat } from "lucide-react";
 import { Logo } from "@/components/logo";
+import type { CSSProperties } from "react";
+
+const GRADIENT_TEXT_STYLE: CSSProperties = {
+  backgroundImage: "linear-gradient(135deg, #6366F1, #38BDF8, #34D399)",
+  backgroundClip: "text",
+  WebkitBackgroundClip: "text",
+  color: "transparent",
+  WebkitTextFillColor: "transparent",
+};
 
 const FEATURES = [
   {
@@ -62,25 +71,27 @@ export default function Home() {
         </nav>
       </header>
 
-      <main className="mx-auto max-w-md px-4 py-10 text-center sm:max-w-lg sm:py-16">
-        <h1 className="text-2xl font-semibold text-fg sm:text-3xl">
-          <span className="font-bold text-accent">Understand why</span> every month feels like there&rsquo;s{" "}
-          <span className="font-bold text-accent">no money left</span> over.
-        </h1>
-        <p className="mx-auto mt-3 max-w-md text-sm text-fg-muted">
-          Small purchases add up without you noticing. Track where it&rsquo;s really going, and know what you have left
-          before the month runs out — then start setting some aside for a rainy day.
-        </p>
-        <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
-          <Link href="/signup" className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover">
-            Get started
-          </Link>
-          <Link href="/login" className="rounded-lg border border-border px-4 py-2 text-sm text-fg-muted hover:text-fg">
-            Log in
-          </Link>
+      <main className="mx-auto max-w-md px-4 py-10 text-center sm:max-w-lg sm:py-16 lg:max-w-5xl lg:py-20">
+        <div className="mx-auto max-w-2xl">
+          <h1 className="text-2xl font-semibold text-fg sm:text-3xl lg:text-4xl">
+            <span className="font-bold" style={GRADIENT_TEXT_STYLE}>Understand why</span> every month feels like there&rsquo;s{" "}
+            <span className="font-bold" style={GRADIENT_TEXT_STYLE}>no money left</span> over.
+          </h1>
+          <p className="mx-auto mt-3 max-w-md text-sm text-fg-muted lg:max-w-lg lg:text-base">
+            Small purchases add up without you noticing. Track where it&rsquo;s really going, and know what you have left
+            before the month runs out — then start setting some aside for a rainy day.
+          </p>
+          <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
+            <Link href="/signup" className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover">
+              Get started
+            </Link>
+            <Link href="/login" className="rounded-lg border border-border px-4 py-2 text-sm text-fg-muted hover:text-fg">
+              Log in
+            </Link>
+          </div>
         </div>
 
-        <div className="mt-12 grid gap-3 text-left sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-3 text-left sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-4">
           {FEATURES.map(({ icon: Icon, title, description }) => (
             <div key={title} className="rounded-xl border border-border bg-surface/30 p-4">
               <Icon size={18} className="text-accent" />
@@ -92,11 +103,18 @@ export default function Home() {
 
         <div className="mt-24 sm:mt-28">
           <h2 className="text-lg font-semibold text-fg sm:text-xl">See it in action</h2>
-          <div className="mt-6 flex flex-col flex-wrap items-center justify-center gap-8 sm:flex-row">
-            {SCREENSHOTS.map(({ src, alt, caption }) => (
-              <figure key={src} className="w-full max-w-[220px]">
+          <div className="mt-6 flex flex-col flex-wrap items-center justify-center gap-8 sm:flex-row lg:gap-10">
+            {SCREENSHOTS.map(({ src, alt, caption }, index) => (
+              <figure key={src} className="w-full max-w-[220px] lg:max-w-[260px]">
                 <div className="overflow-hidden rounded-[1.75rem] border border-border shadow-2xl shadow-black/40">
-                  <Image src={src} alt={alt} width={780} height={1688} className="h-auto w-full" />
+                  <Image
+                    src={src}
+                    alt={alt}
+                    width={780}
+                    height={1688}
+                    className="h-auto w-full"
+                    priority={index === 0}
+                  />
                 </div>
                 <figcaption className="mt-3 text-xs text-fg-muted">{caption}</figcaption>
               </figure>
