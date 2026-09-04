@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeftRight, CalendarDays, Repeat } from "lucide-react";
 import { Logo } from "@/components/logo";
@@ -20,6 +21,19 @@ const FEATURES = [
   },
 ];
 
+const SCREENSHOTS = [
+  {
+    src: "/landing/dashboard.png",
+    alt: "Dashboard showing monthly income, expenses, net total, and a categorized list of transactions",
+    caption: "Monthly overview",
+  },
+  {
+    src: "/landing/insights.png",
+    alt: "Insights page showing income and expenses broken down by category in pie charts",
+    caption: "Category breakdown",
+  },
+];
+
 export default function Home() {
   return (
     <div className="min-h-dvh">
@@ -39,9 +53,13 @@ export default function Home() {
       </header>
 
       <main className="mx-auto max-w-md px-4 py-10 text-center sm:max-w-lg sm:py-16">
-        <h1 className="text-2xl font-semibold text-fg sm:text-3xl">Understand where your money goes</h1>
-        <p className="mx-auto mt-3 max-w-sm text-sm text-fg-muted">
-          Track income and expenses, organize them into categories, and see your monthly position at a glance.
+        <h1 className="text-2xl font-semibold text-fg sm:text-3xl">
+          <span className="font-bold text-accent">Understand why</span> every month feels like there&rsquo;s{" "}
+          <span className="font-bold text-accent">no money left</span> over.
+        </h1>
+        <p className="mx-auto mt-3 max-w-md text-sm text-fg-muted">
+          Small purchases add up without you noticing. Track where it&rsquo;s really going, and know what you have left
+          before the month runs out — then start setting some aside for a rainy day.
         </p>
         <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
           <Link href="/signup" className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover">
@@ -60,6 +78,20 @@ export default function Home() {
               <p className="mt-1 text-xs text-fg-muted">{description}</p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-24 sm:mt-28">
+          <h2 className="text-lg font-semibold text-fg sm:text-xl">See it in action</h2>
+          <div className="mt-6 flex flex-col items-center gap-8 sm:flex-row sm:justify-center">
+            {SCREENSHOTS.map(({ src, alt, caption }) => (
+              <figure key={src} className="w-full max-w-[220px]">
+                <div className="overflow-hidden rounded-[1.75rem] border border-border shadow-2xl shadow-black/40">
+                  <Image src={src} alt={alt} width={780} height={1688} className="h-auto w-full" />
+                </div>
+                <figcaption className="mt-3 text-xs text-fg-muted">{caption}</figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </main>
     </div>
