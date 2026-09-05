@@ -39,3 +39,4 @@ As of 1.2.0, the app has never been promoted out of the **Internal testing** tra
 |---|---|---|---|---|---|
 | 2026-09-05 | 0.1.0 *(not bumped at the time)* | 1 | 1.0.0.0 | Internal testing | First Play Store upload (M14) |
 | 2026-09-05 | 1.2.0 | 2 | 1.2.0.0 | Internal testing | Swipe-to-paginate month on the dashboard overview; first release to follow this doc. Hit the wrong-keystore mistake step 7 now guards against — first attempt was rejected by Play Console, caught and fixed before a second upload. |
+| 2026-09-05 | 1.3.0 | 3 | 1.3.0.0 | Internal testing | Whole-page swipe navigation fix, loading indicator on pagination/navigation, currency symbols + per-user currency setting, tablet layout, confirmed Vercel PR previews. `assetlinks.json`'s SHA256 fingerprint had actually changed since 1.2.0 (not just the usual App Signing re-sign note) — updated to match Play Console's App signing key certificate. |
