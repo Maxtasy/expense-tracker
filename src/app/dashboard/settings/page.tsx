@@ -1,4 +1,4 @@
-import { Download } from "lucide-react";
+import { Download, Heart } from "lucide-react";
 import { auth } from "@/auth";
 import { getUserCurrency } from "@/lib/currency-server";
 import { ImportForm } from "./import-form";
@@ -43,12 +43,29 @@ export default async function SettingsPage() {
       </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Import</h2>
-      <div className="rounded-xl border border-border bg-surface/30 p-3">
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
         <p className="mb-3 text-xs text-fg-muted">
           Import all three CSV files together. This replaces all of your categories, recurring transactions, and
           transactions with the contents of the files.
         </p>
         <ImportForm />
+      </div>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Support</h2>
+      <div className="rounded-xl border border-border bg-surface/30 p-3">
+        <p className="mb-3 text-xs text-fg-muted">
+          Did the app help you save some money? Support future development and cover server costs with a small
+          donation.
+        </p>
+        <a
+          href="https://paypal.me/maxtasy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg transition hover:bg-accent-hover"
+        >
+          <Heart size={16} />
+          Donate via PayPal
+        </a>
       </div>
 
       <p className="mt-4 text-center text-xs text-fg-muted">v{version}</p>
