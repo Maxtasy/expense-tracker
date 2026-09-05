@@ -4,7 +4,9 @@
     "target": {
       "namespace": "android_app",
       "package_name": "app.vercel.expense_tracker_rose_ten_25.twa",
-      "sha256_cert_fingerprints": ["2C:6F:38:99:6C:E4:F3:8B:8D:0B:1B:A5:01:35:4F:1D:C7:B1:1C:3D:FF:77:7B:92:2E:DA:40:08:54:74:63:7B"]
+      "sha256_cert_fingerprints": [
+        "A4:36:BF:01:76:4B:7A:61:26:89:DB:68:8F:0A:7E:48:14:B2:F1:D2:B6:5E:E6:98:9A:7C:4C:44:F9:A5:6F:4C"
+      ]
     }
   }
 ]
