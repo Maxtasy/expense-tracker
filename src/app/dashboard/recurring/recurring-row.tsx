@@ -4,6 +4,8 @@ import { useState, useTransition } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { updateRecurring, deleteRecurring } from "./actions";
 import { categoryColor } from "@/lib/category-color";
+import { currencySymbol, formatMoney } from "@/lib/currency";
+import { AmountInput } from "@/components/amount-input";
 
 type TxType = "expense" | "income";
 type Category = { id: string; name: string; type: TxType };
@@ -21,7 +23,15 @@ type Recurring = {
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-fg focus:border-accent focus:outline-none";
 
-export function RecurringRow({ recurring, categories }: { recurring: Recurring; categories: Category[] }) {
+export function RecurringRow({
+  recurring,
+  categories,
+  currency,
+}: {
+  recurring: Recurring;
+  categories: Category[];
+  currency: string;
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [type, setType] = useState<TxType>(recurring.type);
@@ -58,7 +68,7 @@ export function RecurringRow({ recurring, categories }: { recurring: Recurring; 
         </div>
         <span className={`shrink-0 text-sm font-medium ${isIncome ? "text-success" : "text-fg"}`}>
           {isIncome ? "+" : "-"}
-          {recurring.amount}
+          {formatMoney(recurring.amount, currency)}
         </span>
         <div className="flex shrink-0 items-center gap-2 text-fg-muted">
           <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="hover:text-fg">
@@ -100,7 +110,7 @@ export function RecurringRow({ recurring, categories }: { recurring: Recurring; 
           </label>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <input name="amount" type="number" step="0.01" min="0.01" required defaultValue={recurring.amount} className={inputClass} />
+          <AmountInput symbol={currencySymbol(currency)} required defaultValue={recurring.amount} size="sm" />
           <select
             key={type}
             name="categoryId"

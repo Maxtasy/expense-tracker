@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
 import { categoryColor, PALETTE } from "@/lib/category-color";
 import { monthKey, monthRange, parseMonth, yearRange } from "@/lib/month";
+import { getUserCurrency } from "@/lib/currency-server";
 import { PeriodToggle } from "./period-toggle";
 import { InsightsMonthPager } from "./month-pager";
 import { YearPager } from "./year-pager";
@@ -21,16 +22,19 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
   const current = parseMonth(params.month);
   const { from, to } = mode === "year" ? yearRange(current.year) : monthRange(current);
 
-  const breakdown = await db
-    .select({
-      categoryName: categories.name,
-      type: transactions.type,
-      total: sql<string>`coalesce(sum(${transactions.amount}), 0)`,
-    })
-    .from(transactions)
-    .leftJoin(categories, eq(transactions.categoryId, categories.id))
-    .where(and(eq(transactions.userId, userId), gte(transactions.date, from), lte(transactions.date, to)))
-    .groupBy(transactions.categoryId, categories.name, transactions.type);
+  const [breakdown, currency] = await Promise.all([
+    db
+      .select({
+        categoryName: categories.name,
+        type: transactions.type,
+        total: sql<string>`coalesce(sum(${transactions.amount}), 0)`,
+      })
+      .from(transactions)
+      .leftJoin(categories, eq(transactions.categoryId, categories.id))
+      .where(and(eq(transactions.userId, userId), gte(transactions.date, from), lte(transactions.date, to)))
+      .groupBy(transactions.categoryId, categories.name, transactions.type),
+    getUserCurrency(userId),
+  ]);
 
   function toSlices(type: "income" | "expense") {
     const slices = breakdown
@@ -62,8 +66,10 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
       <PeriodToggle mode={mode} month={monthKey(current)} />
       {mode === "month" ? <InsightsMonthPager current={current} /> : <YearPager current={current} />}
 
-      <CategoryPieChart title="Income by category" data={toSlices("income")} />
-      <CategoryPieChart title="Expenses by category" data={toSlices("expense")} />
+      <div className="split-grid">
+        <CategoryPieChart title="Income by category" data={toSlices("income")} currency={currency} />
+        <CategoryPieChart title="Expenses by category" data={toSlices("expense")} currency={currency} />
+      </div>
     </div>
   );
 }

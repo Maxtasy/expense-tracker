@@ -6,7 +6,8 @@ import { parse } from "csv-parse/sync";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { categories, recurringTransactions, transactions } from "@/db/schema";
+import { categories, recurringTransactions, transactions, users } from "@/db/schema";
+import { CURRENCIES } from "@/lib/currency";
 
 const typeSchema = z.enum(["expense", "income"]);
 const amountSchema = z.string().refine((v) => v.trim() !== "" && Number.isFinite(Number(v)) && Number(v) > 0, {
@@ -209,5 +210,24 @@ export async function importData(_prevState: ImportState, formData: FormData): P
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard/insights");
+  return { success: true };
+}
+
+export async function updateCurrency(formData: FormData) {
+  const session = await auth();
+  if (!session?.user) return { error: "Not signed in" };
+  const userId = session.user.id;
+
+  const currency = formData.get("currency");
+  if (typeof currency !== "string" || !CURRENCIES.some((c) => c.code === currency)) {
+    return { error: "Invalid currency" };
+  }
+
+  await db.update(users).set({ currency }).where(eq(users.id, userId));
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/recurring");
+  revalidatePath("/dashboard/insights");
+  revalidatePath("/dashboard/settings");
   return { success: true };
 }

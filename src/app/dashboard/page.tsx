@@ -10,6 +10,7 @@ import { MonthSummary } from "./month-summary";
 import { SwipeMonthNav } from "./swipe-month-nav";
 import { ensureRecurringGenerated } from "./generate-recurring";
 import { monthKey, monthLabel, monthRange, parseMonth } from "@/lib/month";
+import { getUserCurrency } from "@/lib/currency-server";
 
 type SearchParams = { category?: string; sort?: string; month?: string };
 
@@ -34,7 +35,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   await ensureRecurringGenerated(userId, current);
 
-  const [availableCategories, allTransactionCount, monthTotals] = await Promise.all([
+  const [availableCategories, allTransactionCount, monthTotals, currency] = await Promise.all([
     db
       .select({ id: categories.id, name: categories.name, type: categories.type })
       .from(categories)
@@ -46,6 +47,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       .from(transactions)
       .where(and(eq(transactions.userId, userId), gte(transactions.date, from), lte(transactions.date, to)))
       .groupBy(transactions.type),
+    getUserCurrency(userId),
   ]);
 
   const income = Number(monthTotals.find((t) => t.type === "income")?.total ?? 0);
@@ -76,26 +78,30 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   return (
     <SwipeMonthNav current={current} category={category} sort={sort}>
-      <MonthPager current={current} category={category} sort={sort} />
-      <MonthSummary income={income} expense={expense} />
+      <div className="dashboard-grid">
+        <div className="dashboard-sidebar">
+          <MonthPager current={current} category={category} sort={sort} />
+          <MonthSummary income={income} expense={expense} currency={currency} />
 
-      <AddTransactionModal categories={availableCategories} />
-
-      {allTransactionCount > 0 && (
-        <TransactionFilters categories={availableCategories} category={category} sort={sort} month={monthKey(current)} />
-      )}
-
-      {userTransactions.length === 0 ? (
-        <p className="py-8 text-center text-sm text-fg-muted">
-          {category ? "No transactions match this filter." : `No transactions in ${monthLabel(current)}.`}
-        </p>
-      ) : (
-        <div className="rounded-xl border border-border bg-surface/30 px-3">
-          {userTransactions.map((transaction) => (
-            <TransactionRow key={transaction.id} transaction={transaction} categories={availableCategories} />
-          ))}
+          {allTransactionCount > 0 && (
+            <TransactionFilters categories={availableCategories} category={category} sort={sort} month={monthKey(current)} />
+          )}
         </div>
-      )}
+
+        {userTransactions.length === 0 ? (
+          <p className="py-8 text-center text-sm text-fg-muted">
+            {category ? "No transactions match this filter." : `No transactions in ${monthLabel(current)}.`}
+          </p>
+        ) : (
+          <div className="rounded-xl border border-border bg-surface/30 px-3">
+            {userTransactions.map((transaction) => (
+              <TransactionRow key={transaction.id} transaction={transaction} categories={availableCategories} currency={currency} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <AddTransactionModal categories={availableCategories} currency={currency} />
     </SwipeMonthNav>
   );
 }

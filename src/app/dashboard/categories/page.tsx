@@ -25,18 +25,24 @@ export default async function CategoriesPage() {
 
       <AddCategoryForm />
 
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Expense categories</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 px-3">
-        {expenseCategories.map((category) => (
-          <CategoryRow key={category.id} category={category} />
-        ))}
-      </div>
+      <div className="split-grid">
+        <div>
+          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Expense categories</h2>
+          <div className="mb-4 rounded-xl border border-border bg-surface/30 px-3">
+            {expenseCategories.map((category) => (
+              <CategoryRow key={category.id} category={category} />
+            ))}
+          </div>
+        </div>
 
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Income categories</h2>
-      <div className="rounded-xl border border-border bg-surface/30 px-3">
-        {incomeCategories.map((category) => (
-          <CategoryRow key={category.id} category={category} />
-        ))}
+        <div>
+          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Income categories</h2>
+          <div className="rounded-xl border border-border bg-surface/30 px-3">
+            {incomeCategories.map((category) => (
+              <CategoryRow key={category.id} category={category} />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { AddTransactionForm } from "./add-transaction-form";
 
 type Category = { id: string; name: string; type: "expense" | "income" };
 
-export function AddTransactionModal({ categories }: { categories: Category[] }) {
+export function AddTransactionModal({ categories, currency }: { categories: Category[]; currency: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
@@ -46,7 +46,7 @@ export function AddTransactionModal({ categories }: { categories: Category[] }) 
             <X size={18} />
           </button>
         </div>
-        <AddTransactionForm categories={categories} onSuccess={() => dialogRef.current?.close()} />
+        <AddTransactionForm categories={categories} currency={currency} onSuccess={() => dialogRef.current?.close()} />
       </dialog>
     </>
   );

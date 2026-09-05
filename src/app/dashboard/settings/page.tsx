@@ -1,5 +1,8 @@
 import { Download } from "lucide-react";
+import { auth } from "@/auth";
+import { getUserCurrency } from "@/lib/currency-server";
 import { ImportForm } from "./import-form";
+import { CurrencyForm } from "./currency-form";
 import { version } from "../../../../package.json";
 
 const exportLinks = [
@@ -8,10 +11,19 @@ const exportLinks = [
   { href: "/dashboard/settings/export/transactions", label: "transactions.csv" },
 ];
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const session = await auth();
+  if (!session?.user) return null;
+  const currency = await getUserCurrency(session.user.id);
+
   return (
     <div>
       <h1 className="mb-3 text-sm font-semibold text-fg">Settings</h1>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Currency</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <CurrencyForm currency={currency} />
+      </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Export</h2>
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">

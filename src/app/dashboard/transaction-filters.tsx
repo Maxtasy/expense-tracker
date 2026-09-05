@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
 import { RotateCcw } from "lucide-react";
+import { useNavigate } from "./swipe-month-nav";
 
 type Category = { id: string; name: string; type: "expense" | "income" };
 
@@ -19,20 +19,24 @@ export function TransactionFilters({
   sort: string;
   month: string;
 }) {
-  const formRef = useRef<HTMLFormElement>(null);
+  const navigate = useNavigate();
+
+  function go(next: { category?: string; sort?: string }) {
+    const params = new URLSearchParams();
+    params.set("month", month);
+    const nextCategory = next.category ?? category;
+    const nextSort = next.sort ?? sort;
+    if (nextCategory) params.set("category", nextCategory);
+    if (nextSort) params.set("sort", nextSort);
+    navigate(`/dashboard?${params.toString()}`);
+  }
 
   return (
-    <form
-      ref={formRef}
-      method="get"
-      className="mb-3 flex items-center gap-2 rounded-xl border border-border bg-surface/30 p-3 text-fg-muted"
-    >
-      <input type="hidden" name="month" value={month} />
+    <div className="mb-3 flex items-center gap-2 rounded-xl border border-border bg-surface/30 p-3 text-fg-muted">
       <select
         key={category}
-        name="category"
         defaultValue={category}
-        onChange={() => formRef.current?.requestSubmit()}
+        onChange={(e) => go({ category: e.target.value })}
         aria-label="Filter by category"
         className={`flex-1 ${fieldClass}`}
       >
@@ -46,9 +50,8 @@ export function TransactionFilters({
       </select>
       <select
         key={sort}
-        name="sort"
         defaultValue={sort}
-        onChange={() => formRef.current?.requestSubmit()}
+        onChange={(e) => go({ sort: e.target.value })}
         aria-label="Sort by"
         className={`flex-1 ${fieldClass}`}
       >
@@ -64,6 +67,6 @@ export function TransactionFilters({
       <a href="/dashboard" aria-label="Reset filters" className="shrink-0 text-fg-muted hover:text-fg">
         <RotateCcw size={16} />
       </a>
-    </form>
+    </div>
   );
 }

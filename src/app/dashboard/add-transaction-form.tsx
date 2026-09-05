@@ -2,6 +2,8 @@
 
 import { useRef, useState, useTransition } from "react";
 import { createTransaction } from "./actions";
+import { currencySymbol } from "@/lib/currency";
+import { AmountInput } from "@/components/amount-input";
 
 type Category = { id: string; name: string; type: "expense" | "income" };
 type TxType = "expense" | "income";
@@ -9,7 +11,15 @@ type TxType = "expense" | "income";
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
 
-export function AddTransactionForm({ categories, onSuccess }: { categories: Category[]; onSuccess?: () => void }) {
+export function AddTransactionForm({
+  categories,
+  currency,
+  onSuccess,
+}: {
+  categories: Category[];
+  currency: string;
+  onSuccess?: () => void;
+}) {
   const formRef = useRef<HTMLFormElement>(null);
   const [type, setType] = useState<TxType>("expense");
   const [error, setError] = useState<string | undefined>();
@@ -51,7 +61,7 @@ export function AddTransactionForm({ categories, onSuccess }: { categories: Cate
         </label>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <input name="amount" type="number" step="0.01" min="0.01" placeholder="0.00" required className={inputClass} />
+        <AmountInput symbol={currencySymbol(currency)} required />
         <select key={type} name="categoryId" defaultValue="" className={inputClass}>
           <option value="">Uncategorized</option>
           {filteredCategories.map((c) => (
