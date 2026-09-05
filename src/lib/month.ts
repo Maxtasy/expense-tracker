@@ -39,3 +39,11 @@ export function monthLabel({ year, month }: YearMonth, style: "short" | "long" =
 export function yearRange(year: number): { from: string; to: string } {
   return { from: `${year}-01-01`, to: `${year}-12-31` };
 }
+
+export function monthHref(target: YearMonth, category: string, sort: string): string {
+  const params = new URLSearchParams();
+  params.set("month", monthKey(target));
+  if (category) params.set("category", category);
+  if (sort) params.set("sort", sort);
+  return `/dashboard?${params.toString()}`;
+}

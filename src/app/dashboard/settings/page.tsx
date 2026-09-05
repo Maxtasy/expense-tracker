@@ -1,5 +1,6 @@
 import { Download } from "lucide-react";
 import { ImportForm } from "./import-form";
+import { version } from "../../../../package.json";
 
 const exportLinks = [
   { href: "/dashboard/settings/export/categories", label: "categories.csv" },
@@ -37,6 +38,8 @@ export default function SettingsPage() {
         </p>
         <ImportForm />
       </div>
+
+      <p className="mt-4 text-center text-xs text-fg-muted">v{version}</p>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { TransactionRow } from "./transaction-row";
 import { TransactionFilters } from "./transaction-filters";
 import { MonthPager } from "./month-pager";
 import { MonthSummary } from "./month-summary";
+import { SwipeMonthNav } from "./swipe-month-nav";
 import { ensureRecurringGenerated } from "./generate-recurring";
 import { monthKey, monthLabel, monthRange, parseMonth } from "@/lib/month";
 
@@ -74,7 +75,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     .orderBy(...SORT_OPTIONS[sort]);
 
   return (
-    <div>
+    <SwipeMonthNav current={current} category={category} sort={sort}>
       <MonthPager current={current} category={category} sort={sort} />
       <MonthSummary income={income} expense={expense} />
 
@@ -95,6 +96,6 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           ))}
         </div>
       )}
-    </div>
+    </SwipeMonthNav>
   );
 }

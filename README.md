@@ -91,3 +91,7 @@ Deployed on Vercel, connected to the GitHub repo for auto-deploy on every push t
 - **Vercel environment variables**: only `DATABASE_URL` (the Transaction pooler string) and `AUTH_SECRET` (a separate secret from the dev one in `.env.local`, generated the same way). `DATABASE_URL_MIGRATIONS` is **not** set in Vercel — it's a `drizzle-kit`-only, local-machine concern.
 - **Schema changes going forward**: since there's no CI migration step, run `npm run db:migrate` locally (against the shared Supabase DB) before or right after pushing a change that depends on it — the deployed app and your local dev environment share the same database, so a migration applied locally is immediately live.
 - `trustHost: true` is set in [`src/auth.ts`](src/auth.ts) so Auth.js trusts the `Host`/`X-Forwarded-Host` headers Vercel's proxy sets, rather than requiring a hardcoded canonical URL.
+
+## Releasing
+
+See [RELEASING.md](RELEASING.md) for the full step-by-step, including repackaging and publishing the Android app via PWABuilder/Play Console.
