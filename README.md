@@ -95,3 +95,7 @@ Deployed on Vercel, connected to the GitHub repo for auto-deploy on every push t
 ## Releasing
 
 See [RELEASING.md](RELEASING.md) for the full step-by-step, including repackaging and publishing the Android app via PWABuilder/Play Console.
+
+## CI
+
+Every pull request gets its own Vercel preview deployment automatically (no extra config needed — this is Vercel's default behavior once a project is connected to a GitHub repo). The Vercel bot comments the preview URL directly on the PR.
