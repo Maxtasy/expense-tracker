@@ -28,10 +28,23 @@ As of 1.2.0, the app has never been promoted out of the **Internal testing** tra
    unzip -o Expenses.apk "META-INF/*.RSA" -d extracted
    openssl pkcs7 -in extracted/META-INF/*.RSA -inform DER -print_certs | openssl x509 -noout -fingerprint -sha1
    ```
-   Compare against Play Console's **Setup → App integrity → App signing key certificate** (or the SHA1 shown in the "wrong key" error message if you've already tried uploading once). If they don't match, you grabbed the wrong keystore file — go back to step 5 and re-check which file you selected.
+   Compare against Play Console's **Setup → App integrity → Upload key certificate** (the *upload* one, not the app signing one — see the glossary below; this is what Play Console actually checks against on upload, and is also the SHA1 shown in the "wrong key" error message if you've already tried uploading once). If they don't match, you grabbed the wrong keystore file — go back to step 5 and re-check which file you selected.
 8. Play Console → the active track (Internal testing, per above) → create release → upload the verified `.aab` → release notes → review → roll out.
-9. Spot check `public/.well-known/assetlinks.json`'s fingerprint (SHA256, a different value from the SHA1 used in step 7) still matches Play Console's App signing key certificate. It shouldn't have changed — only touch this file if it actually mismatches.
+9. Spot check `public/.well-known/assetlinks.json`'s fingerprint against Play Console's **Setup → App integrity → App signing key certificate** (the *app signing* one — see glossary below). It shouldn't normally change between releases — only touch this file if it actually mismatches. If the Android app starts showing a browser URL bar instead of running full-screen, that's Digital Asset Links verification failing — almost always this file holding the wrong fingerprint (commonly: someone pasted the *Upload* key's SHA-256 here instead of the *App signing* key's). Verify what's actually live with `curl -s https://expense-tracker-rose-ten-25.vercel.app/.well-known/assetlinks.json` and compare directly against Play Console before assuming the deploy is stale.
 10. Add a row to the table below (date, semver, versionCode, versionName, track, notes); commit.
+
+### Upload key vs. App signing key — don't mix these up
+
+Play Console's **Setup → App integrity** page shows two different certificates, each with its own SHA-1 *and* SHA-256 fingerprint. They serve different purposes and are used in different places in this workflow:
+
+| | **Upload key certificate** | **App signing key certificate** |
+|---|---|---|
+| What it is | The keystore file on your machine, used to sign the `.aab` before uploading | Google's own key, used to re-sign the app before it reaches devices (mandatory since Google Play App Signing) |
+| Used for | Step 7 above — confirms you picked the right local keystore file before uploading | Step 9 above — `public/.well-known/assetlinks.json`'s `sha256_cert_fingerprints` must match this one, since it's what's actually installed on devices |
+| Fingerprint format needed | SHA-1 (step 7's `openssl` command outputs SHA-1) | SHA-256 (colon-separated hex, straight into the JSON array) |
+| Wrong one used → symptom | Play Console rejects the upload outright with a clear error | No error anywhere — the app just silently falls back to showing a browser URL bar instead of running full-screen, since Digital Asset Links verification fails quietly |
+
+**Rule of thumb:** anything about *uploading* → Upload key. Anything about *assetlinks.json / what's installed on a device* → App signing key.
 
 ## Release history
 
