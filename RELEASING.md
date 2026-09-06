@@ -15,11 +15,21 @@ Play Console additionally needs its own:
 
 As of 1.2.0, the app has never been promoted out of the **Internal testing** track — Play Console's Production track is still inactive. Keep releasing to Internal testing until there's a deliberate decision to promote to Production (a bigger, separate step — don't do it as a side effect of a routine release).
 
+## Branching model
+
+`main` always reflects what's actually live (web app *and* whatever's published on Play Store) — it should never be ahead of what users are running. Day-to-day work happens on a long-lived **`develop`** branch instead of `main` directly:
+
+- Feature/fix branches → PR into `develop`, not `main`. Each PR still gets its own Vercel preview deployment.
+- `develop` itself also gets a standing Vercel preview (Vercel deploys every pushed branch, not just PRs) — use its URL as a staging environment to see the accumulated batch of features together before releasing.
+- When everything planned for a release is merged into `develop` and looks right on its preview: open a PR from `develop` → `main`, merge it, then follow the release steps below starting from the version bump.
+
+**Caveat this does NOT solve**: dev and prod share one Supabase database. A migration a `develop` feature needs is live on the real database the moment it's run, regardless of which branch the code sits on — "not merged to `main` yet" only means the *code* isn't live, not the data. Be as careful with schema changes on `develop` as you would be on `main`.
+
 ## Steps
 
-1. Bump `package.json`'s `version`.
-2. Implement/verify the feature itself; commit.
-3. Push to `main` (auto-deploys to Vercel — the live web app updates immediately; this alone is enough for anyone not using the Android app).
+1. Confirm everything intended for this release is merged into `develop` and its Vercel preview looks right.
+2. Bump `package.json`'s `version` (as the last commit on `develop` before releasing).
+3. Open a PR from `develop` → `main` and merge it — **this is what actually deploys to Vercel production**, updating the live web app immediately; this alone is enough for anyone not using the Android app.
 4. Check the last row of the release history table below for the last `versionCode`; the new one is `+1`.
 5. Go to [pwabuilder.com](https://www.pwabuilder.com) → enter the production URL (`https://expense-tracker-rose-ten-25.vercel.app`) → "Package for Stores" → Android → set `versionName` to `"{semver}.0"` and `versionCode` to the incremented value → **upload the existing signing keystore rather than letting it generate a new one** (a new key breaks Play Console's signature match on an update — Play Console will reject the upload).
 6. Download the package zip and extract the `.aab`.

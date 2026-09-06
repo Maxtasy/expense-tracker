@@ -6,6 +6,8 @@ Guidance for Claude Code when working in this repository.
 
 Personal expense tracker (single user). Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Drizzle ORM, Supabase (Postgres), Auth.js v5 (Credentials + JWT sessions). Deployed on Vercel at https://expense-tracker-rose-ten-25.vercel.app, auto-deploying from `main`.
 
+**Branching (as of v1.3.0):** `main` = what's currently live; never push feature work directly to it. Day-to-day work happens on a long-lived `develop` branch — feature/fix branches PR into `develop`, and `develop` itself PRs into `main` only when a release is ready. See [RELEASING.md](RELEASING.md)'s "Branching model" section for the full flow and the database caveat (dev/prod share one Supabase instance regardless of branch).
+
 See [README.md](README.md) for setup, the full schema, and detailed gotchas — this file is a quick-reference, not a duplicate.
 
 ## Architecture at a glance
