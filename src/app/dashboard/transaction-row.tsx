@@ -74,12 +74,12 @@ export function TransactionRow({
           {formatMoney(transaction.amount, currency)}
         </span>
         <div className="flex shrink-0 items-center gap-2 text-fg-muted">
-          <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="hover:text-fg">
+          <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="rounded-lg p-1.5 hover:text-fg">
             <Pencil size={15} />
           </button>
           <form action={deleteTransaction} className="contents">
             <input type="hidden" name="id" value={transaction.id} />
-            <button type="submit" aria-label="Delete" className="hover:text-danger">
+            <button type="submit" aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger">
               <Trash2 size={15} />
             </button>
           </form>
@@ -118,6 +118,7 @@ export function TransactionRow({
             key={type}
             name="categoryId"
             defaultValue={transaction.type === type ? (transaction.categoryId ?? "") : ""}
+            aria-label="Category"
             className={inputClass}
           >
             <option value="">Uncategorized</option>
@@ -129,8 +130,8 @@ export function TransactionRow({
           </select>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <input name="date" type="date" required defaultValue={transaction.date} className={inputClass} />
-          <input name="description" type="text" defaultValue={transaction.description ?? ""} className={inputClass} />
+          <input name="date" type="date" required aria-label="Date" defaultValue={transaction.date} className={inputClass} />
+          <input name="description" type="text" aria-label="Description" defaultValue={transaction.description ?? ""} className={inputClass} />
         </div>
         <div className="flex items-center gap-2">
           <button

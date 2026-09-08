@@ -42,7 +42,7 @@ export function AddTransactionModal({ categories, currency }: { categories: Cate
       >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-fg">Add transaction</h2>
-          <button type="button" onClick={() => dialogRef.current?.close()} aria-label="Close" className="text-fg-muted hover:text-fg">
+          <button type="button" onClick={() => dialogRef.current?.close()} aria-label="Close" className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
             <X size={18} />
           </button>
         </div>
