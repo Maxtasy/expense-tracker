@@ -1,17 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus } from "lucide-react";
 import { AddTransactionForm } from "./add-transaction-form";
+import { TransactionDialog } from "./transaction-dialog";
 
 type Category = { id: string; name: string; type: "expense" | "income" };
 
 export function AddTransactionModal({ categories, currency }: { categories: Category[]; currency: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
-
-  function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
-    if (e.target === e.currentTarget) dialogRef.current?.close();
-  }
 
   return (
     <>
@@ -30,24 +27,9 @@ export function AddTransactionModal({ categories, currency }: { categories: Cate
         <Plus size={26} />
       </button>
 
-      {/* Raw CSS, not a Tailwind `backdrop:` utility: ::backdrop is a pseudo-element, so it
-          can't be reached via inline style, and this dev environment has proven unreliable
-          at compiling first-time-used utility classes (see comment on the button above). */}
-      <style>{`.add-transaction-dialog::backdrop { background: rgba(0, 0, 0, 0.6); }`}</style>
-      <dialog
-        ref={dialogRef}
-        onClick={handleBackdropClick}
-        style={{ position: "fixed", inset: 0, margin: "auto", width: "calc(100% - 2rem)", maxWidth: "28rem" }}
-        className="add-transaction-dialog rounded-xl border border-border bg-surface p-4 text-fg"
-      >
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-fg">Add transaction</h2>
-          <button type="button" onClick={() => dialogRef.current?.close()} aria-label="Close" className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
-            <X size={18} />
-          </button>
-        </div>
+      <TransactionDialog dialogRef={dialogRef} title="Add transaction">
         <AddTransactionForm categories={categories} currency={currency} onSuccess={() => dialogRef.current?.close()} />
-      </dialog>
+      </TransactionDialog>
     </>
   );
 }
