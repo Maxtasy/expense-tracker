@@ -3,7 +3,7 @@
 import type { RefObject } from "react";
 import { X } from "lucide-react";
 
-export function TransactionDialog({
+export function Dialog({
   dialogRef,
   title,
   children,
@@ -21,12 +21,12 @@ export function TransactionDialog({
       {/* Raw CSS, not a Tailwind `backdrop:` utility: ::backdrop is a pseudo-element, so it
           can't be reached via inline style, and this dev environment has proven unreliable
           at compiling first-time-used utility classes (see CLAUDE.md gotchas). */}
-      <style>{`.transaction-dialog::backdrop { background: rgba(0, 0, 0, 0.6); }`}</style>
+      <style>{`.app-dialog::backdrop { background: rgba(0, 0, 0, 0.6); }`}</style>
       <dialog
         ref={dialogRef}
         onClick={handleBackdropClick}
         style={{ position: "fixed", inset: 0, margin: "auto", width: "calc(100% - 2rem)", maxWidth: "28rem" }}
-        className="transaction-dialog rounded-xl border border-border bg-surface p-4 text-fg"
+        className="app-dialog rounded-xl border border-border bg-surface p-4 text-fg"
       >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-fg">{title}</h2>

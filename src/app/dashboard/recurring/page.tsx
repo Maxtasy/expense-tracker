@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, recurringTransactions } from "@/db/schema";
 import { getUserCurrency } from "@/lib/currency-server";
-import { AddRecurringForm } from "./add-recurring-form";
+import { AddRecurringModal } from "./add-recurring-modal";
 import { RecurringRow } from "./recurring-row";
 
 export default async function RecurringPage() {
@@ -39,7 +39,7 @@ export default async function RecurringPage() {
     <div>
       <h1 className="mb-3 text-sm font-semibold text-fg">Recurring transactions</h1>
 
-      <AddRecurringForm categories={availableCategories} currency={currency} />
+      <AddRecurringModal categories={availableCategories} currency={currency} />
 
       {userRecurring.length === 0 ? (
         <p className="py-8 text-center text-sm text-fg-muted">No recurring transactions yet.</p>

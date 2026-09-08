@@ -5,7 +5,7 @@ import { Pencil, Trash2, Repeat } from "lucide-react";
 import { deleteTransaction } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 import { formatMoney } from "@/lib/currency";
-import { TransactionDialog } from "./transaction-dialog";
+import { Dialog } from "./dialog";
 import { EditTransactionForm } from "./edit-transaction-form";
 
 type TxType = "expense" | "income";
@@ -67,14 +67,14 @@ export function TransactionRow({
         </form>
       </div>
 
-      <TransactionDialog dialogRef={dialogRef} title="Edit transaction">
+      <Dialog dialogRef={dialogRef} title="Edit transaction">
         <EditTransactionForm
           transaction={transaction}
           categories={categories}
           currency={currency}
           onSuccess={() => dialogRef.current?.close()}
         />
-      </TransactionDialog>
+      </Dialog>
     </div>
   );
 }
