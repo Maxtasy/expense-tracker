@@ -81,6 +81,7 @@ export default function Home() {
             Small purchases add up without you noticing. Track where it&rsquo;s really going, and know what you have left
             before the month runs out — then start setting some aside for a rainy day.
           </p>
+          <p className="mt-3 text-sm font-medium text-success">Free forever, no ads — start saving right away.</p>
           <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
             <Link href="/signup" className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover">
               Get started

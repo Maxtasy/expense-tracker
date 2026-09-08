@@ -44,12 +44,12 @@ export function CategoryRow({ category }: { category: Category }) {
         <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: categoryColor(category.name) }} aria-hidden="true" />
         <span className="flex-1 text-sm text-fg">{category.name}</span>
         <div className="flex shrink-0 items-center gap-2 text-fg-muted">
-          <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="hover:text-fg">
+          <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="rounded-lg p-1.5 hover:text-fg">
             <Pencil size={15} />
           </button>
           <form action={deleteCategory} className="contents">
             <input type="hidden" name="id" value={category.id} />
-            <button type="submit" aria-label="Delete" className="hover:text-danger">
+            <button type="submit" aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger">
               <Trash2 size={15} />
             </button>
           </form>
@@ -62,7 +62,7 @@ export function CategoryRow({ category }: { category: Category }) {
     <div className="border-b border-border/60 py-2.5 last:border-b-0">
       <form action={handleSubmit} className="flex items-center gap-2">
         <input type="hidden" name="id" value={category.id} />
-        <input name="name" type="text" required defaultValue={category.name} maxLength={50} className={inputClass} />
+        <input name="name" type="text" required aria-label="Category name" defaultValue={category.name} maxLength={50} className={inputClass} />
         <button
           type="submit"
           disabled={isPending}

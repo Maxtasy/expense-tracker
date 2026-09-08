@@ -2,7 +2,7 @@ import { eq, isNull, or } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories } from "@/db/schema";
-import { AddCategoryForm } from "./add-category-form";
+import { AddCategoryModal } from "./add-category-modal";
 import { CategoryRow } from "./category-row";
 
 export default async function CategoriesPage() {
@@ -23,7 +23,7 @@ export default async function CategoriesPage() {
     <div>
       <h1 className="mb-3 text-sm font-semibold text-fg">Categories</h1>
 
-      <AddCategoryForm />
+      <AddCategoryModal />
 
       <div className="split-grid">
         <div>

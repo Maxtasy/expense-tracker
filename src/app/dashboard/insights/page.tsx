@@ -9,6 +9,7 @@ import { PeriodToggle } from "./period-toggle";
 import { InsightsMonthPager } from "./month-pager";
 import { YearPager } from "./year-pager";
 import { CategoryPieChart } from "./category-pie-chart";
+import { CategoryBarList } from "./category-bar-list";
 
 type SearchParams = { mode?: string; month?: string };
 
@@ -65,6 +66,11 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
     <div>
       <PeriodToggle mode={mode} month={monthKey(current)} />
       {mode === "month" ? <InsightsMonthPager current={current} /> : <YearPager current={current} />}
+
+      <div className="split-grid">
+        <CategoryBarList title="Income by category" data={toSlices("income")} currency={currency} />
+        <CategoryBarList title="Expenses by category" data={toSlices("expense")} currency={currency} />
+      </div>
 
       <div className="split-grid">
         <CategoryPieChart title="Income by category" data={toSlices("income")} currency={currency} />
