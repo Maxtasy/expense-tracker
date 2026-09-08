@@ -29,7 +29,12 @@ As of 1.2.0, the app has never been promoted out of the **Internal testing** tra
 
 1. Confirm everything intended for this release is merged into `develop` and its Vercel preview looks right.
 2. Bump `package.json`'s `version` (as the last commit on `develop` before releasing).
-3. Open a PR from `develop` → `main` and merge it — **this is what actually deploys to Vercel production**, updating the live web app immediately; this alone is enough for anyone not using the Android app.
+3. Open a PR from `develop` → `main` and merge it (a regular merge commit, not squash, so `main`'s history keeps each feature's commit individually visible — the feature branches were already squashed going into `develop`) — **this is what actually deploys to Vercel production**, updating the live web app immediately; this alone is enough for anyone not using the Android app. Then tag the resulting commit on `main` so there's a durable pointer to what shipped, independent of the table below:
+   ```bash
+   git checkout main && git pull
+   git tag -a v{semver} -m "v{semver}: <short summary of what shipped>"
+   git push origin v{semver}
+   ```
 4. Check the last row of the release history table below for the last `versionCode`; the new one is `+1`.
 5. Go to [pwabuilder.com](https://www.pwabuilder.com) → enter the production URL (`https://expense-tracker-rose-ten-25.vercel.app`) → "Package for Stores" → Android → set `versionName` to `"{semver}.0"` and `versionCode` to the incremented value → **upload the existing signing keystore rather than letting it generate a new one** (a new key breaks Play Console's signature match on an update — Play Console will reject the upload).
 6. Download the package zip and extract the `.aab`.
@@ -64,3 +69,4 @@ Play Console's app-signing page (currently at **Protected with Play → Play Sto
 | 2026-09-05 | 1.2.0 | 2 | 1.2.0.0 | Internal testing | Swipe-to-paginate month on the dashboard overview; first release to follow this doc. Hit the wrong-keystore mistake step 7 now guards against — first attempt was rejected by Play Console, caught and fixed before a second upload. |
 | 2026-09-05 | 1.3.0 | 3 | 1.3.0.0 | Internal testing | Whole-page swipe navigation fix, loading indicator on pagination/navigation, currency symbols + per-user currency setting, tablet layout, confirmed Vercel PR previews. |
 | 2026-09-06 | 1.3.0 *(web-only fix, no new Play Store upload)* | — | — | — | `public/.well-known/assetlinks.json` was mistakenly updated with the **Upload key certificate**'s SHA-256 instead of the **App signing key certificate**'s during the 1.3.0 release above, breaking the Android app's full-screen mode (it fell back to showing a browser URL bar). Reverted to the correct fingerprint, confirmed against Play Console's own ready-made Digital Asset Links JSON snippet. Docs above rewritten to point at this snippet directly instead of a hand-copied fingerprint, and to the current Play Console path (**Protected with Play → Play Store protection → Manage Play App signing** — moved at least twice now). |
+| 2026-09-08 | 1.4.0 *(web only so far — Android publish pending)* | — | — | — | Add/edit transaction, add category, and add recurring transaction all moved into modals (fixed bottom-right plus button); Insights gained a horizontal bar breakdown per category, shown before the pie charts; fixed low-contrast primary button and missing input labels/icon-button touch targets (a11y); added a free/ad-free line to the landing page hero; adjacent month now prefetches on idle in the dashboard pager. Tagged `v1.4.0` on `main` — first release to follow the tagging step documented above. |
