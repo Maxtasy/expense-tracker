@@ -68,13 +68,13 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
       {mode === "month" ? <InsightsMonthPager current={current} /> : <YearPager current={current} />}
 
       <div className="split-grid">
-        <CategoryPieChart title="Income by category" data={toSlices("income")} currency={currency} />
-        <CategoryPieChart title="Expenses by category" data={toSlices("expense")} currency={currency} />
+        <CategoryBarList title="Income by category" data={toSlices("income")} currency={currency} />
+        <CategoryBarList title="Expenses by category" data={toSlices("expense")} currency={currency} />
       </div>
 
       <div className="split-grid">
-        <CategoryBarList title="Income by category" data={toSlices("income")} currency={currency} />
-        <CategoryBarList title="Expenses by category" data={toSlices("expense")} currency={currency} />
+        <CategoryPieChart title="Income by category" data={toSlices("income")} currency={currency} />
+        <CategoryPieChart title="Expenses by category" data={toSlices("expense")} currency={currency} />
       </div>
     </div>
   );
