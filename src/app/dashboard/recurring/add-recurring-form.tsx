@@ -11,7 +11,15 @@ type Category = { id: string; name: string; type: TxType };
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
 
-export function AddRecurringForm({ categories, currency }: { categories: Category[]; currency: string }) {
+export function AddRecurringForm({
+  categories,
+  currency,
+  onSuccess,
+}: {
+  categories: Category[];
+  currency: string;
+  onSuccess?: () => void;
+}) {
   const formRef = useRef<HTMLFormElement>(null);
   const [type, setType] = useState<TxType>("expense");
   const [error, setError] = useState<string | undefined>();
@@ -27,12 +35,13 @@ export function AddRecurringForm({ categories, currency }: { categories: Categor
         setError(undefined);
         formRef.current?.reset();
         setType("expense");
+        onSuccess?.();
       }
     });
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="mb-4 space-y-2 rounded-xl border border-border bg-surface/50 p-3">
+    <form ref={formRef} action={handleSubmit} className="space-y-2">
       <div className="grid grid-cols-2 gap-2">
         <label
           className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${

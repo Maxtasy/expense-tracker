@@ -5,7 +5,7 @@ import { createCategory } from "./actions";
 
 type TxType = "expense" | "income";
 
-export function AddCategoryForm() {
+export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [type, setType] = useState<TxType>("expense");
   const [error, setError] = useState<string | undefined>();
@@ -20,12 +20,13 @@ export function AddCategoryForm() {
         setError(undefined);
         formRef.current?.reset();
         setType("expense");
+        onSuccess?.();
       }
     });
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="mb-4 space-y-2">
+    <form ref={formRef} action={handleSubmit} className="space-y-2">
       <div className="flex items-center gap-2">
         <input
           name="name"
