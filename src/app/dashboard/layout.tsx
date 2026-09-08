@@ -18,21 +18,21 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Logo size={18} />
           Overview
         </Link>
-        <nav className="flex items-center gap-4 text-fg-muted">
-          <Link href="/dashboard/recurring" aria-label="Recurring transactions" className="hover:text-fg">
+        <nav className="flex items-center gap-2 text-fg-muted">
+          <Link href="/dashboard/recurring" aria-label="Recurring transactions" className="rounded-lg p-1.5 hover:text-fg">
             <Repeat size={18} />
           </Link>
-          <Link href="/dashboard/insights" aria-label="Insights" className="hover:text-fg">
+          <Link href="/dashboard/insights" aria-label="Insights" className="rounded-lg p-1.5 hover:text-fg">
             <PieChart size={18} />
           </Link>
-          <Link href="/dashboard/categories" aria-label="Categories" className="hover:text-fg">
+          <Link href="/dashboard/categories" aria-label="Categories" className="rounded-lg p-1.5 hover:text-fg">
             <Tags size={18} />
           </Link>
-          <Link href="/dashboard/settings" aria-label="Settings" className="hover:text-fg">
+          <Link href="/dashboard/settings" aria-label="Settings" className="rounded-lg p-1.5 hover:text-fg">
             <Settings size={18} />
           </Link>
           <form action={logout} className="contents">
-            <button type="submit" aria-label="Log out" className="hover:text-fg">
+            <button type="submit" aria-label="Log out" className="rounded-lg p-1.5 hover:text-fg">
               <LogOut size={18} />
             </button>
           </form>

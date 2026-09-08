@@ -31,16 +31,16 @@ export function ImportForm() {
   return (
     <form ref={formRef} action={handleSubmit} className="space-y-2">
       <div>
-        <label className="mb-1 block text-xs text-fg-muted">categories.csv</label>
-        <input name="categoriesFile" type="file" accept=".csv,text/csv" required className={inputClass} />
+        <label htmlFor="categoriesFile" className="mb-1 block text-xs text-fg-muted">categories.csv</label>
+        <input id="categoriesFile" name="categoriesFile" type="file" accept=".csv,text/csv" required className={inputClass} />
       </div>
       <div>
-        <label className="mb-1 block text-xs text-fg-muted">recurring_transactions.csv</label>
-        <input name="recurringFile" type="file" accept=".csv,text/csv" required className={inputClass} />
+        <label htmlFor="recurringFile" className="mb-1 block text-xs text-fg-muted">recurring_transactions.csv</label>
+        <input id="recurringFile" name="recurringFile" type="file" accept=".csv,text/csv" required className={inputClass} />
       </div>
       <div>
-        <label className="mb-1 block text-xs text-fg-muted">transactions.csv</label>
-        <input name="transactionsFile" type="file" accept=".csv,text/csv" required className={inputClass} />
+        <label htmlFor="transactionsFile" className="mb-1 block text-xs text-fg-muted">transactions.csv</label>
+        <input id="transactionsFile" name="transactionsFile" type="file" accept=".csv,text/csv" required className={inputClass} />
       </div>
       <label className="flex items-start gap-2 text-xs text-fg-muted">
         <input

@@ -62,7 +62,7 @@ export function AddTransactionForm({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <AmountInput symbol={currencySymbol(currency)} required />
-        <select key={type} name="categoryId" defaultValue="" className={inputClass}>
+        <select key={type} name="categoryId" defaultValue="" aria-label="Category" className={inputClass}>
           <option value="">Uncategorized</option>
           {filteredCategories.map((c) => (
             <option key={c.id} value={c.id}>
@@ -72,7 +72,7 @@ export function AddTransactionForm({
         </select>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <input name="date" type="date" required defaultValue={new Date().toISOString().slice(0, 10)} className={inputClass} />
+        <input name="date" type="date" required aria-label="Date" defaultValue={new Date().toISOString().slice(0, 10)} className={inputClass} />
         <input name="description" type="text" placeholder="Description" className={inputClass} />
       </div>
       <button

@@ -56,12 +56,12 @@ export function TransactionRow({
         {formatMoney(transaction.amount, currency)}
       </span>
       <div className="flex shrink-0 items-center gap-2 text-fg-muted">
-        <button type="button" onClick={() => dialogRef.current?.showModal()} aria-label="Edit" className="hover:text-fg">
+        <button type="button" onClick={() => dialogRef.current?.showModal()} aria-label="Edit" className="rounded-lg p-1.5 hover:text-fg">
           <Pencil size={15} />
         </button>
         <form action={deleteTransaction} className="contents">
           <input type="hidden" name="id" value={transaction.id} />
-          <button type="submit" aria-label="Delete" className="hover:text-danger">
+          <button type="submit" aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger">
             <Trash2 size={15} />
           </button>
         </form>

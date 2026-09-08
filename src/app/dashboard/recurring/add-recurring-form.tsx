@@ -53,7 +53,7 @@ export function AddRecurringForm({ categories, currency }: { categories: Categor
       </div>
       <div className="grid grid-cols-2 gap-2">
         <AmountInput symbol={currencySymbol(currency)} required />
-        <select key={type} name="categoryId" defaultValue="" className={inputClass}>
+        <select key={type} name="categoryId" defaultValue="" aria-label="Category" className={inputClass}>
           <option value="">Uncategorized</option>
           {filteredCategories.map((c) => (
             <option key={c.id} value={c.id}>

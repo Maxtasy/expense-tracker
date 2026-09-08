@@ -71,12 +71,12 @@ export function RecurringRow({
           {formatMoney(recurring.amount, currency)}
         </span>
         <div className="flex shrink-0 items-center gap-2 text-fg-muted">
-          <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="hover:text-fg">
+          <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="rounded-lg p-1.5 hover:text-fg">
             <Pencil size={15} />
           </button>
           <form action={deleteRecurring} className="contents">
             <input type="hidden" name="id" value={recurring.id} />
-            <button type="submit" aria-label="Delete" className="hover:text-danger">
+            <button type="submit" aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger">
               <Trash2 size={15} />
             </button>
           </form>
@@ -115,6 +115,7 @@ export function RecurringRow({
             key={type}
             name="categoryId"
             defaultValue={recurring.type === type ? (recurring.categoryId ?? "") : ""}
+            aria-label="Category"
             className={inputClass}
           >
             <option value="">Uncategorized</option>
@@ -125,7 +126,7 @@ export function RecurringRow({
             ))}
           </select>
         </div>
-        <input name="description" type="text" defaultValue={recurring.description ?? ""} className={inputClass} />
+        <input name="description" type="text" aria-label="Description" defaultValue={recurring.description ?? ""} className={inputClass} />
         <div className="grid grid-cols-2 gap-2">
           <label className="space-y-1">
             <span className="block text-[11px] text-fg-muted">Starts on</span>
