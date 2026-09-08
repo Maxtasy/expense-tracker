@@ -1,4 +1,5 @@
-import { Download, Heart } from "lucide-react";
+import { Download, Heart, Upload } from "lucide-react";
+import Link from "next/link";
 import { auth } from "@/auth";
 import { getUserCurrency } from "@/lib/currency-server";
 import { ImportForm } from "./import-form";
@@ -40,6 +41,20 @@ export default async function SettingsPage() {
             </a>
           ))}
         </div>
+      </div>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Import from Money Manager</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <p className="mb-3 text-xs text-fg-muted">
+          Bring in transactions from a Money Manager .xlsx export. Adds to your existing data — nothing is deleted.
+        </p>
+        <Link
+          href="/dashboard/settings/import-money-manager"
+          className="flex items-center justify-between rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg hover:bg-surface-hover"
+        >
+          Import from Money Manager
+          <Upload size={16} className="text-fg-muted" />
+        </Link>
       </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Import</h2>
