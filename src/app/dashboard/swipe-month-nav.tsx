@@ -1,11 +1,27 @@
 "use client";
 
-import { createContext, useContext, useRef, useTransition } from "react";
+import { createContext, useContext, useEffect, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Logo } from "@/components/logo";
 import { monthHref, shiftMonth, type YearMonth } from "@/lib/month";
+// PrefetchKind isn't part of next/navigation's public API, but router.prefetch()'s default
+// "auto" kind only prefetches the shared shell for a fully dynamic route like this one (it
+// reads the session per request) — confirmed by checking the network tab, no request fired
+// for the adjacent month's data at all. Type-only import so nothing internal ships at runtime.
+import type { PrefetchKind } from "next/dist/client/components/router-reducer/router-reducer-types";
 
 const SWIPE_THRESHOLD_PX = 60;
+
+// Falls back to setTimeout since requestIdleCallback isn't available in Safari/iOS,
+// which matters here since this is a PWA.
+function onIdle(callback: () => void): () => void {
+  if (typeof window.requestIdleCallback === "function") {
+    const id = window.requestIdleCallback(callback);
+    return () => window.cancelIdleCallback(id);
+  }
+  const id = window.setTimeout(callback, 1000);
+  return () => window.clearTimeout(id);
+}
 
 const NavPendingContext = createContext<{ navigate: (href: string) => void } | null>(null);
 
@@ -29,6 +45,17 @@ export function SwipeMonthNav({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const start = useRef<{ x: number; y: number } | null>(null);
+
+  // Neither month-pager button nor the swipe gesture is a next/link, so unlike a normal
+  // route this pager gets no automatic prefetch — warm the adjacent months' route once the
+  // main thread is idle instead of waiting for the user to actually navigate.
+  useEffect(() => {
+    return onIdle(() => {
+      router.prefetch(monthHref(shiftMonth(current, -1), category, sort), { kind: "full" as PrefetchKind });
+      router.prefetch(monthHref(shiftMonth(current, 1), category, sort), { kind: "full" as PrefetchKind });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- primitives so an equal-but-new `current` object doesn't reschedule
+  }, [router, current.year, current.month, category, sort]);
 
   function navigate(href: string) {
     startTransition(() => router.push(href));
