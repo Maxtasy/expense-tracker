@@ -23,6 +23,7 @@ export function AmountInput({ symbol, name = "amount", defaultValue, placeholder
         type="number"
         step="0.01"
         min="0.01"
+        aria-label="Amount"
         placeholder={placeholder}
         required={required}
         defaultValue={defaultValue}
