@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { updateCategory, deleteCategory } from "./actions";
 import { categoryColor } from "@/lib/category-color";
+import { Spinner } from "@/components/spinner";
 
 type Category = { id: string; name: string; type: "expense" | "income"; userId: string | null };
 
@@ -28,6 +29,12 @@ export function CategoryRow({ category }: { category: Category }) {
     });
   }
 
+  function handleDelete(formData: FormData) {
+    startTransition(async () => {
+      await deleteCategory(formData);
+    });
+  }
+
   if (isGlobal) {
     return (
       <div className="flex items-center gap-3 border-b border-border/60 px-1 py-2.5 last:border-b-0">
@@ -47,10 +54,10 @@ export function CategoryRow({ category }: { category: Category }) {
           <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="rounded-lg p-1.5 hover:text-fg">
             <Pencil size={15} />
           </button>
-          <form action={deleteCategory} className="contents">
+          <form action={handleDelete} className="contents">
             <input type="hidden" name="id" value={category.id} />
-            <button type="submit" aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger">
-              <Trash2 size={15} />
+            <button type="submit" disabled={isPending} aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger disabled:opacity-60">
+              {isPending ? <Spinner size={15} /> : <Trash2 size={15} />}
             </button>
           </form>
         </div>
