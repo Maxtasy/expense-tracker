@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useTransition } from "react";
 import { Pencil, Trash2, Repeat } from "lucide-react";
 import { deleteTransaction } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 import { formatMoney } from "@/lib/currency";
 import { Dialog } from "./dialog";
 import { EditTransactionForm } from "./edit-transaction-form";
+import { Spinner } from "@/components/spinner";
 
 type TxType = "expense" | "income";
 type Category = { id: string; name: string; type: TxType };
@@ -32,7 +33,14 @@ export function TransactionRow({
   currency: string;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [isDeleting, startDelete] = useTransition();
   const isIncome = transaction.type === "income";
+
+  function handleDelete(formData: FormData) {
+    startDelete(async () => {
+      await deleteTransaction(formData);
+    });
+  }
 
   return (
     <div className="flex items-center gap-3 border-b border-border/60 px-1 py-2.5 last:border-b-0">
@@ -60,10 +68,10 @@ export function TransactionRow({
         <button type="button" onClick={() => dialogRef.current?.showModal()} aria-label="Edit" className="rounded-lg p-1.5 hover:text-fg">
           <Pencil size={15} />
         </button>
-        <form action={deleteTransaction} className="contents">
+        <form action={handleDelete} className="contents">
           <input type="hidden" name="id" value={transaction.id} />
-          <button type="submit" aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger">
-            <Trash2 size={15} />
+          <button type="submit" disabled={isDeleting} aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger disabled:opacity-60">
+            {isDeleting ? <Spinner size={15} /> : <Trash2 size={15} />}
           </button>
         </form>
       </div>

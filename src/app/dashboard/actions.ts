@@ -5,7 +5,7 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth, signOut } from "@/auth";
 import { db } from "@/db";
-import { transactions } from "@/db/schema";
+import { recurringTransactionSkips, transactions } from "@/db/schema";
 
 export async function logout() {
   await signOut({ redirectTo: "/login" });
@@ -101,11 +101,27 @@ export async function updateTransaction(_prevState: TransactionState, formData: 
 export async function deleteTransaction(formData: FormData) {
   const session = await auth();
   if (!session?.user) return;
+  const userId = session.user.id;
 
   const id = formData.get("id");
   if (typeof id !== "string" || !id) return;
 
-  await db.delete(transactions).where(and(eq(transactions.id, id), eq(transactions.userId, session.user.id)));
+  await db.transaction(async (tx) => {
+    const [deleted] = await tx
+      .delete(transactions)
+      .where(and(eq(transactions.id, id), eq(transactions.userId, userId)))
+      .returning({ recurringTransactionId: transactions.recurringTransactionId, date: transactions.date });
+
+    // deleting a single materialized occurrence of a recurring rule must not bring it back the
+    // next time this month is viewed — record it as skipped rather than letting it regenerate
+    if (deleted?.recurringTransactionId) {
+      const [year, month] = deleted.date.split("-").map(Number);
+      await tx
+        .insert(recurringTransactionSkips)
+        .values({ recurringTransactionId: deleted.recurringTransactionId, year, month })
+        .onConflictDoNothing();
+    }
+  });
 
   revalidatePath("/dashboard");
 }

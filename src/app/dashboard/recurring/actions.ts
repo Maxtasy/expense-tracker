@@ -1,11 +1,11 @@
 "use server";
 
 import { z } from "zod";
-import { and, eq } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { recurringTransactions } from "@/db/schema";
+import { recurringTransactions, transactions } from "@/db/schema";
 
 const recurringSchema = z
   .object({
@@ -105,11 +105,23 @@ export async function updateRecurring(_prevState: RecurringState, formData: Form
 export async function deleteRecurring(formData: FormData) {
   const session = await auth();
   if (!session?.user) return;
+  const userId = session.user.id;
 
   const id = formData.get("id");
   if (typeof id !== "string" || !id) return;
 
-  await db.delete(recurringTransactions).where(and(eq(recurringTransactions.id, id), eq(recurringTransactions.userId, session.user.id)));
+  const today = new Date().toISOString().slice(0, 10);
+
+  await db.transaction(async (tx) => {
+    // future occurrences already materialized (e.g. by scrolling ahead) shouldn't outlive the
+    // rule; past and current-day ones are kept for historical accuracy and just get detached
+    // from the rule automatically via the FK's onDelete: "set null"
+    await tx
+      .delete(transactions)
+      .where(and(eq(transactions.recurringTransactionId, id), eq(transactions.userId, userId), gt(transactions.date, today)));
+
+    await tx.delete(recurringTransactions).where(and(eq(recurringTransactions.id, id), eq(recurringTransactions.userId, userId)));
+  });
 
   revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard");

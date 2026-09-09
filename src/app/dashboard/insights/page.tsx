@@ -6,12 +6,13 @@ import { categoryColor, PALETTE } from "@/lib/category-color";
 import { monthKey, monthRange, parseMonth, yearRange } from "@/lib/month";
 import { getUserCurrency } from "@/lib/currency-server";
 import { PeriodToggle } from "./period-toggle";
+import { TypeToggle } from "./type-toggle";
 import { InsightsMonthPager } from "./month-pager";
 import { YearPager } from "./year-pager";
 import { CategoryPieChart } from "./category-pie-chart";
 import { CategoryBarList } from "./category-bar-list";
 
-type SearchParams = { mode?: string; month?: string };
+type SearchParams = { mode?: string; month?: string; type?: string };
 
 export default async function InsightsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const session = await auth();
@@ -20,6 +21,7 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
 
   const params = await searchParams;
   const mode = params.mode === "year" ? "year" : "month";
+  const type = params.type === "income" ? "income" : "expense";
   const current = parseMonth(params.month);
   const { from, to } = mode === "year" ? yearRange(current.year) : monthRange(current);
 
@@ -65,20 +67,21 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
     });
   }
 
+  const slices = toSlices(type);
+  const title = type === "income" ? "Income by category" : "Expenses by category";
+
   return (
     <div>
-      <PeriodToggle mode={mode} month={monthKey(current)} />
-      {mode === "month" ? <InsightsMonthPager current={current} /> : <YearPager current={current} />}
+      <PeriodToggle mode={mode} month={monthKey(current)} type={type} />
+      {mode === "month" ? (
+        <InsightsMonthPager current={current} type={type} />
+      ) : (
+        <YearPager current={current} type={type} />
+      )}
+      <TypeToggle mode={mode} month={monthKey(current)} type={type} />
 
-      <div className="split-grid">
-        <CategoryBarList title="Income by category" data={toSlices("income")} currency={currency} />
-        <CategoryBarList title="Expenses by category" data={toSlices("expense")} currency={currency} />
-      </div>
-
-      <div className="split-grid">
-        <CategoryPieChart title="Income by category" data={toSlices("income")} currency={currency} />
-        <CategoryPieChart title="Expenses by category" data={toSlices("expense")} currency={currency} />
-      </div>
+      <CategoryBarList title={title} data={slices} currency={currency} />
+      <CategoryPieChart title={title} data={slices} currency={currency} />
     </div>
   );
 }
