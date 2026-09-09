@@ -1,23 +1,31 @@
 import { eq, isNull, or } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { categories } from "@/db/schema";
+import { categories, hiddenCategories } from "@/db/schema";
 import { AddCategoryModal } from "./add-category-modal";
 import { CategoryRow } from "./category-row";
+import { HiddenCategoryRow } from "./hidden-category-row";
 
 export default async function CategoriesPage() {
   const session = await auth();
   if (!session?.user) return null;
   const userId = session.user.id;
 
-  const allCategories = await db
-    .select({ id: categories.id, name: categories.name, type: categories.type, userId: categories.userId, color: categories.color })
-    .from(categories)
-    .where(or(isNull(categories.userId), eq(categories.userId, userId)))
-    .orderBy(categories.name);
+  const [allCategories, hidden] = await Promise.all([
+    db
+      .select({ id: categories.id, name: categories.name, type: categories.type, userId: categories.userId, color: categories.color })
+      .from(categories)
+      .where(or(isNull(categories.userId), eq(categories.userId, userId)))
+      .orderBy(categories.name),
+    db.select({ categoryId: hiddenCategories.categoryId }).from(hiddenCategories).where(eq(hiddenCategories.userId, userId)),
+  ]);
 
-  const expenseCategories = allCategories.filter((c) => c.type === "expense");
-  const incomeCategories = allCategories.filter((c) => c.type === "income");
+  const hiddenIds = new Set(hidden.map((h) => h.categoryId));
+  const visibleCategories = allCategories.filter((c) => !hiddenIds.has(c.id));
+  const hiddenCategoryList = allCategories.filter((c) => hiddenIds.has(c.id));
+
+  const expenseCategories = visibleCategories.filter((c) => c.type === "expense");
+  const incomeCategories = visibleCategories.filter((c) => c.type === "income");
 
   return (
     <div>
@@ -44,6 +52,17 @@ export default async function CategoriesPage() {
           </div>
         </div>
       </div>
+
+      {hiddenCategoryList.length > 0 && (
+        <div className="mt-4">
+          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Hidden categories</h2>
+          <div className="rounded-xl border border-border bg-surface/30 px-3">
+            {hiddenCategoryList.map((category) => (
+              <HiddenCategoryRow key={category.id} category={category} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

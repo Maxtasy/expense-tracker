@@ -20,6 +20,23 @@ export const categories = pgTable("categories", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// a global (default) category a user has chosen to hide from their own category list — never
+// touches the shared category row itself, since that would affect every other user
+export const hiddenCategories = pgTable(
+  "hidden_categories",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    categoryId: uuid("category_id")
+      .notNull()
+      .references(() => categories.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [unique().on(table.userId, table.categoryId)],
+);
+
 export const recurringTransactions = pgTable("recurring_transactions", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
