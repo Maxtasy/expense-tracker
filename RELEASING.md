@@ -15,6 +15,19 @@ Play Console additionally needs its own:
 
 As of 1.2.0, the app has never been promoted out of the **Internal testing** track — Play Console's Production track is still inactive. Keep releasing to Internal testing until there's a deliberate decision to promote to Production (a bigger, separate step — don't do it as a side effect of a routine release).
 
+## Do you even need to repackage for Android?
+
+Usually no. The Android app is a **TWA (Trusted Web Activity)** — a thin native shell that verifies it's allowed to display the production URL full-screen (via `assetlinks.json`), then just loads `https://expense-tracker-rose-ten-25.vercel.app`, same as a browser tab. The service worker only caches `/_next/static/*` and `/icons/*`, never page content (deliberately — see CLAUDE.md's PWA section), so there is no page/feature code baked into the installed package at all. The moment `main` deploys, every install — web tab or Android shell — is already showing it.
+
+So steps 4–9 below (PWABuilder repackage + Play Console upload) are only worth doing when something actually lives in the native package rather than being fetched live:
+
+- **The Play Store listing's version number.** `versionCode`/`versionName` are metadata Play Console displays and enforces strictly-increasing on upload — cosmetic/record-keeping, nothing on-device depends on it. Skipping an upload just means the Play Store page shows an older version number than what's actually running.
+- **App icon, splash screen, or other manifest bits PWABuilder bakes in at packaging time.** Editing `icon.svg` and running `icons:build` updates the *web* icon immediately; the installed Android icon only updates on the next repackage.
+- **`assetlinks.json`'s trust relationship.** This is a native-side prerequisite for full-screen mode, not something a web deploy can fix if it breaks (see the 2026-09-06 incident below) — but it also doesn't need a new upload on every release, just when the fingerprint itself changes.
+- **Google Play's periodic target-SDK requirements.** Play eventually forces a re-upload regardless of feature parity, to keep targeting a current Android API level, or risks the app being pulled from new installs.
+
+If a release doesn't touch any of those, it's reasonable to stop after step 3 and record the release as web-only in the table below (see the 1.4.0 row) — the Android app already has the update either way.
+
 ## Branching model
 
 `main` always reflects what's actually live (web app *and* whatever's published on Play Store) — it should never be ahead of what users are running. Day-to-day work happens on a long-lived **`develop`** branch instead of `main` directly:
@@ -29,8 +42,13 @@ As of 1.2.0, the app has never been promoted out of the **Internal testing** tra
 
 1. Confirm everything intended for this release is merged into `develop` and its Vercel preview looks right.
 2. Bump `package.json`'s `version` (as the last commit on `develop` before releasing).
-3. Open a PR from `develop` → `main` and merge it — **this is what actually deploys to Vercel production**, updating the live web app immediately; this alone is enough for anyone not using the Android app.
-4. Check the last row of the release history table below for the last `versionCode`; the new one is `+1`.
+3. Open a PR from `develop` → `main` and merge it (a regular merge commit, not squash, so `main`'s history keeps each feature's commit individually visible — the feature branches were already squashed going into `develop`) — **this is what actually deploys to Vercel production**, updating the live web app immediately; this alone is enough for anyone not using the Android app. Then tag the resulting commit on `main` so there's a durable pointer to what shipped, independent of the table below:
+   ```bash
+   git checkout main && git pull
+   git tag -a v{semver} -m "v{semver}: <short summary of what shipped>"
+   git push origin v{semver}
+   ```
+4. Decide whether this release actually needs an Android repackage (see "Do you even need to repackage for Android?" above) — if not, skip to step 10 and record it as web-only. Otherwise, check the last row of the release history table below for the last `versionCode`; the new one is `+1`.
 5. Go to [pwabuilder.com](https://www.pwabuilder.com) → enter the production URL (`https://expense-tracker-rose-ten-25.vercel.app`) → "Package for Stores" → Android → set `versionName` to `"{semver}.0"` and `versionCode` to the incremented value → **upload the existing signing keystore rather than letting it generate a new one** (a new key breaks Play Console's signature match on an update — Play Console will reject the upload).
 6. Download the package zip and extract the `.aab`.
 7. **Before uploading, verify the signing certificate matches what Play Console expects** — this caught a real mistake during the 1.2.0 release (the wrong keystore file was picked in PWABuilder's file dialog, silently, since the dialog only shows a filename). Extract the cert fingerprint locally with no password needed:
@@ -64,3 +82,4 @@ Play Console's app-signing page (currently at **Protected with Play → Play Sto
 | 2026-09-05 | 1.2.0 | 2 | 1.2.0.0 | Internal testing | Swipe-to-paginate month on the dashboard overview; first release to follow this doc. Hit the wrong-keystore mistake step 7 now guards against — first attempt was rejected by Play Console, caught and fixed before a second upload. |
 | 2026-09-05 | 1.3.0 | 3 | 1.3.0.0 | Internal testing | Whole-page swipe navigation fix, loading indicator on pagination/navigation, currency symbols + per-user currency setting, tablet layout, confirmed Vercel PR previews. |
 | 2026-09-06 | 1.3.0 *(web-only fix, no new Play Store upload)* | — | — | — | `public/.well-known/assetlinks.json` was mistakenly updated with the **Upload key certificate**'s SHA-256 instead of the **App signing key certificate**'s during the 1.3.0 release above, breaking the Android app's full-screen mode (it fell back to showing a browser URL bar). Reverted to the correct fingerprint, confirmed against Play Console's own ready-made Digital Asset Links JSON snippet. Docs above rewritten to point at this snippet directly instead of a hand-copied fingerprint, and to the current Play Console path (**Protected with Play → Play Store protection → Manage Play App signing** — moved at least twice now). |
+| 2026-09-08 | 1.4.0 *(web only so far — Android publish pending)* | — | — | — | Add/edit transaction, add category, and add recurring transaction all moved into modals (fixed bottom-right plus button); Insights gained a horizontal bar breakdown per category, shown before the pie charts; fixed low-contrast primary button and missing input labels/icon-button touch targets (a11y); added a free/ad-free line to the landing page hero; adjacent month now prefetches on idle in the dashboard pager. Tagged `v1.4.0` on `main` — first release to follow the tagging step documented above. |

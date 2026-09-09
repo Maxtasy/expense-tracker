@@ -25,3 +25,11 @@ body {
   background: var(--color-background);
   color: var(--color-fg);
 }
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}

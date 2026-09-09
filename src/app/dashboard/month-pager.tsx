@@ -27,7 +27,7 @@ export function MonthPager({ current, category, sort }: { current: YearMonth; ca
         >
           {monthLabel(prev, "short")}
         </button>
-        <span className="rounded-full bg-accent/15 px-3 py-1 font-medium text-accent">{monthLabel(current)}</span>
+        <span className="rounded-full bg-accent/15 px-3 py-1 text-center font-medium text-accent">{monthLabel(current)}</span>
         <button
           type="button"
           onClick={() => navigate(monthHref(next, category, sort))}
