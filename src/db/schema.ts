@@ -15,6 +15,8 @@ export const categories = pgTable("categories", {
   type: text("type", { enum: ["expense", "income"] }).notNull().default("expense"),
   // null userId = global default category, shared by all users
   userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+  // hex string (e.g. "#38bdf8"); null = fall back to the deterministic name-hash color
+  color: text("color"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

@@ -25,6 +25,7 @@ export default async function RecurringPage() {
         description: recurringTransactions.description,
         categoryId: recurringTransactions.categoryId,
         categoryName: categories.name,
+        categoryColor: categories.color,
         startDate: recurringTransactions.startDate,
         endDate: recurringTransactions.endDate,
       })

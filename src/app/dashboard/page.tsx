@@ -69,6 +69,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       description: transactions.description,
       categoryId: transactions.categoryId,
       categoryName: categories.name,
+      categoryColor: categories.color,
       recurringTransactionId: transactions.recurringTransactionId,
     })
     .from(transactions)
