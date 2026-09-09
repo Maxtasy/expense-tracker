@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeftRight, CalendarDays, FileSpreadsheet, Repeat } from "lucide-react";
+import { ArrowLeftRight, CalendarDays, FileSpreadsheet, Languages, Mail, PieChart, Repeat, Sparkles } from "lucide-react";
 import { Logo } from "@/components/logo";
 import type { CSSProperties } from "react";
 
@@ -32,6 +32,24 @@ const FEATURES = [
     icon: FileSpreadsheet,
     title: "Your data, backed up",
     description: "Export everything to CSV any time, and restore it in a couple of clicks whenever you need to.",
+  },
+];
+
+const ROADMAP = [
+  {
+    icon: Languages,
+    title: "Multiple languages",
+    description: "Use the app in your own language, not just English.",
+  },
+  {
+    icon: PieChart,
+    title: "Deeper insights",
+    description: "More ways to break down and visualize where your money goes.",
+  },
+  {
+    icon: Sparkles,
+    title: "More customization",
+    description: "Small touches like custom category colors, so the app feels like yours.",
   },
 ];
 
@@ -120,6 +138,38 @@ export default function Home() {
                 <figcaption className="mt-3 text-xs text-fg-muted">{caption}</figcaption>
               </figure>
             ))}
+          </div>
+        </div>
+
+        <div className="mt-24 sm:mt-28">
+          <h2 className="text-lg font-semibold text-fg sm:text-xl">What&rsquo;s next</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted lg:max-w-lg">
+            The app is actively growing. Here&rsquo;s some of what&rsquo;s planned:
+          </p>
+          <div className="mt-6 grid gap-3 text-left sm:grid-cols-3 lg:gap-4">
+            {ROADMAP.map(({ icon: Icon, title, description }) => (
+              <div key={title} className="rounded-xl border border-border bg-surface/30 p-4">
+                <Icon size={18} className="text-accent" />
+                <p className="mt-3 text-sm font-medium text-fg">{title}</p>
+                <p className="mt-1 text-xs text-fg-muted">{description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-16 sm:mt-20">
+          <div className="mx-auto max-w-md rounded-xl border border-border bg-surface/30 p-6">
+            <Mail size={20} className="mx-auto text-accent" />
+            <h2 className="mt-3 text-base font-semibold text-fg">Have a feature in mind?</h2>
+            <p className="mt-2 text-sm text-fg-muted">
+              This app is shaped by feedback. If there&rsquo;s something missing you&rsquo;d find useful, let me know.
+            </p>
+            <a
+              href="mailto:contact@maxtasy.me"
+              className="mt-4 inline-block rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover"
+            >
+              contact@maxtasy.me
+            </a>
           </div>
         </div>
       </main>
