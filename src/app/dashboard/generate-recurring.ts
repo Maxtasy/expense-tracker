@@ -1,12 +1,12 @@
 import { and, eq, gte, isNotNull, lte } from "drizzle-orm";
 import { db } from "@/db";
-import { recurringTransactions, transactions } from "@/db/schema";
+import { recurringTransactionSkips, recurringTransactions, transactions } from "@/db/schema";
 import { compareYearMonth, daysInMonth, monthRange, type YearMonth } from "@/lib/month";
 
 export async function ensureRecurringGenerated(userId: string, current: YearMonth) {
   const { from, to } = monthRange(current);
 
-  const [definitions, existing] = await Promise.all([
+  const [definitions, existing, skips] = await Promise.all([
     db.select().from(recurringTransactions).where(eq(recurringTransactions.userId, userId)),
     db
       .select({ recurringTransactionId: transactions.recurringTransactionId })
@@ -19,13 +19,25 @@ export async function ensureRecurringGenerated(userId: string, current: YearMont
           lte(transactions.date, to),
         ),
       ),
+    db
+      .select({ recurringTransactionId: recurringTransactionSkips.recurringTransactionId })
+      .from(recurringTransactionSkips)
+      .innerJoin(recurringTransactions, eq(recurringTransactionSkips.recurringTransactionId, recurringTransactions.id))
+      .where(
+        and(
+          eq(recurringTransactions.userId, userId),
+          eq(recurringTransactionSkips.year, current.year),
+          eq(recurringTransactionSkips.month, current.month),
+        ),
+      ),
   ]);
 
   const existingIds = new Set(existing.map((e) => e.recurringTransactionId));
+  const skippedIds = new Set(skips.map((s) => s.recurringTransactionId));
 
   const toInsert: (typeof transactions.$inferInsert)[] = [];
   for (const def of definitions) {
-    if (existingIds.has(def.id)) continue;
+    if (existingIds.has(def.id) || skippedIds.has(def.id)) continue;
 
     const [startYear, startMonth, startDay] = def.startDate.split("-").map(Number);
     if (compareYearMonth({ year: startYear, month: startMonth }, current) > 0) continue;
