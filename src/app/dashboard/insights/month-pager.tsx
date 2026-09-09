@@ -19,7 +19,7 @@ export function InsightsMonthPager({ current }: { current: YearMonth }) {
         <Link href={hrefFor(prev)} className="px-1 text-xs text-fg-muted hover:text-fg">
           {monthLabel(prev, "short")}
         </Link>
-        <span className="rounded-full bg-accent/15 px-3 py-1 font-medium text-accent">{monthLabel(current)}</span>
+        <span className="rounded-full bg-accent/15 px-3 py-1 text-center font-medium text-accent">{monthLabel(current)}</span>
         <Link href={hrefFor(next)} className="px-1 text-xs text-fg-muted hover:text-fg">
           {monthLabel(next, "short")}
         </Link>
