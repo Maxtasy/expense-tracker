@@ -1,6 +1,6 @@
 {
-  "id": "c9ab390f-8603-49d3-861e-4195da7cc789",
-  "prevId": "ebcfd7a6-b58a-4bf5-ae16-8d9fba882dc4",
+  "id": "724e21d1-11ec-45e4-ade1-7ed39435587b",
+  "prevId": "c9ab390f-8603-49d3-861e-4195da7cc789",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -31,6 +31,12 @@
         "user_id": {
           "name": "user_id",
           "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },

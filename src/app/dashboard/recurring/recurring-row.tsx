@@ -6,6 +6,7 @@ import { updateRecurring, deleteRecurring } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 import { currencySymbol, formatMoney } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
+import { Spinner } from "@/components/spinner";
 
 type TxType = "expense" | "income";
 type Category = { id: string; name: string; type: TxType };
@@ -16,6 +17,7 @@ type Recurring = {
   description: string | null;
   categoryId: string | null;
   categoryName: string | null;
+  categoryColor: string | null;
   startDate: string;
   endDate: string | null;
 };
@@ -49,6 +51,12 @@ export function RecurringRow({
     });
   }
 
+  function handleDelete(formData: FormData) {
+    startTransition(async () => {
+      await deleteRecurring(formData);
+    });
+  }
+
   if (!isEditing) {
     const isIncome = recurring.type === "income";
     const day = recurring.startDate.split("-")[2];
@@ -56,7 +64,7 @@ export function RecurringRow({
       <div className="flex items-center gap-3 border-b border-border/60 px-1 py-2.5 last:border-b-0">
         <span
           className="h-1.5 w-1.5 shrink-0 rounded-full"
-          style={{ backgroundColor: categoryColor(recurring.categoryName) }}
+          style={{ backgroundColor: categoryColor(recurring.categoryName, recurring.categoryColor) }}
           aria-hidden="true"
         />
         <div className="min-w-0 flex-1">
@@ -74,10 +82,10 @@ export function RecurringRow({
           <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="rounded-lg p-1.5 hover:text-fg">
             <Pencil size={15} />
           </button>
-          <form action={deleteRecurring} className="contents">
+          <form action={handleDelete} className="contents">
             <input type="hidden" name="id" value={recurring.id} />
-            <button type="submit" aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger">
-              <Trash2 size={15} />
+            <button type="submit" disabled={isPending} aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger disabled:opacity-60">
+              {isPending ? <Spinner size={15} /> : <Trash2 size={15} />}
             </button>
           </form>
         </div>

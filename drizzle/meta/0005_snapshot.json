@@ -1,6 +1,6 @@
 {
-  "id": "c9ab390f-8603-49d3-861e-4195da7cc789",
-  "prevId": "ebcfd7a6-b58a-4bf5-ae16-8d9fba882dc4",
+  "id": "9bf58d9c-6fed-4eb0-8678-ccf0edd4d384",
+  "prevId": "724e21d1-11ec-45e4-ade1-7ed39435587b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -34,6 +34,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "color": {
+          "name": "color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -60,6 +66,81 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.hidden_categories": {
+      "name": "hidden_categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "hidden_categories_user_id_users_id_fk": {
+          "name": "hidden_categories_user_id_users_id_fk",
+          "tableFrom": "hidden_categories",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "hidden_categories_category_id_categories_id_fk": {
+          "name": "hidden_categories_category_id_categories_id_fk",
+          "tableFrom": "hidden_categories",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "hidden_categories_user_id_category_id_unique": {
+          "name": "hidden_categories_user_id_category_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "category_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

@@ -1,6 +1,7 @@
 export const PALETTE = ["#38bdf8", "#34d399", "#fbbf24", "#a78bfa", "#f472b6", "#2dd4bf"];
 
-export function categoryColor(name: string | null): string {
+export function categoryColor(name: string | null, color?: string | null): string {
+  if (color) return color;
   if (!name) return "#5f5e5a";
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
