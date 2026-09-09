@@ -17,6 +17,7 @@ type Recurring = {
   description: string | null;
   categoryId: string | null;
   categoryName: string | null;
+  categoryColor: string | null;
   startDate: string;
   endDate: string | null;
 };
@@ -63,7 +64,7 @@ export function RecurringRow({
       <div className="flex items-center gap-3 border-b border-border/60 px-1 py-2.5 last:border-b-0">
         <span
           className="h-1.5 w-1.5 shrink-0 rounded-full"
-          style={{ backgroundColor: categoryColor(recurring.categoryName) }}
+          style={{ backgroundColor: categoryColor(recurring.categoryName, recurring.categoryColor) }}
           aria-hidden="true"
         />
         <div className="min-w-0 flex-1">

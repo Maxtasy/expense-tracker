@@ -19,6 +19,7 @@ type Transaction = {
   description: string | null;
   categoryId: string | null;
   categoryName: string | null;
+  categoryColor: string | null;
   recurringTransactionId: string | null;
 };
 
@@ -45,7 +46,7 @@ export function TransactionRow({
     <div className="flex items-center gap-3 border-b border-border/60 px-1 py-2.5 last:border-b-0">
       <span
         className="h-1.5 w-1.5 shrink-0 rounded-full"
-        style={{ backgroundColor: categoryColor(transaction.categoryName) }}
+        style={{ backgroundColor: categoryColor(transaction.categoryName, transaction.categoryColor) }}
         aria-hidden="true"
       />
       <div className="min-w-0 flex-1">

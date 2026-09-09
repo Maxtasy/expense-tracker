@@ -11,7 +11,7 @@ export default async function CategoriesPage() {
   const userId = session.user.id;
 
   const allCategories = await db
-    .select({ id: categories.id, name: categories.name, type: categories.type, userId: categories.userId })
+    .select({ id: categories.id, name: categories.name, type: categories.type, userId: categories.userId, color: categories.color })
     .from(categories)
     .where(or(isNull(categories.userId), eq(categories.userId, userId)))
     .orderBy(categories.name);

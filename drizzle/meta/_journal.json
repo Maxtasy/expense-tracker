@@ -29,6 +29,13 @@
       "when": 1788979463937,
       "tag": "0003_shallow_thunderbird",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788983752069,
+      "tag": "0004_magical_korvac",
+      "breakpoints": true
     }
   ]
 }

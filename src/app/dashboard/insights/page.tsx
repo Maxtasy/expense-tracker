@@ -29,13 +29,14 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
     db
       .select({
         categoryName: categories.name,
+        categoryColor: categories.color,
         type: transactions.type,
         total: sql<string>`coalesce(sum(${transactions.amount}), 0)`,
       })
       .from(transactions)
       .leftJoin(categories, eq(transactions.categoryId, categories.id))
       .where(and(eq(transactions.userId, userId), gte(transactions.date, from), lte(transactions.date, to)))
-      .groupBy(transactions.categoryId, categories.name, transactions.type),
+      .groupBy(transactions.categoryId, categories.name, categories.color, transactions.type),
     getUserCurrency(userId),
   ]);
 
@@ -45,16 +46,18 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
       .map((row) => ({
         name: row.categoryName ?? "Uncategorized",
         value: Number(row.total),
-        color: categoryColor(row.categoryName),
+        color: categoryColor(row.categoryName, row.categoryColor),
+        custom: Boolean(row.categoryColor),
       }))
       .filter((slice) => slice.value > 0)
       .sort((a, b) => b.value - a.value);
 
-    // categoryColor() hashes into a small palette, so two categories in the same
-    // chart can collide; reassign duplicates to the next unused palette color so
-    // every slice stays visually distinct where possible.
-    const used = new Set<string>();
-    return slices.map((slice) => {
+    // categoryColor() hashes into a small palette, so two auto-colored categories in the
+    // same chart can collide; reassign those (but never a user-picked custom color) to the
+    // next unused palette color so every slice stays visually distinct where possible.
+    const used = new Set<string>(slices.filter((s) => s.custom).map((s) => s.color));
+    return slices.map(({ custom, ...slice }) => {
+      if (custom) return slice;
       let color = slice.color;
       if (used.has(color)) {
         color = PALETTE.find((c) => !used.has(c)) ?? color;

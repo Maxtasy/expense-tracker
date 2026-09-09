@@ -9,6 +9,7 @@ import { categories } from "@/db/schema";
 
 const nameSchema = z.string().trim().min(1, "Name is required").max(50, "Name is too long");
 const typeSchema = z.enum(["expense", "income"]);
+const colorSchema = z.union([z.string().regex(/^#[0-9a-fA-F]{6}$/, "Invalid color"), z.literal("")]);
 
 export type CategoryState = { error?: string } | null;
 
@@ -62,7 +63,12 @@ export async function updateCategory(_prevState: CategoryState, formData: FormDa
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message };
   }
+  const colorParsed = colorSchema.safeParse(formData.get("color") ?? "");
+  if (!colorParsed.success) {
+    return { error: colorParsed.error.issues[0].message };
+  }
   const name = parsed.data;
+  const color = colorParsed.data || null;
   const userId = session.user.id;
 
   const [existing] = await db
@@ -77,7 +83,7 @@ export async function updateCategory(_prevState: CategoryState, formData: FormDa
 
   const updated = await db
     .update(categories)
-    .set({ name })
+    .set({ name, color })
     .where(and(eq(categories.id, id), eq(categories.userId, userId)))
     .returning({ id: categories.id });
 
