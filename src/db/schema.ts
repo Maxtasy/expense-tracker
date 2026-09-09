@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, numeric, date, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, numeric, date, timestamp, integer, unique } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -33,6 +33,22 @@ export const recurringTransactions = pgTable("recurring_transactions", {
   endDate: date("end_date"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// records that a single materialized occurrence of a recurring rule was deleted on purpose, so
+// ensureRecurringGenerated() doesn't recreate it when that month is viewed again
+export const recurringTransactionSkips = pgTable(
+  "recurring_transaction_skips",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    recurringTransactionId: uuid("recurring_transaction_id")
+      .notNull()
+      .references(() => recurringTransactions.id, { onDelete: "cascade" }),
+    year: integer("year").notNull(),
+    month: integer("month").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [unique().on(table.recurringTransactionId, table.year, table.month)],
+);
 
 export const transactions = pgTable("transactions", {
   id: uuid("id").primaryKey().defaultRandom(),
