@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Pencil, Trash2 } from "lucide-react";
-import { updateCategory, deleteCategory } from "./actions";
+import { EyeOff, Pencil, Trash2 } from "lucide-react";
+import { updateCategory, deleteCategory, hideCategory } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 
 type Category = { id: string; name: string; type: "expense" | "income"; userId: string | null };
@@ -34,6 +34,12 @@ export function CategoryRow({ category }: { category: Category }) {
         <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: categoryColor(category.name) }} aria-hidden="true" />
         <span className="flex-1 text-sm text-fg">{category.name}</span>
         <span className="text-xs text-fg-muted">Default</span>
+        <form action={hideCategory} className="contents">
+          <input type="hidden" name="categoryId" value={category.id} />
+          <button type="submit" aria-label="Hide category" className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
+            <EyeOff size={15} />
+          </button>
+        </form>
       </div>
     );
   }

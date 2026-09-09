@@ -1,7 +1,7 @@
 import { eq, isNull, or } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { categories, recurringTransactions } from "@/db/schema";
+import { categories, hiddenCategories, recurringTransactions } from "@/db/schema";
 import { getUserCurrency } from "@/lib/currency-server";
 import { AddRecurringModal } from "./add-recurring-modal";
 import { RecurringRow } from "./recurring-row";
@@ -11,12 +11,13 @@ export default async function RecurringPage() {
   if (!session?.user) return null;
   const userId = session.user.id;
 
-  const [availableCategories, userRecurring, currency] = await Promise.all([
+  const [availableCategories, hiddenIds, userRecurring, currency] = await Promise.all([
     db
       .select({ id: categories.id, name: categories.name, type: categories.type })
       .from(categories)
       .where(or(isNull(categories.userId), eq(categories.userId, userId)))
       .orderBy(categories.name),
+    db.select({ categoryId: hiddenCategories.categoryId }).from(hiddenCategories).where(eq(hiddenCategories.userId, userId)),
     db
       .select({
         id: recurringTransactions.id,
@@ -35,11 +36,14 @@ export default async function RecurringPage() {
     getUserCurrency(userId),
   ]);
 
+  const hiddenIdSet = new Set(hiddenIds.map((h) => h.categoryId));
+  const visibleCategories = availableCategories.filter((c) => !hiddenIdSet.has(c.id));
+
   return (
     <div>
       <h1 className="mb-3 text-sm font-semibold text-fg">Recurring transactions</h1>
 
-      <AddRecurringModal categories={availableCategories} currency={currency} />
+      <AddRecurringModal categories={visibleCategories} currency={currency} />
 
       {userRecurring.length === 0 ? (
         <p className="py-8 text-center text-sm text-fg-muted">No recurring transactions yet.</p>
