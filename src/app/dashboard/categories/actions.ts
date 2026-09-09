@@ -5,10 +5,11 @@ import { and, eq, ilike, isNull, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { categories } from "@/db/schema";
+import { categories, hiddenCategories } from "@/db/schema";
 
 const nameSchema = z.string().trim().min(1, "Name is required").max(50, "Name is too long");
 const typeSchema = z.enum(["expense", "income"]);
+const colorSchema = z.union([z.string().regex(/^#[0-9a-fA-F]{6}$/, "Invalid color"), z.literal("")]);
 
 export type CategoryState = { error?: string } | null;
 
@@ -62,7 +63,12 @@ export async function updateCategory(_prevState: CategoryState, formData: FormDa
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message };
   }
+  const colorParsed = colorSchema.safeParse(formData.get("color") ?? "");
+  if (!colorParsed.success) {
+    return { error: colorParsed.error.issues[0].message };
+  }
   const name = parsed.data;
+  const color = colorParsed.data || null;
   const userId = session.user.id;
 
   const [existing] = await db
@@ -77,7 +83,7 @@ export async function updateCategory(_prevState: CategoryState, formData: FormDa
 
   const updated = await db
     .update(categories)
-    .set({ name })
+    .set({ name, color })
     .where(and(eq(categories.id, id), eq(categories.userId, userId)))
     .returning({ id: categories.id });
 
@@ -101,4 +107,39 @@ export async function deleteCategory(formData: FormData) {
 
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard");
+}
+
+export async function hideCategory(formData: FormData) {
+  const session = await auth();
+  if (!session?.user) return;
+
+  const categoryId = formData.get("categoryId");
+  if (typeof categoryId !== "string" || !categoryId) return;
+
+  // only global categories can be hidden — hiding is how you "delete" a default category
+  // without removing it for every other user; a personal category is deleted outright instead
+  const [category] = await db.select({ id: categories.id }).from(categories).where(and(eq(categories.id, categoryId), isNull(categories.userId)));
+  if (!category) return;
+
+  await db.insert(hiddenCategories).values({ userId: session.user.id, categoryId }).onConflictDoNothing();
+
+  revalidatePath("/dashboard/categories");
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/recurring");
+}
+
+export async function unhideCategory(formData: FormData) {
+  const session = await auth();
+  if (!session?.user) return;
+
+  const categoryId = formData.get("categoryId");
+  if (typeof categoryId !== "string" || !categoryId) return;
+
+  await db
+    .delete(hiddenCategories)
+    .where(and(eq(hiddenCategories.userId, session.user.id), eq(hiddenCategories.categoryId, categoryId)));
+
+  revalidatePath("/dashboard/categories");
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/recurring");
 }

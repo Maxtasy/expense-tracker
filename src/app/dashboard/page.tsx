@@ -1,7 +1,7 @@
 import { and, asc, desc, eq, gte, isNull, lte, or, sql, SQL } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { categories, transactions } from "@/db/schema";
+import { categories, hiddenCategories, transactions } from "@/db/schema";
 import { AddTransactionModal } from "./add-transaction-modal";
 import { TransactionRow } from "./transaction-row";
 import { TransactionFilters } from "./transaction-filters";
@@ -35,12 +35,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   await ensureRecurringGenerated(userId, current);
 
-  const [availableCategories, allTransactionCount, monthTotals, currency] = await Promise.all([
+  const [availableCategories, hiddenIds, allTransactionCount, monthTotals, currency] = await Promise.all([
     db
       .select({ id: categories.id, name: categories.name, type: categories.type })
       .from(categories)
       .where(or(isNull(categories.userId), eq(categories.userId, userId)))
       .orderBy(categories.name),
+    db.select({ categoryId: hiddenCategories.categoryId }).from(hiddenCategories).where(eq(hiddenCategories.userId, userId)),
     db.$count(transactions, eq(transactions.userId, userId)),
     db
       .select({ type: transactions.type, total: sql<string>`coalesce(sum(${transactions.amount}), 0)` })
@@ -49,6 +50,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       .groupBy(transactions.type),
     getUserCurrency(userId),
   ]);
+
+  const hiddenIdSet = new Set(hiddenIds.map((h) => h.categoryId));
+  // hidden default categories stay out of filters/new-entry pickers, but each transaction's own
+  // edit form still gets the full list below so an existing (now-hidden) assignment stays visible
+  const visibleCategories = availableCategories.filter((c) => !hiddenIdSet.has(c.id));
 
   const income = Number(monthTotals.find((t) => t.type === "income")?.total ?? 0);
   const expense = Number(monthTotals.find((t) => t.type === "expense")?.total ?? 0);
@@ -69,6 +75,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       description: transactions.description,
       categoryId: transactions.categoryId,
       categoryName: categories.name,
+      categoryColor: categories.color,
       recurringTransactionId: transactions.recurringTransactionId,
     })
     .from(transactions)
@@ -84,7 +91,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <MonthSummary income={income} expense={expense} currency={currency} />
 
           {allTransactionCount > 0 && (
-            <TransactionFilters categories={availableCategories} category={category} sort={sort} month={monthKey(current)} />
+            <TransactionFilters categories={visibleCategories} category={category} sort={sort} month={monthKey(current)} />
           )}
         </div>
 
@@ -101,7 +108,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         )}
       </div>
 
-      <AddTransactionModal categories={availableCategories} currency={currency} />
+      <AddTransactionModal categories={visibleCategories} currency={currency} />
     </SwipeMonthNav>
   );
 }
