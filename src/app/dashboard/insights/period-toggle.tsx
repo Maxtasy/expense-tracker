@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function PeriodToggle({ mode, month }: { mode: "month" | "year"; month: string }) {
+export function PeriodToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" }) {
   const tabs: { key: "month" | "year"; label: string }[] = [
     { key: "month", label: "Month" },
     { key: "year", label: "Year" },
@@ -11,7 +11,7 @@ export function PeriodToggle({ mode, month }: { mode: "month" | "year"; month: s
       {tabs.map((tab) => (
         <Link
           key={tab.key}
-          href={`/dashboard/insights?mode=${tab.key}&month=${month}`}
+          href={`/dashboard/insights?mode=${tab.key}&month=${month}&type=${type}`}
           className={`rounded-lg py-1.5 text-center text-sm font-medium transition ${
             mode === tab.key ? "bg-accent text-accent-fg" : "text-fg-muted hover:text-fg"
           }`}
