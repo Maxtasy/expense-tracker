@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export function PeriodToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" }) {
+export async function PeriodToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" }) {
+  const t = await getTranslations("insights");
   const tabs: { key: "month" | "year"; label: string }[] = [
-    { key: "month", label: "Month" },
-    { key: "year", label: "Year" },
+    { key: "month", label: t("month") },
+    { key: "year", label: t("year") },
   ];
 
   return (

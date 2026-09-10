@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export function TypeToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" }) {
+export async function TypeToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" }) {
+  const t = await getTranslations("dashboard.summary");
   const tabs: { key: "expense" | "income"; label: string }[] = [
-    { key: "expense", label: "Expenses" },
-    { key: "income", label: "Income" },
+    { key: "expense", label: t("expenses") },
+    { key: "income", label: t("income") },
   ];
 
   return (

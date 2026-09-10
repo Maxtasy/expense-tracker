@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,10 +24,13 @@ export const viewport: Viewport = {
   themeColor: "#0b0e14",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-fg">
@@ -43,7 +48,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             __html: `if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js").catch(function () {}); }`,
           }}
         />
-        {children}
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

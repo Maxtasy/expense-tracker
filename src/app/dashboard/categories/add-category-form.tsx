@@ -1,11 +1,14 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { createCategory } from "./actions";
 
 type TxType = "expense" | "income";
 
 export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
+  const t = useTranslations("categories");
+  const tCommon = useTranslations("common");
   const formRef = useRef<HTMLFormElement>(null);
   const [type, setType] = useState<TxType>("expense");
   const [error, setError] = useState<string | undefined>();
@@ -31,7 +34,7 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
         <input
           name="name"
           type="text"
-          placeholder="New category name"
+          placeholder={t("namePlaceholder")}
           required
           maxLength={50}
           className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none"
@@ -41,7 +44,7 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
           disabled={isPending}
           className="shrink-0 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-60"
         >
-          {isPending ? "..." : "Add"}
+          {isPending ? "..." : tCommon("add")}
         </button>
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -51,7 +54,7 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
           }`}
         >
           <input type="radio" name="type" value="expense" checked={type === "expense"} onChange={() => setType("expense")} className="sr-only" />
-          Expense
+          {tCommon("expense")}
         </label>
         <label
           className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-xs font-medium transition ${
@@ -59,7 +62,7 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
           }`}
         >
           <input type="radio" name="type" value="income" checked={type === "income"} onChange={() => setType("income")} className="sr-only" />
-          Income
+          {tCommon("income")}
         </label>
       </div>
       {error && <span className="text-xs text-danger">{error}</span>}

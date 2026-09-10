@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { EyeOff, Pencil, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { updateCategory, deleteCategory, hideCategory } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 import { Spinner } from "@/components/spinner";
@@ -11,6 +12,8 @@ type Category = { id: string; name: string; type: "expense" | "income"; userId: 
 const inputClass = "w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-fg focus:border-accent focus:outline-none";
 
 export function CategoryRow({ category }: { category: Category }) {
+  const t = useTranslations("categories");
+  const tCommon = useTranslations("common");
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [color, setColor] = useState<string | null>(category.color);
@@ -45,10 +48,10 @@ export function CategoryRow({ category }: { category: Category }) {
           aria-hidden="true"
         />
         <span className="flex-1 text-sm text-fg">{category.name}</span>
-        <span className="text-xs text-fg-muted">Default</span>
+        <span className="text-xs text-fg-muted">{t("default")}</span>
         <form action={hideCategory} className="contents">
           <input type="hidden" name="categoryId" value={category.id} />
-          <button type="submit" aria-label="Hide category" className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
+          <button type="submit" aria-label={t("hideCategory")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
             <EyeOff size={15} />
           </button>
         </form>
@@ -66,12 +69,12 @@ export function CategoryRow({ category }: { category: Category }) {
         />
         <span className="flex-1 text-sm text-fg">{category.name}</span>
         <div className="flex shrink-0 items-center gap-2 text-fg-muted">
-          <button type="button" onClick={() => setIsEditing(true)} aria-label="Edit" className="rounded-lg p-1.5 hover:text-fg">
+          <button type="button" onClick={() => setIsEditing(true)} aria-label={tCommon("edit")} className="rounded-lg p-1.5 hover:text-fg">
             <Pencil size={15} />
           </button>
           <form action={handleDelete} className="contents">
             <input type="hidden" name="id" value={category.id} />
-            <button type="submit" disabled={isPending} aria-label="Delete" className="rounded-lg p-1.5 hover:text-danger disabled:opacity-60">
+            <button type="submit" disabled={isPending} aria-label={tCommon("delete")} className="rounded-lg p-1.5 hover:text-danger disabled:opacity-60">
               {isPending ? <Spinner size={15} /> : <Trash2 size={15} />}
             </button>
           </form>
@@ -88,12 +91,12 @@ export function CategoryRow({ category }: { category: Category }) {
         <div className="flex items-center gap-2">
           <input
             type="color"
-            aria-label="Category color"
+            aria-label={t("categoryColor")}
             value={color ?? categoryColor(category.name)}
             onChange={(e) => setColor(e.target.value)}
             className="h-8 w-8 shrink-0 cursor-pointer rounded-lg border border-border bg-surface p-0.5"
           />
-          <input name="name" type="text" required aria-label="Category name" defaultValue={category.name} maxLength={50} className={inputClass} />
+          <input name="name" type="text" required aria-label={t("categoryName")} defaultValue={category.name} maxLength={50} className={inputClass} />
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -101,14 +104,14 @@ export function CategoryRow({ category }: { category: Category }) {
             disabled={isPending}
             className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-60"
           >
-            {isPending ? "..." : "Save"}
+            {isPending ? "..." : tCommon("save")}
           </button>
           <button type="button" onClick={() => setIsEditing(false)} className="shrink-0 rounded-lg border border-border px-3 py-1.5 text-xs text-fg-muted hover:text-fg">
-            Cancel
+            {tCommon("cancel")}
           </button>
           {color !== null && (
             <button type="button" onClick={() => setColor(null)} className="shrink-0 text-xs text-fg-muted hover:text-fg">
-              Auto color
+              {t("autoColor")}
             </button>
           )}
           {error && <span className="text-xs text-danger">{error}</span>}

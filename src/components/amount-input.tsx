@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 type Props = {
   symbol: string;
   name?: string;
@@ -8,6 +12,7 @@ type Props = {
 };
 
 export function AmountInput({ symbol, name = "amount", defaultValue, placeholder = "0.00", required, size = "md" }: Props) {
+  const t = useTranslations("common");
   const padY = size === "sm" ? "py-1.5" : "py-2";
   const textSize = size === "sm" ? "text-sm" : "text-sm";
 
@@ -23,7 +28,7 @@ export function AmountInput({ symbol, name = "amount", defaultValue, placeholder
         type="number"
         step="0.01"
         min="0.01"
-        aria-label="Amount"
+        aria-label={t("amount")}
         placeholder={placeholder}
         required={required}
         defaultValue={defaultValue}

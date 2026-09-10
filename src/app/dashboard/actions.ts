@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { auth, signOut } from "@/auth";
 import { db } from "@/db";
 import { recurringTransactionSkips, transactions } from "@/db/schema";
@@ -11,22 +12,27 @@ export async function logout() {
   await signOut({ redirectTo: "/login" });
 }
 
-const transactionSchema = z.object({
-  type: z.enum(["expense", "income"]),
-  amount: z.coerce.number().positive("Amount must be greater than 0"),
-  date: z.string().min(1, "Date is required"),
-  description: z.string().trim().optional(),
-  categoryId: z.union([z.string().uuid(), z.literal("")]),
-});
+async function buildTransactionSchema() {
+  const t = await getTranslations("validation");
+  return z.object({
+    type: z.enum(["expense", "income"]),
+    amount: z.coerce.number().positive(t("amountPositive")),
+    date: z.string().min(1, t("dateRequired")),
+    description: z.string().trim().optional(),
+    categoryId: z.union([z.string().uuid(), z.literal("")]),
+  });
+}
 
 export type TransactionState = { error?: string } | undefined;
 
 export async function createTransaction(_prevState: TransactionState, formData: FormData): Promise<TransactionState> {
   const session = await auth();
+  const t = await getTranslations("validation");
   if (!session?.user) {
-    return { error: "You must be logged in" };
+    return { error: t("notLoggedIn") };
   }
 
+  const transactionSchema = await buildTransactionSchema();
   const parsed = transactionSchema.safeParse({
     type: formData.get("type"),
     amount: formData.get("amount"),
@@ -55,15 +61,18 @@ export async function createTransaction(_prevState: TransactionState, formData: 
 
 export async function updateTransaction(_prevState: TransactionState, formData: FormData): Promise<TransactionState> {
   const session = await auth();
+  const t = await getTranslations("validation");
+  const tEntities = await getTranslations("entities");
   if (!session?.user) {
-    return { error: "You must be logged in" };
+    return { error: t("notLoggedIn") };
   }
 
   const id = formData.get("id");
   if (typeof id !== "string" || !id) {
-    return { error: "Missing transaction id" };
+    return { error: tEntities("missingTransactionId") };
   }
 
+  const transactionSchema = await buildTransactionSchema();
   const parsed = transactionSchema.safeParse({
     type: formData.get("type"),
     amount: formData.get("amount"),
@@ -91,7 +100,7 @@ export async function updateTransaction(_prevState: TransactionState, formData: 
     .returning({ id: transactions.id });
 
   if (updated.length === 0) {
-    return { error: "Transaction not found" };
+    return { error: tEntities("transactionNotFound") };
   }
 
   revalidatePath("/dashboard");

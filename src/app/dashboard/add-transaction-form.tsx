@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { createTransaction } from "./actions";
 import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
@@ -20,6 +21,8 @@ export function AddTransactionForm({
   currency: string;
   onSuccess?: () => void;
 }) {
+  const t = useTranslations("dashboard.form");
+  const tCommon = useTranslations("common");
   const formRef = useRef<HTMLFormElement>(null);
   const [type, setType] = useState<TxType>("expense");
   const [error, setError] = useState<string | undefined>();
@@ -49,7 +52,7 @@ export function AddTransactionForm({
           }`}
         >
           <input type="radio" name="type" value="expense" checked={type === "expense"} onChange={() => setType("expense")} className="sr-only" />
-          Expense
+          {tCommon("expense")}
         </label>
         <label
           className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${
@@ -57,13 +60,13 @@ export function AddTransactionForm({
           }`}
         >
           <input type="radio" name="type" value="income" checked={type === "income"} onChange={() => setType("income")} className="sr-only" />
-          Income
+          {tCommon("income")}
         </label>
       </div>
       <div className="grid grid-cols-2 gap-2">
         <AmountInput symbol={currencySymbol(currency)} required />
-        <select key={type} name="categoryId" defaultValue="" aria-label="Category" className={inputClass}>
-          <option value="">Uncategorized</option>
+        <select key={type} name="categoryId" defaultValue="" aria-label={t("categoryLabel")} className={inputClass}>
+          <option value="">{tCommon("uncategorized")}</option>
           {filteredCategories.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -72,15 +75,15 @@ export function AddTransactionForm({
         </select>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <input name="date" type="date" required aria-label="Date" defaultValue={new Date().toISOString().slice(0, 10)} className={inputClass} />
-        <input name="description" type="text" placeholder="Description" className={inputClass} />
+        <input name="date" type="date" required aria-label={t("dateLabel")} defaultValue={new Date().toISOString().slice(0, 10)} className={inputClass} />
+        <input name="description" type="text" placeholder={t("descriptionPlaceholder")} className={inputClass} />
       </div>
       <button
         type="submit"
         disabled={isPending}
         className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg transition hover:bg-accent-hover disabled:opacity-60"
       >
-        {isPending ? "Adding..." : "Add"}
+        {isPending ? tCommon("adding") : tCommon("add")}
       </button>
       {error && <p className="text-sm text-danger">{error}</p>}
     </form>
