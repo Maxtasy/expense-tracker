@@ -5,7 +5,7 @@ import { auth } from "@/auth";
 import { getUserCurrency } from "@/lib/currency-server";
 import { getUserLocale } from "@/lib/locale-server";
 import { ImportForm } from "./import-form";
-import { ResetTransactionsForm } from "./reset-transactions-form";
+import { StartFreshForm } from "./start-fresh-form";
 import { CurrencyForm } from "./currency-form";
 import { LocaleForm } from "./locale-form";
 import { version } from "../../../../package.json";
@@ -74,10 +74,10 @@ export default async function SettingsPage() {
         <ImportForm />
       </div>
 
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("resetTransactionsLabel")}</h2>
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("startFresh.label")}</h2>
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-3 text-xs text-fg-muted">{t("resetTransactionsDescription")}</p>
-        <ResetTransactionsForm />
+        <p className="mb-3 text-xs text-fg-muted">{t("startFresh.description")}</p>
+        <StartFreshForm />
       </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("support")}</h2>
