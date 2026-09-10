@@ -1,6 +1,16 @@
 # Expense Tracker
 
-A personal expense tracker built with Next.js (App Router), TypeScript, Drizzle ORM, Supabase (Postgres), and Auth.js.
+An expense tracker built with Next.js (App Router), TypeScript, Drizzle ORM, Supabase (Postgres), and Auth.js. Started as a personal single-user project; now published on Google Play (currently **Internal testing**, working toward **Closed testing** ahead of a future Production release — see [RELEASING.md](RELEASING.md)).
+
+## Screenshots
+
+| Dashboard | Insights | Recurring |
+|---|---|---|
+| ![Dashboard](public/screenshots/dashboard.png) | ![Insights](public/screenshots/insights.png) | ![Recurring](public/screenshots/recurring.png) |
+
+| Categories | Settings |
+|---|---|
+| ![Categories](public/screenshots/categories.png) | ![Settings](public/screenshots/settings.png) |
 
 ## Getting started
 
@@ -87,7 +97,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 Deployed on Vercel, connected to the GitHub repo for auto-deploy on every push to `main`.
 
-- **Database**: production uses the same Supabase project as development (this is a personal single-user app, no need for separate environments).
+- **Database**: production uses the same Supabase project as development. This was a reasonable simplification while the app had one user; now that real Closed-testing accounts exist, it's a known risk rather than a convenience — a migration or query run locally is immediately live for everyone. Splitting into separate environments is planned before promoting to Production, but hasn't happened yet.
 - **Vercel environment variables**: only `DATABASE_URL` (the Transaction pooler string) and `AUTH_SECRET` (a separate secret from the dev one in `.env.local`, generated the same way). `DATABASE_URL_MIGRATIONS` is **not** set in Vercel — it's a `drizzle-kit`-only, local-machine concern.
 - **Schema changes going forward**: since there's no CI migration step, run `npm run db:migrate` locally (against the shared Supabase DB) before or right after pushing a change that depends on it — the deployed app and your local dev environment share the same database, so a migration applied locally is immediately live.
 - `trustHost: true` is set in [`src/auth.ts`](src/auth.ts) so Auth.js trusts the `Host`/`X-Forwarded-Host` headers Vercel's proxy sets, rather than requiring a hardcoded canonical URL.
