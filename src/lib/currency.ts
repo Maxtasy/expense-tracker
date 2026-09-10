@@ -27,7 +27,15 @@ export function currencySymbol(code: string): string {
   return CURRENCIES.find((c) => c.code === code)?.symbol ?? code;
 }
 
-export function formatMoney(amount: number | string, code: string): string {
+export function currencyName(code: string, locale: string): string {
+  try {
+    return new Intl.DisplayNames([locale], { type: "currency" }).of(code) ?? code;
+  } catch {
+    return CURRENCIES.find((c) => c.code === code)?.name ?? code;
+  }
+}
+
+export function formatMoney(amount: number | string, code: string, locale: string): string {
   const n = typeof amount === "string" ? Number(amount) : amount;
-  return `${currencySymbol(code)}${n.toFixed(2)}`;
+  return new Intl.NumberFormat(locale, { style: "currency", currency: code }).format(n);
 }

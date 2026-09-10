@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Tags, Repeat, PieChart, Settings, LogOut } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { Logo } from "@/components/logo";
 import { logout } from "./actions";
@@ -10,29 +11,30 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!session?.user) {
     redirect("/login");
   }
+  const t = await getTranslations("nav");
 
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
         <Link href="/dashboard" className="flex items-center gap-2 text-sm font-semibold">
           <Logo size={18} />
-          Overview
+          {t("overview")}
         </Link>
         <nav className="flex items-center gap-2 text-fg-muted">
-          <Link href="/dashboard/recurring" aria-label="Recurring transactions" className="rounded-lg p-1.5 hover:text-fg">
+          <Link href="/dashboard/recurring" aria-label={t("recurring")} className="rounded-lg p-1.5 hover:text-fg">
             <Repeat size={18} />
           </Link>
-          <Link href="/dashboard/insights" aria-label="Insights" className="rounded-lg p-1.5 hover:text-fg">
+          <Link href="/dashboard/insights" aria-label={t("insights")} className="rounded-lg p-1.5 hover:text-fg">
             <PieChart size={18} />
           </Link>
-          <Link href="/dashboard/categories" aria-label="Categories" className="rounded-lg p-1.5 hover:text-fg">
+          <Link href="/dashboard/categories" aria-label={t("categories")} className="rounded-lg p-1.5 hover:text-fg">
             <Tags size={18} />
           </Link>
-          <Link href="/dashboard/settings" aria-label="Settings" className="rounded-lg p-1.5 hover:text-fg">
+          <Link href="/dashboard/settings" aria-label={t("settings")} className="rounded-lg p-1.5 hover:text-fg">
             <Settings size={18} />
           </Link>
           <form action={logout} className="contents">
-            <button type="submit" aria-label="Log out" className="rounded-lg p-1.5 hover:text-fg">
+            <button type="submit" aria-label={t("logOut")} className="rounded-lg p-1.5 hover:text-fg">
               <LogOut size={18} />
             </button>
           </form>

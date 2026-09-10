@@ -3,29 +3,39 @@
 import { z } from "zod";
 import { and, eq, ilike, isNull, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, hiddenCategories } from "@/db/schema";
 
-const nameSchema = z.string().trim().min(1, "Name is required").max(50, "Name is too long");
 const typeSchema = z.enum(["expense", "income"]);
-const colorSchema = z.union([z.string().regex(/^#[0-9a-fA-F]{6}$/, "Invalid color"), z.literal("")]);
+
+async function buildSchemas() {
+  const t = await getTranslations("validation");
+  return {
+    nameSchema: z.string().trim().min(1, t("nameRequired")).max(50, t("nameTooLong")),
+    colorSchema: z.union([z.string().regex(/^#[0-9a-fA-F]{6}$/, t("invalidColor")), z.literal("")]),
+  };
+}
 
 export type CategoryState = { error?: string } | null;
 
 export async function createCategory(_prevState: CategoryState, formData: FormData): Promise<CategoryState> {
   const session = await auth();
+  const t = await getTranslations("validation");
+  const tEntities = await getTranslations("entities");
   if (!session?.user) {
-    return { error: "You must be logged in" };
+    return { error: t("notLoggedIn") };
   }
 
+  const { nameSchema } = await buildSchemas();
   const nameParsed = nameSchema.safeParse(formData.get("name"));
   if (!nameParsed.success) {
     return { error: nameParsed.error.issues[0].message };
   }
   const typeParsed = typeSchema.safeParse(formData.get("type"));
   if (!typeParsed.success) {
-    return { error: "Invalid category type" };
+    return { error: t("invalidCategoryType") };
   }
   const name = nameParsed.data;
   const type = typeParsed.data;
@@ -38,7 +48,7 @@ export async function createCategory(_prevState: CategoryState, formData: FormDa
     .limit(1);
 
   if (existing) {
-    return { error: "A category with that name already exists" };
+    return { error: tEntities("categoryExists") };
   }
 
   await db.insert(categories).values({ name, type, userId });
@@ -50,15 +60,18 @@ export async function createCategory(_prevState: CategoryState, formData: FormDa
 
 export async function updateCategory(_prevState: CategoryState, formData: FormData): Promise<CategoryState> {
   const session = await auth();
+  const t = await getTranslations("validation");
+  const tEntities = await getTranslations("entities");
   if (!session?.user) {
-    return { error: "You must be logged in" };
+    return { error: t("notLoggedIn") };
   }
 
   const id = formData.get("id");
   if (typeof id !== "string" || !id) {
-    return { error: "Missing category id" };
+    return { error: tEntities("missingCategoryId") };
   }
 
+  const { nameSchema, colorSchema } = await buildSchemas();
   const parsed = nameSchema.safeParse(formData.get("name"));
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message };
@@ -78,7 +91,7 @@ export async function updateCategory(_prevState: CategoryState, formData: FormDa
     .limit(1);
 
   if (existing && existing.id !== id) {
-    return { error: "A category with that name already exists" };
+    return { error: tEntities("categoryExists") };
   }
 
   const updated = await db
@@ -88,7 +101,7 @@ export async function updateCategory(_prevState: CategoryState, formData: FormDa
     .returning({ id: categories.id });
 
   if (updated.length === 0) {
-    return { error: "Category not found" };
+    return { error: tEntities("categoryNotFound") };
   }
 
   revalidatePath("/dashboard/categories");

@@ -1,4 +1,5 @@
 import { eq, isNull, or } from "drizzle-orm";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, hiddenCategories } from "@/db/schema";
@@ -10,6 +11,7 @@ export default async function CategoriesPage() {
   const session = await auth();
   if (!session?.user) return null;
   const userId = session.user.id;
+  const t = await getTranslations("categories");
 
   const [allCategories, hidden] = await Promise.all([
     db
@@ -29,13 +31,13 @@ export default async function CategoriesPage() {
 
   return (
     <div>
-      <h1 className="mb-3 text-sm font-semibold text-fg">Categories</h1>
+      <h1 className="mb-3 text-sm font-semibold text-fg">{t("title")}</h1>
 
       <AddCategoryModal />
 
       <div className="split-grid">
         <div>
-          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Expense categories</h2>
+          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("expenseCategories")}</h2>
           <div className="mb-4 rounded-xl border border-border bg-surface/30 px-3">
             {expenseCategories.map((category) => (
               <CategoryRow key={category.id} category={category} />
@@ -44,7 +46,7 @@ export default async function CategoriesPage() {
         </div>
 
         <div>
-          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Income categories</h2>
+          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("incomeCategories")}</h2>
           <div className="rounded-xl border border-border bg-surface/30 px-3">
             {incomeCategories.map((category) => (
               <CategoryRow key={category.id} category={category} />
@@ -55,7 +57,7 @@ export default async function CategoriesPage() {
 
       {hiddenCategoryList.length > 0 && (
         <div className="mt-4">
-          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">Hidden categories</h2>
+          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("hiddenCategories")}</h2>
           <div className="rounded-xl border border-border bg-surface/30 px-3">
             {hiddenCategoryList.map((category) => (
               <HiddenCategoryRow key={category.id} category={category} />

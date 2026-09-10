@@ -4,55 +4,64 @@ import { z } from "zod";
 import { eq, isNull } from "drizzle-orm";
 import { parse } from "csv-parse/sync";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, recurringTransactions, transactions, users } from "@/db/schema";
 import { CURRENCIES } from "@/lib/currency";
+import { LOCALES } from "@/lib/locale";
 
 const typeSchema = z.enum(["expense", "income"]);
-const amountSchema = z.string().refine((v) => v.trim() !== "" && Number.isFinite(Number(v)) && Number(v) > 0, {
-  message: "Amount must be a positive number",
-});
 
-const categoryRowSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().trim().min(1).max(50),
-  type: typeSchema,
-  is_global: z.enum(["true", "false"]),
-});
+function buildCsvSchemas(amountMustBePositiveNumberMessage: string) {
+  const amountSchema = z.string().refine((v) => v.trim() !== "" && Number.isFinite(Number(v)) && Number(v) > 0, {
+    message: amountMustBePositiveNumberMessage,
+  });
 
-const recurringRowSchema = z.object({
-  id: z.string().min(1),
-  type: typeSchema,
-  category_id: z.string(),
-  amount: amountSchema,
-  description: z.string(),
-  start_date: z.string().min(1),
-  end_date: z.string(),
-});
+  const categoryRowSchema = z.object({
+    id: z.string().min(1),
+    name: z.string().trim().min(1).max(50),
+    type: typeSchema,
+    is_global: z.enum(["true", "false"]),
+  });
 
-const transactionRowSchema = z.object({
-  id: z.string().min(1),
-  type: typeSchema,
-  category_id: z.string(),
-  recurring_transaction_id: z.string(),
-  amount: amountSchema,
-  description: z.string(),
-  date: z.string().min(1),
-});
+  const recurringRowSchema = z.object({
+    id: z.string().min(1),
+    type: typeSchema,
+    category_id: z.string(),
+    amount: amountSchema,
+    description: z.string(),
+    start_date: z.string().min(1),
+    end_date: z.string(),
+  });
 
-function parseCsv(text: string, label: string): Record<string, string>[] {
+  const transactionRowSchema = z.object({
+    id: z.string().min(1),
+    type: typeSchema,
+    category_id: z.string(),
+    recurring_transaction_id: z.string(),
+    amount: amountSchema,
+    description: z.string(),
+    date: z.string().min(1),
+  });
+
+  return { categoryRowSchema, recurringRowSchema, transactionRowSchema };
+}
+
+type CsvImportTranslator = Awaited<ReturnType<typeof getTranslations<"settings.csvImport">>>;
+
+function parseCsv(text: string, label: string, t: CsvImportTranslator): Record<string, string>[] {
   try {
     return parse(text, { columns: true, skip_empty_lines: true, trim: true }) as Record<string, string>[];
   } catch {
-    throw new Error(`Could not parse ${label} as CSV`);
+    throw new Error(t("csvParseError", { label }));
   }
 }
 
-function checkDuplicateIds(rows: { id: string }[], label: string) {
+function checkDuplicateIds(rows: { id: string }[], label: string, t: CsvImportTranslator) {
   const seen = new Set<string>();
   for (const row of rows) {
-    if (seen.has(row.id)) throw new Error(`${label} has a duplicate id: ${row.id}`);
+    if (seen.has(row.id)) throw new Error(t("duplicateId", { label, id: row.id }));
     seen.add(row.id);
   }
 }
@@ -61,19 +70,24 @@ export type ImportState = { error?: string; success?: boolean } | null;
 
 export async function importData(_prevState: ImportState, formData: FormData): Promise<ImportState> {
   const session = await auth();
+  const tValidation = await getTranslations("validation");
   if (!session?.user) {
-    return { error: "You must be logged in" };
+    return { error: tValidation("notLoggedIn") };
   }
   const userId = session.user.id;
+  const t = await getTranslations("settings.csvImport");
+  const { categoryRowSchema, recurringRowSchema, transactionRowSchema } = buildCsvSchemas(
+    tValidation("amountMustBePositiveNumber"),
+  );
 
   const categoriesFile = formData.get("categoriesFile");
   const recurringFile = formData.get("recurringFile");
   const transactionsFile = formData.get("transactionsFile");
   if (!(categoriesFile instanceof File) || !(recurringFile instanceof File) || !(transactionsFile instanceof File)) {
-    return { error: "All three CSV files are required" };
+    return { error: t("allFilesRequired") };
   }
   if (categoriesFile.size === 0 || recurringFile.size === 0 || transactionsFile.size === 0) {
-    return { error: "All three CSV files are required" };
+    return { error: t("allFilesRequired") };
   }
 
   let categoryRows: z.infer<typeof categoryRowSchema>[];
@@ -81,46 +95,46 @@ export async function importData(_prevState: ImportState, formData: FormData): P
   let transactionRows: z.infer<typeof transactionRowSchema>[];
 
   try {
-    const rawCategories = parseCsv(await categoriesFile.text(), "categories.csv");
+    const rawCategories = parseCsv(await categoriesFile.text(), t("categoriesFileLabel"), t);
     categoryRows = rawCategories.map((row, i) => {
       const parsed = categoryRowSchema.safeParse(row);
-      if (!parsed.success) throw new Error(`categories.csv row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new Error(`${t("categoriesFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
       return parsed.data;
     });
-    checkDuplicateIds(categoryRows, "categories.csv");
+    checkDuplicateIds(categoryRows, t("categoriesFileLabel"), t);
 
-    const rawRecurring = parseCsv(await recurringFile.text(), "recurring_transactions.csv");
+    const rawRecurring = parseCsv(await recurringFile.text(), t("recurringFileLabel"), t);
     recurringRows = rawRecurring.map((row, i) => {
       const parsed = recurringRowSchema.safeParse(row);
-      if (!parsed.success) throw new Error(`recurring_transactions.csv row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new Error(`${t("recurringFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
       return parsed.data;
     });
-    checkDuplicateIds(recurringRows, "recurring_transactions.csv");
+    checkDuplicateIds(recurringRows, t("recurringFileLabel"), t);
 
-    const rawTransactions = parseCsv(await transactionsFile.text(), "transactions.csv");
+    const rawTransactions = parseCsv(await transactionsFile.text(), t("transactionsFileLabel"), t);
     transactionRows = rawTransactions.map((row, i) => {
       const parsed = transactionRowSchema.safeParse(row);
-      if (!parsed.success) throw new Error(`transactions.csv row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new Error(`${t("transactionsFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
       return parsed.data;
     });
-    checkDuplicateIds(transactionRows, "transactions.csv");
+    checkDuplicateIds(transactionRows, t("transactionsFileLabel"), t);
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Failed to parse CSV files" };
+    return { error: err instanceof Error ? err.message : t("importFailed") };
   }
 
   const categoryIds = new Set(categoryRows.map((r) => r.id));
   for (const row of recurringRows) {
     if (row.category_id && !categoryIds.has(row.category_id)) {
-      return { error: `recurring_transactions.csv row references unknown category_id "${row.category_id}"` };
+      return { error: t("unknownCategoryIdRecurring", { id: row.category_id }) };
     }
   }
   const recurringIds = new Set(recurringRows.map((r) => r.id));
   for (const row of transactionRows) {
     if (row.category_id && !categoryIds.has(row.category_id)) {
-      return { error: `transactions.csv row references unknown category_id "${row.category_id}"` };
+      return { error: t("unknownCategoryIdTransactions", { id: row.category_id }) };
     }
     if (row.recurring_transaction_id && !recurringIds.has(row.recurring_transaction_id)) {
-      return { error: `transactions.csv row references unknown recurring_transaction_id "${row.recurring_transaction_id}"` };
+      return { error: t("unknownRecurringId", { id: row.recurring_transaction_id }) };
     }
   }
 
@@ -135,7 +149,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
         (c) => c.type === row.type && c.name.toLowerCase() === row.name.toLowerCase(),
       );
       if (!match) {
-        return { error: `categories.csv references global category "${row.name}" (${row.type}) which doesn't exist` };
+        return { error: t("unknownGlobalCategory", { name: row.name, type: row.type }) };
       }
     }
   }
@@ -152,7 +166,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
           const match = existingGlobalCategories.find(
             (c) => c.type === row.type && c.name.toLowerCase() === row.name.toLowerCase(),
           );
-          if (!match) throw new Error(`Global category "${row.name}" (${row.type}) not found`);
+          if (!match) throw new Error(t("globalCategoryNotFoundDuringImport", { name: row.name, type: row.type }));
           categoryIdMap.set(row.id, match.id);
         } else {
           const [inserted] = await tx
@@ -166,7 +180,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
       const recurringIdMap = new Map<string, string>();
       for (const row of recurringRows) {
         const categoryId = row.category_id ? categoryIdMap.get(row.category_id) : undefined;
-        if (row.category_id && !categoryId) throw new Error(`Unknown category_id "${row.category_id}"`);
+        if (row.category_id && !categoryId) throw new Error(t("unknownCategoryIdDuringImport", { id: row.category_id }));
         const [inserted] = await tx
           .insert(recurringTransactions)
           .values({
@@ -184,12 +198,12 @@ export async function importData(_prevState: ImportState, formData: FormData): P
 
       for (const row of transactionRows) {
         const categoryId = row.category_id ? categoryIdMap.get(row.category_id) : undefined;
-        if (row.category_id && !categoryId) throw new Error(`Unknown category_id "${row.category_id}"`);
+        if (row.category_id && !categoryId) throw new Error(t("unknownCategoryIdDuringImport", { id: row.category_id }));
         const recurringTransactionId = row.recurring_transaction_id
           ? recurringIdMap.get(row.recurring_transaction_id)
           : undefined;
         if (row.recurring_transaction_id && !recurringTransactionId) {
-          throw new Error(`Unknown recurring_transaction_id "${row.recurring_transaction_id}"`);
+          throw new Error(t("unknownRecurringIdDuringImport", { id: row.recurring_transaction_id }));
         }
         await tx.insert(transactions).values({
           userId,
@@ -203,7 +217,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
       }
     });
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Import failed" };
+    return { error: err instanceof Error ? err.message : t("importFailed") };
   }
 
   revalidatePath("/dashboard");
@@ -215,15 +229,36 @@ export async function importData(_prevState: ImportState, formData: FormData): P
 
 export async function updateCurrency(formData: FormData) {
   const session = await auth();
-  if (!session?.user) return { error: "Not signed in" };
+  const t = await getTranslations("settings");
+  if (!session?.user) return { error: t("notSignedIn") };
   const userId = session.user.id;
 
   const currency = formData.get("currency");
   if (typeof currency !== "string" || !CURRENCIES.some((c) => c.code === currency)) {
-    return { error: "Invalid currency" };
+    return { error: t("invalidCurrency") };
   }
 
   await db.update(users).set({ currency }).where(eq(users.id, userId));
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/recurring");
+  revalidatePath("/dashboard/insights");
+  revalidatePath("/dashboard/settings");
+  return { success: true };
+}
+
+export async function updateLocale(formData: FormData) {
+  const session = await auth();
+  const t = await getTranslations("settings");
+  if (!session?.user) return { error: t("notSignedIn") };
+  const userId = session.user.id;
+
+  const locale = formData.get("locale");
+  if (typeof locale !== "string" || !LOCALES.some((l) => l.code === locale)) {
+    return { error: t("invalidLocale") };
+  }
+
+  await db.update(users).set({ locale }).where(eq(users.id, userId));
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/recurring");

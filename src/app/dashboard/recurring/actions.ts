@@ -3,27 +3,32 @@
 import { z } from "zod";
 import { and, eq, gt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { recurringTransactions, transactions } from "@/db/schema";
 
-const recurringSchema = z
-  .object({
-    type: z.enum(["expense", "income"]),
-    amount: z.coerce.number().positive("Amount must be greater than 0"),
-    categoryId: z.union([z.string().uuid(), z.literal("")]),
-    description: z.string().trim().optional(),
-    startDate: z.string().min(1, "Start date is required"),
-    endDate: z.union([z.string().min(1), z.literal("")]),
-  })
-  .refine((data) => !data.endDate || data.endDate >= data.startDate, {
-    message: "End date must be on or after the start date",
-    path: ["endDate"],
-  });
+async function buildRecurringSchema() {
+  const t = await getTranslations("validation");
+  return z
+    .object({
+      type: z.enum(["expense", "income"]),
+      amount: z.coerce.number().positive(t("amountPositive")),
+      categoryId: z.union([z.string().uuid(), z.literal("")]),
+      description: z.string().trim().optional(),
+      startDate: z.string().min(1, t("startDateRequired")),
+      endDate: z.union([z.string().min(1), z.literal("")]),
+    })
+    .refine((data) => !data.endDate || data.endDate >= data.startDate, {
+      message: t("endDateAfterStart"),
+      path: ["endDate"],
+    });
+}
 
 export type RecurringState = { error?: string } | null;
 
-function parseForm(formData: FormData) {
+async function parseForm(formData: FormData) {
+  const recurringSchema = await buildRecurringSchema();
   return recurringSchema.safeParse({
     type: formData.get("type"),
     amount: formData.get("amount"),
@@ -36,11 +41,12 @@ function parseForm(formData: FormData) {
 
 export async function createRecurring(_prevState: RecurringState, formData: FormData): Promise<RecurringState> {
   const session = await auth();
+  const t = await getTranslations("validation");
   if (!session?.user) {
-    return { error: "You must be logged in" };
+    return { error: t("notLoggedIn") };
   }
 
-  const parsed = parseForm(formData);
+  const parsed = await parseForm(formData);
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message };
   }
@@ -64,16 +70,18 @@ export async function createRecurring(_prevState: RecurringState, formData: Form
 
 export async function updateRecurring(_prevState: RecurringState, formData: FormData): Promise<RecurringState> {
   const session = await auth();
+  const t = await getTranslations("validation");
+  const tEntities = await getTranslations("entities");
   if (!session?.user) {
-    return { error: "You must be logged in" };
+    return { error: t("notLoggedIn") };
   }
 
   const id = formData.get("id");
   if (typeof id !== "string" || !id) {
-    return { error: "Missing recurring transaction id" };
+    return { error: tEntities("missingRecurringId") };
   }
 
-  const parsed = parseForm(formData);
+  const parsed = await parseForm(formData);
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message };
   }
@@ -94,7 +102,7 @@ export async function updateRecurring(_prevState: RecurringState, formData: Form
     .returning({ id: recurringTransactions.id });
 
   if (updated.length === 0) {
-    return { error: "Recurring transaction not found" };
+    return { error: tEntities("recurringNotFound") };
   }
 
   revalidatePath("/dashboard/recurring");

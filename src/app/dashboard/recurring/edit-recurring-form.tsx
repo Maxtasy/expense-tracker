@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { updateRecurring } from "./actions";
 import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
@@ -31,6 +32,9 @@ export function EditRecurringForm({
   currency: string;
   onSuccess?: () => void;
 }) {
+  const t = useTranslations("recurring");
+  const tDashboardForm = useTranslations("dashboard.form");
+  const tCommon = useTranslations("common");
   const [type, setType] = useState<TxType>(recurring.type);
   const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
@@ -58,7 +62,7 @@ export function EditRecurringForm({
           }`}
         >
           <input type="radio" name="type" value="expense" checked={type === "expense"} onChange={() => setType("expense")} className="sr-only" />
-          Expense
+          {tCommon("expense")}
         </label>
         <label
           className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${
@@ -66,7 +70,7 @@ export function EditRecurringForm({
           }`}
         >
           <input type="radio" name="type" value="income" checked={type === "income"} onChange={() => setType("income")} className="sr-only" />
-          Income
+          {tCommon("income")}
         </label>
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -75,10 +79,10 @@ export function EditRecurringForm({
           key={type}
           name="categoryId"
           defaultValue={recurring.type === type ? (recurring.categoryId ?? "") : ""}
-          aria-label="Category"
+          aria-label={tDashboardForm("categoryLabel")}
           className={inputClass}
         >
-          <option value="">Uncategorized</option>
+          <option value="">{tCommon("uncategorized")}</option>
           {filteredCategories.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -86,14 +90,14 @@ export function EditRecurringForm({
           ))}
         </select>
       </div>
-      <input name="description" type="text" aria-label="Description" defaultValue={recurring.description ?? ""} className={inputClass} />
+      <input name="description" type="text" aria-label={tDashboardForm("descriptionLabel")} defaultValue={recurring.description ?? ""} className={inputClass} />
       <div className="grid grid-cols-2 gap-2">
         <label className="space-y-1">
-          <span className="block text-[11px] text-fg-muted">Starts on</span>
+          <span className="block text-[11px] text-fg-muted">{t("startsOn")}</span>
           <input name="startDate" type="date" required defaultValue={recurring.startDate} className={inputClass} />
         </label>
         <label className="space-y-1">
-          <span className="block text-[11px] text-fg-muted">Ends on (optional)</span>
+          <span className="block text-[11px] text-fg-muted">{t("endsOnOptional")}</span>
           <input name="endDate" type="date" defaultValue={recurring.endDate ?? ""} className={inputClass} />
         </label>
       </div>
@@ -102,7 +106,7 @@ export function EditRecurringForm({
         disabled={isPending}
         className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg transition hover:bg-accent-hover disabled:opacity-60"
       >
-        {isPending ? "Saving..." : "Save"}
+        {isPending ? tCommon("saving") : tCommon("save")}
       </button>
       {error && <p className="text-sm text-danger">{error}</p>}
     </form>

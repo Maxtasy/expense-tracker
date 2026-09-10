@@ -1,12 +1,15 @@
 "use client";
 
 import { Eye } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { unhideCategory } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 
 type Category = { id: string; name: string; type: "expense" | "income"; color: string | null };
 
 export function HiddenCategoryRow({ category }: { category: Category }) {
+  const t = useTranslations("categories");
+
   return (
     <div className="flex items-center gap-3 border-b border-border/60 px-1 py-2.5 last:border-b-0">
       <span
@@ -19,7 +22,7 @@ export function HiddenCategoryRow({ category }: { category: Category }) {
         <input type="hidden" name="categoryId" value={category.id} />
         <button type="submit" className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs text-fg-muted hover:text-fg">
           <Eye size={14} />
-          Unhide
+          {t("unhide")}
         </button>
       </form>
     </div>
