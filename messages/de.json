@@ -130,6 +130,18 @@
     "importMoneyManagerLink": "Aus Money Manager importieren",
     "import": "Import",
     "importDescription": "Alle drei CSV-Dateien zusammen importieren. Dies ersetzt alle deine Kategorien, wiederkehrenden Transaktionen und Transaktionen durch den Inhalt der Dateien.",
+    "startFresh": {
+      "label": "Neustart",
+      "description": "Lösche dauerhaft alle deine Transaktionen und wiederkehrenden Transaktionen. Kategorien sind davon nicht betroffen.",
+      "openButton": "Neustart",
+      "modalTitle": "Neustart",
+      "modalWarning": "Dies löscht dauerhaft alle deine Transaktionen und wiederkehrenden Transaktionen. Kategorien sind davon nicht betroffen. Dies kann nicht rückgängig gemacht werden.",
+      "confirmCheckbox": "Mir ist bewusst, dass dies alle meine Transaktionen und wiederkehrenden Transaktionen dauerhaft löscht.",
+      "typeToConfirmLabel": "Gib DELETE ein, um zu bestätigen",
+      "confirmButton": "Alles löschen",
+      "deleting": "Wird gelöscht...",
+      "complete": "Alle Transaktionen und wiederkehrenden Transaktionen wurden gelöscht."
+    },
     "support": "Unterstützung",
     "supportDescription": "Hat dir die App geholfen, Geld zu sparen? Unterstütze die Weiterentwicklung und die Serverkosten mit einer kleinen Spende.",
     "donateButton": "Über PayPal spenden",

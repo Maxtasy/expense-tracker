@@ -130,6 +130,18 @@
     "importMoneyManagerLink": "Importer depuis Money Manager",
     "import": "Importer",
     "importDescription": "Importez les trois fichiers CSV ensemble. Cela remplace toutes vos catégories, transactions récurrentes et transactions par le contenu des fichiers.",
+    "startFresh": {
+      "label": "Repartir à zéro",
+      "description": "Supprime définitivement toutes vos transactions et transactions récurrentes. Les catégories ne sont pas affectées.",
+      "openButton": "Repartir à zéro",
+      "modalTitle": "Repartir à zéro",
+      "modalWarning": "Cela supprime définitivement toutes vos transactions et transactions récurrentes. Les catégories ne sont pas affectées. Cette action est irréversible.",
+      "confirmCheckbox": "Je comprends que cela supprime définitivement toutes mes transactions et transactions récurrentes.",
+      "typeToConfirmLabel": "Tapez DELETE pour confirmer",
+      "confirmButton": "Tout supprimer",
+      "deleting": "Suppression...",
+      "complete": "Toutes les transactions et transactions récurrentes ont été supprimées."
+    },
     "support": "Soutien",
     "supportDescription": "L'application vous a-t-elle aidé à économiser de l'argent ? Soutenez son développement et couvrez les frais de serveur avec un petit don.",
     "donateButton": "Faire un don via PayPal",
