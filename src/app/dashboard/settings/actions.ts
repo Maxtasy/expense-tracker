@@ -266,3 +266,16 @@ export async function updateLocale(formData: FormData) {
   revalidatePath("/dashboard/settings");
   return { success: true };
 }
+
+export async function resetTransactions() {
+  const session = await auth();
+  const tValidation = await getTranslations("validation");
+  if (!session?.user) return { error: tValidation("notLoggedIn") };
+  const userId = session.user.id;
+
+  await db.delete(transactions).where(eq(transactions.userId, userId));
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/insights");
+  return { success: true };
+}
