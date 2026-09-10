@@ -34,7 +34,10 @@ export function CategoryPieChart({ title, data, currency }: { title: string; dat
 
   return (
     <div className="mb-3 rounded-xl border border-border bg-surface/30 p-3">
-      <h2 className="mb-2 text-sm font-medium text-fg">{title}</h2>
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <h2 className="text-sm font-medium text-fg">{title}</h2>
+        <span className="text-sm font-medium text-fg">{formatMoney(total, currency, locale)}</span>
+      </div>
       {data.length === 0 ? (
         <p className="py-8 text-center text-sm text-fg-muted">{t("noData")}</p>
       ) : (

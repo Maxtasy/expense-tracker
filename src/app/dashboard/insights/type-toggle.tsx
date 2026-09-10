@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 export async function TypeToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" }) {
@@ -11,7 +10,7 @@ export async function TypeToggle({ mode, month, type }: { mode: "month" | "year"
   return (
     <div className="mb-3 grid grid-cols-2 gap-1 rounded-xl border border-border bg-surface/30 p-1">
       {tabs.map((tab) => (
-        <Link
+        <a
           key={tab.key}
           href={`/dashboard/insights?mode=${mode}&month=${month}&type=${tab.key}`}
           className={`rounded-lg py-1.5 text-center text-sm font-medium transition ${
@@ -19,7 +18,7 @@ export async function TypeToggle({ mode, month, type }: { mode: "month" | "year"
           }`}
         >
           {tab.label}
-        </Link>
+        </a>
       ))}
     </div>
   );
