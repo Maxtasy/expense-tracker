@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { createCategory } from "./actions";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
+import { Spinner } from "@/components/spinner";
 
 type TxType = "expense" | "income";
 
@@ -43,9 +44,10 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
         <button
           type="submit"
           disabled={isPending}
-          className={`shrink-0 rounded-lg px-3 py-2 text-sm font-medium transition disabled:opacity-60 ${typeButtonClass(type)}`}
+          className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition disabled:opacity-60 ${typeButtonClass(type)}`}
         >
-          {isPending ? "..." : tCommon("add")}
+          {isPending && <Spinner size={14} />}
+          {isPending ? tCommon("adding") : tCommon("add")}
         </button>
       </div>
       <div className="grid grid-cols-2 gap-2">

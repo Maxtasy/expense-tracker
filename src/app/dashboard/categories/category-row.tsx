@@ -39,6 +39,12 @@ export function CategoryRow({ category }: { category: Category }) {
     });
   }
 
+  function handleHide(formData: FormData) {
+    startTransition(async () => {
+      await hideCategory(formData);
+    });
+  }
+
   if (isGlobal) {
     return (
       <div className="flex items-center gap-3 border-b border-border/60 px-1 py-2.5 last:border-b-0">
@@ -49,10 +55,10 @@ export function CategoryRow({ category }: { category: Category }) {
         />
         <span className="flex-1 text-sm text-fg">{category.name}</span>
         <span className="text-xs text-fg-muted">{t("default")}</span>
-        <form action={hideCategory} className="contents">
+        <form action={handleHide} className="contents">
           <input type="hidden" name="categoryId" value={category.id} />
-          <button type="submit" aria-label={t("hideCategory")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
-            <EyeOff size={15} />
+          <button type="submit" disabled={isPending} aria-label={t("hideCategory")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg disabled:opacity-60">
+            {isPending ? <Spinner size={15} /> : <EyeOff size={15} />}
           </button>
         </form>
       </div>
@@ -102,9 +108,10 @@ export function CategoryRow({ category }: { category: Category }) {
           <button
             type="submit"
             disabled={isPending}
-            className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-60"
+            className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-60"
           >
-            {isPending ? "..." : tCommon("save")}
+            {isPending && <Spinner size={12} />}
+            {isPending ? tCommon("saving") : tCommon("save")}
           </button>
           <button type="button" onClick={() => setIsEditing(false)} className="shrink-0 rounded-lg border border-border px-3 py-1.5 text-xs text-fg-muted hover:text-fg">
             {tCommon("cancel")}

@@ -6,6 +6,7 @@ import { createRecurring } from "./actions";
 import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
+import { Spinner } from "@/components/spinner";
 
 type TxType = "expense" | "income";
 type Category = { id: string; name: string; type: TxType };
@@ -86,8 +87,9 @@ export function AddRecurringForm({
       <button
         type="submit"
         disabled={isPending}
-        className={`w-full rounded-lg px-3 py-2 text-sm font-medium transition disabled:opacity-60 ${typeButtonClass(type)}`}
+        className={`inline-flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition disabled:opacity-60 ${typeButtonClass(type)}`}
       >
+        {isPending && <Spinner size={14} />}
         {isPending ? tCommon("adding") : t("addButton")}
       </button>
       {error && <p className="text-sm text-danger">{error}</p>}

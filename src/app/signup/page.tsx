@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { signup } from "./actions";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { Spinner } from "@/components/spinner";
 
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
@@ -43,8 +44,9 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-60"
           >
+            {pending && <Spinner size={14} />}
             {pending ? t("submitPending") : t("submit")}
           </button>
         </form>
