@@ -266,3 +266,21 @@ export async function updateLocale(formData: FormData) {
   revalidatePath("/dashboard/settings");
   return { success: true };
 }
+
+export async function startFresh() {
+  const session = await auth();
+  const tValidation = await getTranslations("validation");
+  if (!session?.user) return { error: tValidation("notLoggedIn") };
+  const userId = session.user.id;
+
+  await db.transaction(async (tx) => {
+    await tx.delete(transactions).where(eq(transactions.userId, userId));
+    // recurring_transaction_skips cascade-deletes with their rule -- no separate cleanup needed
+    await tx.delete(recurringTransactions).where(eq(recurringTransactions.userId, userId));
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/recurring");
+  revalidatePath("/dashboard/insights");
+  return { success: true };
+}

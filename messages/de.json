@@ -14,6 +14,95 @@
     "add": "Hinzufügen",
     "adding": "Wird hinzugefügt..."
   },
+  "auth": {
+    "login": {
+      "title": "Anmelden",
+      "emailLabel": "E-Mail",
+      "passwordLabel": "Passwort",
+      "submit": "Anmelden",
+      "submitPending": "Anmeldung läuft...",
+      "noAccount": "Noch kein Konto?",
+      "signupLink": "Registrieren",
+      "invalidCredentials": "Ungültige E-Mail oder ungültiges Passwort",
+      "genericError": "Etwas ist schiefgelaufen, bitte versuche es erneut"
+    },
+    "signup": {
+      "title": "Registrieren",
+      "emailLabel": "E-Mail",
+      "passwordLabel": "Passwort",
+      "submit": "Registrieren",
+      "submitPending": "Konto wird erstellt...",
+      "haveAccount": "Bereits ein Konto?",
+      "loginLink": "Anmelden",
+      "invalidEmail": "Gib eine gültige E-Mail-Adresse ein",
+      "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein",
+      "emailTaken": "Es existiert bereits ein Konto mit dieser E-Mail-Adresse"
+    }
+  },
+  "landing": {
+    "nav": {
+      "login": "Anmelden",
+      "signup": "Registrieren"
+    },
+    "hero": {
+      "headline": "<hl>Verstehe, warum</hl> sich jeder Monat anfühlt, als wäre <hl>kein Geld mehr übrig</hl>.",
+      "subheadline": "Kleine Ausgaben summieren sich, ohne dass du es merkst. Behalte den Überblick, wohin dein Geld wirklich fließt, und wisse, was dir noch bleibt, bevor der Monat vorbei ist – und leg dann etwas für schlechte Zeiten zurück.",
+      "tagline": "Für immer kostenlos, ohne Werbung – fang gleich an zu sparen.",
+      "getStarted": "Loslegen",
+      "login": "Anmelden"
+    },
+    "features": {
+      "track": {
+        "title": "Alles im Blick",
+        "description": "Erfasse Einnahmen und Ausgaben, organisiert in Kategorien, die du selbst bestimmst."
+      },
+      "monthly": {
+        "title": "Monatsübersicht",
+        "description": "Sieh Einnahmen, Ausgaben und deinen Kontostand für jeden Monat auf einen Blick."
+      },
+      "recurring": {
+        "title": "Wiederkehrende Buchungen leicht gemacht",
+        "description": "Richte Gehalt, Miete oder Abos einmal ein – sie erscheinen danach automatisch jeden Monat."
+      },
+      "backup": {
+        "title": "Deine Daten, gesichert",
+        "description": "Exportiere jederzeit alles als CSV und stelle es bei Bedarf mit wenigen Klicks wieder her."
+      },
+      "languages": {
+        "title": "Spricht deine Sprache",
+        "description": "Nutze die App auf Englisch, Deutsch, Spanisch, Französisch oder Portugiesisch."
+      }
+    },
+    "screenshotsHeading": "So sieht's in Aktion aus",
+    "screenshots": {
+      "dashboard": {
+        "caption": "Monatsübersicht",
+        "alt": "Dashboard mit monatlichen Einnahmen, Ausgaben, Gesamtsumme und einer kategorisierten Liste der Transaktionen"
+      },
+      "insights": {
+        "caption": "Aufschlüsselung nach Kategorie",
+        "alt": "Einblicke-Seite mit Einnahmen und Ausgaben, aufgeschlüsselt nach Kategorie in Kreisdiagrammen"
+      },
+      "settings": {
+        "caption": "Exportiere & importiere deine Daten",
+        "alt": "Einstellungsseite mit CSV-Exportlinks für Kategorien, wiederkehrende Transaktionen und Transaktionen sowie einem Importformular"
+      }
+    },
+    "roadmapHeading": "Was als Nächstes kommt",
+    "roadmapSubheading": "Die App wächst stetig weiter. Hier ein Teil dessen, was geplant ist:",
+    "roadmap": {
+      "insights": {
+        "title": "Tiefere Einblicke",
+        "description": "Mehr Möglichkeiten, um aufzuschlüsseln und zu visualisieren, wohin dein Geld fließt."
+      },
+      "customization": {
+        "title": "Mehr Anpassung",
+        "description": "Kleine Details wie eigene Kategoriefarben, damit sich die App wie deine eigene anfühlt."
+      }
+    },
+    "feedbackHeading": "Hast du eine Idee für ein Feature?",
+    "feedbackDescription": "Diese App wird durch Feedback geformt. Wenn dir etwas Nützliches fehlt, lass es mich wissen."
+  },
   "validation": {
     "notLoggedIn": "Du musst angemeldet sein",
     "amountPositive": "Der Betrag muss größer als 0 sein",
@@ -130,6 +219,18 @@
     "importMoneyManagerLink": "Aus Money Manager importieren",
     "import": "Import",
     "importDescription": "Alle drei CSV-Dateien zusammen importieren. Dies ersetzt alle deine Kategorien, wiederkehrenden Transaktionen und Transaktionen durch den Inhalt der Dateien.",
+    "startFresh": {
+      "label": "Neustart",
+      "description": "Lösche dauerhaft alle deine Transaktionen und wiederkehrenden Transaktionen. Kategorien sind davon nicht betroffen.",
+      "openButton": "Neustart",
+      "modalTitle": "Neustart",
+      "modalWarning": "Dies löscht dauerhaft alle deine Transaktionen und wiederkehrenden Transaktionen. Kategorien sind davon nicht betroffen. Dies kann nicht rückgängig gemacht werden.",
+      "confirmCheckbox": "Mir ist bewusst, dass dies alle meine Transaktionen und wiederkehrenden Transaktionen dauerhaft löscht.",
+      "typeToConfirmLabel": "Gib DELETE ein, um zu bestätigen",
+      "confirmButton": "Alles löschen",
+      "deleting": "Wird gelöscht...",
+      "complete": "Alle Transaktionen und wiederkehrenden Transaktionen wurden gelöscht."
+    },
     "support": "Unterstützung",
     "supportDescription": "Hat dir die App geholfen, Geld zu sparen? Unterstütze die Weiterentwicklung und die Serverkosten mit einer kleinen Spende.",
     "donateButton": "Über PayPal spenden",

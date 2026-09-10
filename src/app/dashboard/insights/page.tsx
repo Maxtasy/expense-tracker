@@ -76,13 +76,13 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
 
   return (
     <div>
+      <TypeToggle mode={mode} month={monthKey(current)} type={type} />
       <PeriodToggle mode={mode} month={monthKey(current)} type={type} />
       {mode === "month" ? (
         <InsightsMonthPager current={current} type={type} />
       ) : (
         <YearPager current={current} type={type} />
       )}
-      <TypeToggle mode={mode} month={monthKey(current)} type={type} />
 
       <CategoryBarList title={title} data={slices} currency={currency} />
       <CategoryPieChart title={title} data={slices} currency={currency} />

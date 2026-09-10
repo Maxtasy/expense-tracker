@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { createCategory } from "./actions";
+import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 
 type TxType = "expense" | "income";
 
@@ -42,24 +43,20 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
         <button
           type="submit"
           disabled={isPending}
-          className="shrink-0 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-60"
+          className={`shrink-0 rounded-lg px-3 py-2 text-sm font-medium transition disabled:opacity-60 ${typeButtonClass(type)}`}
         >
           {isPending ? "..." : tCommon("add")}
         </button>
       </div>
       <div className="grid grid-cols-2 gap-2">
         <label
-          className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-xs font-medium transition ${
-            type === "expense" ? "border-accent bg-accent text-accent-fg" : "border-border bg-surface text-fg-muted"
-          }`}
+          className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-xs font-medium transition ${typeChipClass("expense", type === "expense")}`}
         >
           <input type="radio" name="type" value="expense" checked={type === "expense"} onChange={() => setType("expense")} className="sr-only" />
           {tCommon("expense")}
         </label>
         <label
-          className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-xs font-medium transition ${
-            type === "income" ? "border-accent bg-accent text-accent-fg" : "border-border bg-surface text-fg-muted"
-          }`}
+          className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-xs font-medium transition ${typeChipClass("income", type === "income")}`}
         >
           <input type="radio" name="type" value="income" checked={type === "income"} onChange={() => setType("income")} className="sr-only" />
           {tCommon("income")}

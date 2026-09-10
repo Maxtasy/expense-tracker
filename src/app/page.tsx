@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode, CSSProperties } from "react";
 import { ArrowLeftRight, CalendarDays, FileSpreadsheet, Languages, Mail, PieChart, Repeat, Sparkles } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/logo";
-import type { CSSProperties } from "react";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
 const GRADIENT_TEXT_STYLE: CSSProperties = {
   backgroundImage: "linear-gradient(135deg, #6366F1, #38BDF8, #34D399)",
@@ -13,65 +15,27 @@ const GRADIENT_TEXT_STYLE: CSSProperties = {
 };
 
 const FEATURES = [
-  {
-    icon: ArrowLeftRight,
-    title: "Track everything",
-    description: "Log income and expenses, organized into categories you control.",
-  },
-  {
-    icon: CalendarDays,
-    title: "Monthly overview",
-    description: "See income, expenses, and your net position for any month at a glance.",
-  },
-  {
-    icon: Repeat,
-    title: "Recurring made easy",
-    description: "Set up salary, rent, or subscriptions once — they show up automatically every month.",
-  },
-  {
-    icon: FileSpreadsheet,
-    title: "Your data, backed up",
-    description: "Export everything to CSV any time, and restore it in a couple of clicks whenever you need to.",
-  },
-];
+  { icon: ArrowLeftRight, key: "track" },
+  { icon: CalendarDays, key: "monthly" },
+  { icon: Repeat, key: "recurring" },
+  { icon: FileSpreadsheet, key: "backup" },
+  { icon: Languages, key: "languages" },
+] as const;
 
 const ROADMAP = [
-  {
-    icon: Languages,
-    title: "Multiple languages",
-    description: "Use the app in your own language, not just English.",
-  },
-  {
-    icon: PieChart,
-    title: "Deeper insights",
-    description: "More ways to break down and visualize where your money goes.",
-  },
-  {
-    icon: Sparkles,
-    title: "More customization",
-    description: "Small touches like custom category colors, so the app feels like yours.",
-  },
-];
+  { icon: PieChart, key: "insights" },
+  { icon: Sparkles, key: "customization" },
+] as const;
 
 const SCREENSHOTS = [
-  {
-    src: "/landing/dashboard.png",
-    alt: "Dashboard showing monthly income, expenses, net total, and a categorized list of transactions",
-    caption: "Monthly overview",
-  },
-  {
-    src: "/landing/insights.png",
-    alt: "Insights page showing income and expenses broken down by category in pie charts",
-    caption: "Category breakdown",
-  },
-  {
-    src: "/landing/settings.png",
-    alt: "Settings page with CSV export links for categories, recurring transactions, and transactions, and an import form",
-    caption: "Export & import your data",
-  },
-];
+  { src: "/landing/dashboard.png", key: "dashboard" },
+  { src: "/landing/insights.png", key: "insights" },
+  { src: "/landing/settings.png", key: "settings" },
+] as const;
 
-export default function Home() {
+export default async function Home() {
+  const t = await getTranslations("landing");
+
   return (
     <div className="min-h-dvh">
       <header className="flex items-center justify-between px-4 py-4 sm:px-6">
@@ -80,11 +44,12 @@ export default function Home() {
           Expense Tracker
         </div>
         <nav className="flex items-center gap-3 text-sm">
+          <LocaleSwitcher />
           <Link href="/login" className="text-fg-muted hover:text-fg">
-            Log in
+            {t("nav.login")}
           </Link>
           <Link href="/signup" className="rounded-lg bg-accent px-3 py-1.5 font-medium text-accent-fg hover:bg-accent-hover">
-            Sign up
+            {t("nav.signup")}
           </Link>
         </nav>
       </header>
@@ -92,66 +57,66 @@ export default function Home() {
       <main className="mx-auto max-w-md px-4 py-10 text-center sm:max-w-lg sm:py-16 lg:max-w-5xl lg:py-20">
         <div className="mx-auto max-w-2xl">
           <h1 className="text-2xl font-semibold text-fg sm:text-3xl lg:text-4xl">
-            <span className="font-bold" style={GRADIENT_TEXT_STYLE}>Understand why</span> every month feels like there&rsquo;s{" "}
-            <span className="font-bold" style={GRADIENT_TEXT_STYLE}>no money left</span> over.
+            {t.rich("hero.headline", {
+              hl: (chunks: ReactNode) => (
+                <span className="font-bold" style={GRADIENT_TEXT_STYLE}>
+                  {chunks}
+                </span>
+              ),
+            })}
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-sm text-fg-muted lg:max-w-lg lg:text-base">
-            Small purchases add up without you noticing. Track where it&rsquo;s really going, and know what you have left
-            before the month runs out — then start setting some aside for a rainy day.
-          </p>
-          <p className="mt-3 text-sm font-medium text-success">Free forever, no ads — start saving right away.</p>
+          <p className="mx-auto mt-3 max-w-md text-sm text-fg-muted lg:max-w-lg lg:text-base">{t("hero.subheadline")}</p>
+          <p className="mt-3 text-sm font-medium text-success">{t("hero.tagline")}</p>
           <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
             <Link href="/signup" className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover">
-              Get started
+              {t("hero.getStarted")}
             </Link>
             <Link href="/login" className="rounded-lg border border-border px-4 py-2 text-sm text-fg-muted hover:text-fg">
-              Log in
+              {t("hero.login")}
             </Link>
           </div>
         </div>
 
         <div className="mt-12 grid gap-3 text-left sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-4">
-          {FEATURES.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="rounded-xl border border-border bg-surface/30 p-4">
+          {FEATURES.map(({ icon: Icon, key }) => (
+            <div key={key} className="rounded-xl border border-border bg-surface/30 p-4">
               <Icon size={18} className="text-accent" />
-              <p className="mt-3 text-sm font-medium text-fg">{title}</p>
-              <p className="mt-1 text-xs text-fg-muted">{description}</p>
+              <p className="mt-3 text-sm font-medium text-fg">{t(`features.${key}.title`)}</p>
+              <p className="mt-1 text-xs text-fg-muted">{t(`features.${key}.description`)}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-24 sm:mt-28">
-          <h2 className="text-lg font-semibold text-fg sm:text-xl">See it in action</h2>
+          <h2 className="text-lg font-semibold text-fg sm:text-xl">{t("screenshotsHeading")}</h2>
           <div className="mt-6 flex flex-col flex-wrap items-center justify-center gap-8 sm:flex-row lg:gap-10">
-            {SCREENSHOTS.map(({ src, alt, caption }, index) => (
+            {SCREENSHOTS.map(({ src, key }, index) => (
               <figure key={src} className="w-full max-w-[220px] lg:max-w-[260px]">
                 <div className="overflow-hidden rounded-[1.75rem] border border-border shadow-2xl shadow-black/40">
                   <Image
                     src={src}
-                    alt={alt}
+                    alt={t(`screenshots.${key}.alt`)}
                     width={780}
                     height={1688}
                     className="h-auto w-full"
                     priority={index === 0}
                   />
                 </div>
-                <figcaption className="mt-3 text-xs text-fg-muted">{caption}</figcaption>
+                <figcaption className="mt-3 text-xs text-fg-muted">{t(`screenshots.${key}.caption`)}</figcaption>
               </figure>
             ))}
           </div>
         </div>
 
         <div className="mt-24 sm:mt-28">
-          <h2 className="text-lg font-semibold text-fg sm:text-xl">What&rsquo;s next</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted lg:max-w-lg">
-            The app is actively growing. Here&rsquo;s some of what&rsquo;s planned:
-          </p>
-          <div className="mt-6 grid gap-3 text-left sm:grid-cols-3 lg:gap-4">
-            {ROADMAP.map(({ icon: Icon, title, description }) => (
-              <div key={title} className="rounded-xl border border-border bg-surface/30 p-4">
+          <h2 className="text-lg font-semibold text-fg sm:text-xl">{t("roadmapHeading")}</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted lg:max-w-lg">{t("roadmapSubheading")}</p>
+          <div className="mt-6 grid gap-3 text-left sm:grid-cols-2 lg:gap-4">
+            {ROADMAP.map(({ icon: Icon, key }) => (
+              <div key={key} className="rounded-xl border border-border bg-surface/30 p-4">
                 <Icon size={18} className="text-accent" />
-                <p className="mt-3 text-sm font-medium text-fg">{title}</p>
-                <p className="mt-1 text-xs text-fg-muted">{description}</p>
+                <p className="mt-3 text-sm font-medium text-fg">{t(`roadmap.${key}.title`)}</p>
+                <p className="mt-1 text-xs text-fg-muted">{t(`roadmap.${key}.description`)}</p>
               </div>
             ))}
           </div>
@@ -160,10 +125,8 @@ export default function Home() {
         <div className="mt-16 sm:mt-20">
           <div className="mx-auto max-w-md rounded-xl border border-border bg-surface/30 p-6">
             <Mail size={20} className="mx-auto text-accent" />
-            <h2 className="mt-3 text-base font-semibold text-fg">Have a feature in mind?</h2>
-            <p className="mt-2 text-sm text-fg-muted">
-              This app is shaped by feedback. If there&rsquo;s something missing you&rsquo;d find useful, let me know.
-            </p>
+            <h2 className="mt-3 text-base font-semibold text-fg">{t("feedbackHeading")}</h2>
+            <p className="mt-2 text-sm text-fg-muted">{t("feedbackDescription")}</p>
             <a
               href="mailto:contact@maxtasy.me"
               className="mt-4 inline-block rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover"

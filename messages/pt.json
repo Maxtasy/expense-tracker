@@ -14,6 +14,95 @@
     "add": "Adicionar",
     "adding": "Adicionando..."
   },
+  "auth": {
+    "login": {
+      "title": "Entrar",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Senha",
+      "submit": "Entrar",
+      "submitPending": "Entrando...",
+      "noAccount": "Ainda não tem uma conta?",
+      "signupLink": "Cadastre-se",
+      "invalidCredentials": "E-mail ou senha inválidos",
+      "genericError": "Algo deu errado, tente novamente"
+    },
+    "signup": {
+      "title": "Cadastrar",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Senha",
+      "submit": "Cadastrar",
+      "submitPending": "Criando conta...",
+      "haveAccount": "Já tem uma conta?",
+      "loginLink": "Entrar",
+      "invalidEmail": "Digite um endereço de e-mail válido",
+      "passwordTooShort": "A senha deve ter pelo menos 8 caracteres",
+      "emailTaken": "Já existe uma conta com esse e-mail"
+    }
+  },
+  "landing": {
+    "nav": {
+      "login": "Entrar",
+      "signup": "Cadastre-se"
+    },
+    "hero": {
+      "headline": "<hl>Entenda por que</hl> todo mês parece que <hl>não sobra dinheiro</hl>.",
+      "subheadline": "Pequenos gastos se acumulam sem que você perceba. Acompanhe para onde seu dinheiro está realmente indo e saiba o que sobra antes do fim do mês — depois comece a guardar algo para os imprevistos.",
+      "tagline": "Grátis para sempre, sem anúncios — comece a economizar agora mesmo.",
+      "getStarted": "Começar",
+      "login": "Entrar"
+    },
+    "features": {
+      "track": {
+        "title": "Acompanhe tudo",
+        "description": "Registre receitas e despesas, organizadas em categorias que você controla."
+      },
+      "monthly": {
+        "title": "Visão mensal",
+        "description": "Veja receitas, despesas e seu saldo líquido de qualquer mês em um relance."
+      },
+      "recurring": {
+        "title": "Transações recorrentes facilitadas",
+        "description": "Configure salário, aluguel ou assinaturas uma vez — elas aparecem automaticamente todo mês depois disso."
+      },
+      "backup": {
+        "title": "Seus dados, protegidos",
+        "description": "Exporte tudo para CSV a qualquer momento e restaure em poucos cliques sempre que precisar."
+      },
+      "languages": {
+        "title": "Fala o seu idioma",
+        "description": "Use o app em inglês, alemão, espanhol, francês ou português."
+      }
+    },
+    "screenshotsHeading": "Veja em ação",
+    "screenshots": {
+      "dashboard": {
+        "caption": "Visão mensal",
+        "alt": "Painel mostrando receitas, despesas e saldo líquido mensais, além de uma lista de transações organizada por categoria"
+      },
+      "insights": {
+        "caption": "Divisão por categoria",
+        "alt": "Página de insights mostrando receitas e despesas divididas por categoria em gráficos de pizza"
+      },
+      "settings": {
+        "caption": "Exporte e importe seus dados",
+        "alt": "Página de configurações com links de exportação CSV para categorias, transações recorrentes e transações, além de um formulário de importação"
+      }
+    },
+    "roadmapHeading": "O que vem a seguir",
+    "roadmapSubheading": "O app está em constante evolução. Aqui está parte do que está planejado:",
+    "roadmap": {
+      "insights": {
+        "title": "Insights mais profundos",
+        "description": "Mais formas de detalhar e visualizar para onde vai o seu dinheiro."
+      },
+      "customization": {
+        "title": "Mais personalização",
+        "description": "Pequenos detalhes como cores de categoria personalizadas, para que o app pareça seu."
+      }
+    },
+    "feedbackHeading": "Tem uma ideia de funcionalidade?",
+    "feedbackDescription": "Este app é moldado por feedback. Se estiver faltando algo que seria útil para você, me avise."
+  },
   "validation": {
     "notLoggedIn": "Você precisa estar conectado",
     "amountPositive": "O valor deve ser maior que 0",
@@ -130,6 +219,18 @@
     "importMoneyManagerLink": "Importar do Money Manager",
     "import": "Importar",
     "importDescription": "Importe os três arquivos CSV juntos. Isso substitui todas as suas categorias, transações recorrentes e transações pelo conteúdo dos arquivos.",
+    "startFresh": {
+      "label": "Recomeçar",
+      "description": "Exclui permanentemente todas as suas transações e transações recorrentes. As categorias não são afetadas.",
+      "openButton": "Recomeçar",
+      "modalTitle": "Recomeçar",
+      "modalWarning": "Isso exclui permanentemente todas as suas transações e transações recorrentes. As categorias não são afetadas. Isso não pode ser desfeito.",
+      "confirmCheckbox": "Entendo que isso exclui permanentemente todas as minhas transações e transações recorrentes.",
+      "typeToConfirmLabel": "Digite DELETE para confirmar",
+      "confirmButton": "Excluir tudo",
+      "deleting": "Excluindo...",
+      "complete": "Todas as transações e transações recorrentes foram excluídas."
+    },
     "support": "Apoio",
     "supportDescription": "O aplicativo ajudou você a economizar dinheiro? Apoie o desenvolvimento futuro e ajude a cobrir os custos do servidor com uma pequena doação.",
     "donateButton": "Doar via PayPal",

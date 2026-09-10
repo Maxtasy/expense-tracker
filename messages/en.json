@@ -14,6 +14,95 @@
     "add": "Add",
     "adding": "Adding..."
   },
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": "Log in",
+      "submitPending": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up",
+      "invalidCredentials": "Invalid email or password",
+      "genericError": "Something went wrong, please try again"
+    },
+    "signup": {
+      "title": "Sign up",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": "Sign up",
+      "submitPending": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Log in",
+      "invalidEmail": "Enter a valid email address",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "emailTaken": "An account with that email already exists"
+    }
+  },
+  "landing": {
+    "nav": {
+      "login": "Log in",
+      "signup": "Sign up"
+    },
+    "hero": {
+      "headline": "<hl>Understand why</hl> every month feels like there’s <hl>no money left</hl> over.",
+      "subheadline": "Small purchases add up without you noticing. Track where it’s really going, and know what you have left before the month runs out — then start setting some aside for a rainy day.",
+      "tagline": "Free forever, no ads — start saving right away.",
+      "getStarted": "Get started",
+      "login": "Log in"
+    },
+    "features": {
+      "track": {
+        "title": "Track everything",
+        "description": "Log income and expenses, organized into categories you control."
+      },
+      "monthly": {
+        "title": "Monthly overview",
+        "description": "See income, expenses, and your net position for any month at a glance."
+      },
+      "recurring": {
+        "title": "Recurring made easy",
+        "description": "Set up salary, rent, or subscriptions once — they show up automatically every month."
+      },
+      "backup": {
+        "title": "Your data, backed up",
+        "description": "Export everything to CSV any time, and restore it in a couple of clicks whenever you need to."
+      },
+      "languages": {
+        "title": "Speaks your language",
+        "description": "Use the app in English, German, Spanish, French, or Portuguese."
+      }
+    },
+    "screenshotsHeading": "See it in action",
+    "screenshots": {
+      "dashboard": {
+        "caption": "Monthly overview",
+        "alt": "Dashboard showing monthly income, expenses, net total, and a categorized list of transactions"
+      },
+      "insights": {
+        "caption": "Category breakdown",
+        "alt": "Insights page showing income and expenses broken down by category in pie charts"
+      },
+      "settings": {
+        "caption": "Export & import your data",
+        "alt": "Settings page with CSV export links for categories, recurring transactions, and transactions, and an import form"
+      }
+    },
+    "roadmapHeading": "What’s next",
+    "roadmapSubheading": "The app is actively growing. Here’s some of what’s planned:",
+    "roadmap": {
+      "insights": {
+        "title": "Deeper insights",
+        "description": "More ways to break down and visualize where your money goes."
+      },
+      "customization": {
+        "title": "More customization",
+        "description": "Small touches like custom category colors, so the app feels like yours."
+      }
+    },
+    "feedbackHeading": "Have a feature in mind?",
+    "feedbackDescription": "This app is shaped by feedback. If there’s something missing you’d find useful, let me know."
+  },
   "validation": {
     "notLoggedIn": "You must be logged in",
     "amountPositive": "Amount must be greater than 0",
@@ -130,6 +219,18 @@
     "importMoneyManagerLink": "Import from Money Manager",
     "import": "Import",
     "importDescription": "Import all three CSV files together. This replaces all of your categories, recurring transactions, and transactions with the contents of the files.",
+    "startFresh": {
+      "label": "Start fresh",
+      "description": "Permanently delete all of your transactions and recurring transactions. Categories are not affected.",
+      "openButton": "Start fresh",
+      "modalTitle": "Start fresh",
+      "modalWarning": "This permanently deletes all of your transactions and recurring transactions. Categories are not affected. This can't be undone.",
+      "confirmCheckbox": "I understand this permanently deletes all of my transactions and recurring transactions.",
+      "typeToConfirmLabel": "Type DELETE to confirm",
+      "confirmButton": "Delete everything",
+      "deleting": "Deleting...",
+      "complete": "All transactions and recurring transactions deleted."
+    },
     "support": "Support",
     "supportDescription": "Did the app help you save some money? Support future development and cover server costs with a small donation.",
     "donateButton": "Donate via PayPal",

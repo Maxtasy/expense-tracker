@@ -14,6 +14,95 @@
     "add": "Ajouter",
     "adding": "Ajout en cours..."
   },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Mot de passe",
+      "submit": "Se connecter",
+      "submitPending": "Connexion en cours...",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "signupLink": "S'inscrire",
+      "invalidCredentials": "E-mail ou mot de passe invalide",
+      "genericError": "Une erreur s'est produite, veuillez réessayer"
+    },
+    "signup": {
+      "title": "Inscription",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Mot de passe",
+      "submit": "S'inscrire",
+      "submitPending": "Création du compte...",
+      "haveAccount": "Vous avez déjà un compte ?",
+      "loginLink": "Se connecter",
+      "invalidEmail": "Saisissez une adresse e-mail valide",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+      "emailTaken": "Un compte existe déjà avec cet e-mail"
+    }
+  },
+  "landing": {
+    "nav": {
+      "login": "Connexion",
+      "signup": "S'inscrire"
+    },
+    "hero": {
+      "headline": "<hl>Comprenez pourquoi</hl> chaque mois donne l'impression qu'il <hl>ne reste plus d'argent</hl>.",
+      "subheadline": "Les petites dépenses s'accumulent sans qu'on s'en rende compte. Suivez où va réellement votre argent et sachez ce qu'il vous reste avant la fin du mois — puis commencez à mettre un peu de côté pour les imprévus.",
+      "tagline": "Gratuit pour toujours, sans publicité — commencez à économiser dès maintenant.",
+      "getStarted": "Commencer",
+      "login": "Connexion"
+    },
+    "features": {
+      "track": {
+        "title": "Suivez tout",
+        "description": "Enregistrez vos revenus et dépenses, organisés dans des catégories que vous contrôlez."
+      },
+      "monthly": {
+        "title": "Aperçu mensuel",
+        "description": "Consultez vos revenus, dépenses et votre solde net pour n'importe quel mois en un coup d'œil."
+      },
+      "recurring": {
+        "title": "Les transactions récurrentes, en toute simplicité",
+        "description": "Configurez salaire, loyer ou abonnements une fois — ils apparaissent ensuite automatiquement chaque mois."
+      },
+      "backup": {
+        "title": "Vos données, sauvegardées",
+        "description": "Exportez tout en CSV à tout moment, et restaurez-les en quelques clics quand vous en avez besoin."
+      },
+      "languages": {
+        "title": "Dans votre langue",
+        "description": "Utilisez l'application en anglais, allemand, espagnol, français ou portugais."
+      }
+    },
+    "screenshotsHeading": "Découvrez l'application en action",
+    "screenshots": {
+      "dashboard": {
+        "caption": "Aperçu mensuel",
+        "alt": "Tableau de bord affichant les revenus, dépenses et le solde net mensuels, ainsi qu'une liste de transactions classées par catégorie"
+      },
+      "insights": {
+        "caption": "Répartition par catégorie",
+        "alt": "Page d'aperçus montrant les revenus et dépenses répartis par catégorie sous forme de diagrammes circulaires"
+      },
+      "settings": {
+        "caption": "Exportez et importez vos données",
+        "alt": "Page des paramètres avec des liens d'exportation CSV pour les catégories, les transactions récurrentes et les transactions, ainsi qu'un formulaire d'importation"
+      }
+    },
+    "roadmapHeading": "Prochaines étapes",
+    "roadmapSubheading": "L'application continue d'évoluer. Voici une partie de ce qui est prévu :",
+    "roadmap": {
+      "insights": {
+        "title": "Des aperçus plus poussés",
+        "description": "Plus de moyens d'analyser et de visualiser où va votre argent."
+      },
+      "customization": {
+        "title": "Plus de personnalisation",
+        "description": "De petites touches comme des couleurs de catégorie personnalisées, pour que l'application vous ressemble."
+      }
+    },
+    "feedbackHeading": "Une idée de fonctionnalité ?",
+    "feedbackDescription": "Cette application évolue grâce à vos retours. S'il manque quelque chose qui vous serait utile, faites-le-moi savoir."
+  },
   "validation": {
     "notLoggedIn": "Vous devez être connecté",
     "amountPositive": "Le montant doit être supérieur à 0",
@@ -130,6 +219,18 @@
     "importMoneyManagerLink": "Importer depuis Money Manager",
     "import": "Importer",
     "importDescription": "Importez les trois fichiers CSV ensemble. Cela remplace toutes vos catégories, transactions récurrentes et transactions par le contenu des fichiers.",
+    "startFresh": {
+      "label": "Repartir à zéro",
+      "description": "Supprime définitivement toutes vos transactions et transactions récurrentes. Les catégories ne sont pas affectées.",
+      "openButton": "Repartir à zéro",
+      "modalTitle": "Repartir à zéro",
+      "modalWarning": "Cela supprime définitivement toutes vos transactions et transactions récurrentes. Les catégories ne sont pas affectées. Cette action est irréversible.",
+      "confirmCheckbox": "Je comprends que cela supprime définitivement toutes mes transactions et transactions récurrentes.",
+      "typeToConfirmLabel": "Tapez DELETE pour confirmer",
+      "confirmButton": "Tout supprimer",
+      "deleting": "Suppression...",
+      "complete": "Toutes les transactions et transactions récurrentes ont été supprimées."
+    },
     "support": "Soutien",
     "supportDescription": "L'application vous a-t-elle aidé à économiser de l'argent ? Soutenez son développement et couvrez les frais de serveur avec un petit don.",
     "donateButton": "Faire un don via PayPal",
