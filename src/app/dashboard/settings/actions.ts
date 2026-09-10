@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { compare, hash } from "bcryptjs";
 import { eq, isNull } from "drizzle-orm";
 import { parse } from "csv-parse/sync";
 import { revalidatePath } from "next/cache";
@@ -264,6 +265,47 @@ export async function updateLocale(formData: FormData) {
   revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard/insights");
   revalidatePath("/dashboard/settings");
+  return { success: true };
+}
+
+export async function changePassword(formData: FormData) {
+  const session = await auth();
+  const tSettings = await getTranslations("settings");
+  if (!session?.user) return { error: tSettings("notSignedIn") };
+  const userId = session.user.id;
+  const t = await getTranslations("settings.changePassword");
+
+  const changePasswordSchema = z
+    .object({
+      currentPassword: z.string().min(1),
+      newPassword: z.string().min(8, t("passwordTooShort")),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: t("passwordsDoNotMatch"),
+      path: ["confirmPassword"],
+    });
+
+  const parsed = changePasswordSchema.safeParse({
+    currentPassword: formData.get("currentPassword"),
+    newPassword: formData.get("newPassword"),
+    confirmPassword: formData.get("confirmPassword"),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
+  }
+
+  const [user] = await db.select({ passwordHash: users.passwordHash }).from(users).where(eq(users.id, userId)).limit(1);
+  if (!user) return { error: tSettings("notSignedIn") };
+
+  const currentPasswordMatches = await compare(parsed.data.currentPassword, user.passwordHash);
+  if (!currentPasswordMatches) {
+    return { error: t("currentPasswordIncorrect") };
+  }
+
+  const passwordHash = await hash(parsed.data.newPassword, 10);
+  await db.update(users).set({ passwordHash }).where(eq(users.id, userId));
+
   return { success: true };
 }
 

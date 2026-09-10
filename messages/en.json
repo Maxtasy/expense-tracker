@@ -213,6 +213,18 @@
     "language": "Language",
     "languageAriaLabel": "Language",
     "saved": "Saved",
+    "changePassword": {
+      "label": "Change password",
+      "currentPasswordLabel": "Current password",
+      "newPasswordLabel": "New password",
+      "confirmPasswordLabel": "Confirm new password",
+      "saveButton": "Change password",
+      "saving": "Changing...",
+      "success": "Password changed.",
+      "currentPasswordIncorrect": "Current password is incorrect",
+      "passwordTooShort": "New password must be at least 8 characters",
+      "passwordsDoNotMatch": "New passwords do not match"
+    },
     "export": "Export",
     "importMoneyManagerLabel": "Import from Money Manager",
     "importMoneyManagerDescription": "Bring in transactions from a Money Manager .xlsx export. Adds to your existing data — nothing is deleted.",

@@ -213,6 +213,18 @@
     "language": "Idioma",
     "languageAriaLabel": "Idioma",
     "saved": "Salvo",
+    "changePassword": {
+      "label": "Alterar senha",
+      "currentPasswordLabel": "Senha atual",
+      "newPasswordLabel": "Nova senha",
+      "confirmPasswordLabel": "Confirmar nova senha",
+      "saveButton": "Alterar senha",
+      "saving": "Alterando...",
+      "success": "Senha alterada.",
+      "currentPasswordIncorrect": "A senha atual está incorreta",
+      "passwordTooShort": "A nova senha deve ter pelo menos 8 caracteres",
+      "passwordsDoNotMatch": "As novas senhas não coincidem"
+    },
     "export": "Exportar",
     "importMoneyManagerLabel": "Importar do Money Manager",
     "importMoneyManagerDescription": "Traga transações de uma exportação .xlsx do Money Manager. Elas são adicionadas aos seus dados existentes — nada é excluído.",

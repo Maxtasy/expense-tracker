@@ -8,6 +8,7 @@ import { ImportForm } from "./import-form";
 import { StartFreshForm } from "./start-fresh-form";
 import { CurrencyForm } from "./currency-form";
 import { LocaleForm } from "./locale-form";
+import { ChangePasswordForm } from "./change-password-form";
 import { ExportLinks } from "./export-links";
 import { version } from "../../../../package.json";
 
@@ -38,6 +39,11 @@ export default async function SettingsPage() {
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("language")}</h2>
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
         <LocaleForm locale={locale} />
+      </div>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("changePassword.label")}</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <ChangePasswordForm />
       </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("export")}</h2>
