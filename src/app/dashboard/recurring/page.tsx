@@ -1,4 +1,5 @@
 import { eq, isNull, or } from "drizzle-orm";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, hiddenCategories, recurringTransactions } from "@/db/schema";
@@ -10,6 +11,7 @@ export default async function RecurringPage() {
   const session = await auth();
   if (!session?.user) return null;
   const userId = session.user.id;
+  const t = await getTranslations("recurring");
 
   const [availableCategories, hiddenIds, userRecurring, currency] = await Promise.all([
     db
@@ -42,12 +44,12 @@ export default async function RecurringPage() {
 
   return (
     <div>
-      <h1 className="mb-3 text-sm font-semibold text-fg">Recurring transactions</h1>
+      <h1 className="mb-3 text-sm font-semibold text-fg">{t("title")}</h1>
 
       <AddRecurringModal categories={visibleCategories} currency={currency} />
 
       {userRecurring.length === 0 ? (
-        <p className="py-8 text-center text-sm text-fg-muted">No recurring transactions yet.</p>
+        <p className="py-8 text-center text-sm text-fg-muted">{t("empty")}</p>
       ) : (
         <div className="rounded-xl border border-border bg-surface/30 px-3">
           {userRecurring.map((recurring) => (

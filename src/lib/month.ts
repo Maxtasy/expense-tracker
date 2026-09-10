@@ -32,8 +32,16 @@ export function compareYearMonth(a: YearMonth, b: YearMonth): number {
   return a.year * 12 + a.month - (b.year * 12 + b.month);
 }
 
-export function monthLabel({ year, month }: YearMonth, style: "short" | "long" = "long"): string {
-  return new Date(year, month - 1, 1).toLocaleDateString("en-US", { month: style, year: "numeric" });
+export function monthLabel({ year, month }: YearMonth, locale: string, style: "short" | "long" = "long"): string {
+  return new Date(year, month - 1, 1).toLocaleDateString(locale, { month: style, year: "numeric" });
+}
+
+// dateStr is a plain "YYYY-MM-DD" string with no time component — parsed via the Date(y, m, d)
+// constructor (local time) rather than new Date(dateStr) (parsed as UTC midnight), since the
+// latter can roll back a day once formatted in a timezone behind UTC.
+export function formatDate(dateStr: string, locale: string): string {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString(locale);
 }
 
 export function yearRange(year: number): { from: string; to: string } {

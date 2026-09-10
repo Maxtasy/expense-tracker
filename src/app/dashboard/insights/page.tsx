@@ -1,4 +1,5 @@
 import { and, eq, gte, lte, sql } from "drizzle-orm";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
@@ -25,7 +26,7 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
   const current = parseMonth(params.month);
   const { from, to } = mode === "year" ? yearRange(current.year) : monthRange(current);
 
-  const [breakdown, currency] = await Promise.all([
+  const [breakdown, currency, t] = await Promise.all([
     db
       .select({
         categoryName: categories.name,
@@ -38,13 +39,16 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
       .where(and(eq(transactions.userId, userId), gte(transactions.date, from), lte(transactions.date, to)))
       .groupBy(transactions.categoryId, categories.name, categories.color, transactions.type),
     getUserCurrency(userId),
+    getTranslations("insights"),
   ]);
+
+  const tCommon = await getTranslations("common");
 
   function toSlices(type: "income" | "expense") {
     const slices = breakdown
       .filter((row) => row.type === type)
       .map((row) => ({
-        name: row.categoryName ?? "Uncategorized",
+        name: row.categoryName ?? tCommon("uncategorized"),
         value: Number(row.total),
         color: categoryColor(row.categoryName, row.categoryColor),
         custom: Boolean(row.categoryColor),
@@ -68,7 +72,7 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
   }
 
   const slices = toSlices(type);
-  const title = type === "income" ? "Income by category" : "Expenses by category";
+  const title = type === "income" ? t("incomeByCategory") : t("expensesByCategory");
 
   return (
     <div>

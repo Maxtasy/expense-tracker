@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { eq, isNull, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
@@ -23,35 +24,37 @@ export type PreviewState = {
   };
 } | null;
 
-async function readFile(formData: FormData): Promise<ArrayBuffer> {
+async function readFile(formData: FormData, chooseFileMessage: string): Promise<ArrayBuffer> {
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
-    throw new Error("Choose a Money Manager .xlsx export file");
+    throw new Error(chooseFileMessage);
   }
   return file.arrayBuffer();
 }
 
 export async function previewMoneyManagerImport(_prevState: PreviewState, formData: FormData): Promise<PreviewState> {
   const session = await auth();
-  if (!session?.user) return { error: "You must be logged in" };
+  const tValidation = await getTranslations("validation");
+  if (!session?.user) return { error: tValidation("notLoggedIn") };
   const userId = session.user.id;
+  const t = await getTranslations("settings.moneyManager");
 
   let buffer: ArrayBuffer;
   try {
-    buffer = await readFile(formData);
+    buffer = await readFile(formData, t("chooseFile"));
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Could not read file" };
+    return { error: err instanceof Error ? err.message : t("couldNotReadFile") };
   }
 
   let parsed;
   try {
     parsed = await parseMoneyManagerFile(buffer);
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Could not parse file" };
+    return { error: err instanceof Error ? err.message : t("couldNotParseFile") };
   }
 
   if (parsed.rows.length === 0) {
-    return { error: "No importable transactions found in this file" };
+    return { error: t("noImportableTransactions") };
   }
 
   const existing = await db
@@ -94,39 +97,41 @@ export type CommitState = {
 
 export async function commitMoneyManagerImport(_prevState: CommitState, formData: FormData): Promise<CommitState> {
   const session = await auth();
-  if (!session?.user) return { error: "You must be logged in" };
+  const tValidation = await getTranslations("validation");
+  if (!session?.user) return { error: tValidation("notLoggedIn") };
   const userId = session.user.id;
+  const t = await getTranslations("settings.moneyManager");
 
   let buffer: ArrayBuffer;
   try {
-    buffer = await readFile(formData);
+    buffer = await readFile(formData, t("chooseFile"));
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Could not read file" };
+    return { error: err instanceof Error ? err.message : t("couldNotReadFile") };
   }
 
   const mappingRaw = formData.get("mapping");
-  if (typeof mappingRaw !== "string") return { error: "Missing category mapping" };
+  if (typeof mappingRaw !== "string") return { error: t("missingCategoryMapping") };
   let mapping: z.infer<typeof mappingSchema>;
   try {
     mapping = mappingSchema.parse(JSON.parse(mappingRaw));
   } catch {
-    return { error: "Invalid category mapping" };
+    return { error: t("invalidCategoryMapping") };
   }
 
   let parsed;
   try {
     parsed = await parseMoneyManagerFile(buffer);
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Could not parse file" };
+    return { error: err instanceof Error ? err.message : t("couldNotParseFile") };
   }
   if (parsed.rows.length === 0) {
-    return { error: "No importable transactions found in this file" };
+    return { error: t("noImportableTransactions") };
   }
 
   const mappingByKey = new Map(mapping.map((m) => [`${m.type}:${m.name.toLowerCase()}`, m]));
   for (const c of parsed.categorySummary) {
     if (!mappingByKey.has(`${c.type}:${c.name.toLowerCase()}`)) {
-      return { error: `Missing mapping decision for category "${c.name}"` };
+      return { error: t("missingMappingDecision", { name: c.name }) };
     }
   }
 
@@ -164,7 +169,7 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
         }
         if (entry.action === "map") {
           const target = existingCategories.find((c) => c.id === entry.targetCategoryId && c.type === entry.type);
-          if (!target) throw new Error(`Category to map "${entry.name}" to was not found`);
+          if (!target) throw new Error(t("categoryMapTargetNotFound", { name: entry.name }));
           categoryIdByKey.set(key, target.id);
           continue;
         }
@@ -220,6 +225,6 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
     revalidatePath("/dashboard/insights");
     return { success: true, imported, skippedDuplicates, categoriesCreated };
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Import failed" };
+    return { error: err instanceof Error ? err.message : t("importFailed") };
   }
 }

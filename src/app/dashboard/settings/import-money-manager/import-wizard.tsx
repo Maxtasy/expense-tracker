@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { previewMoneyManagerImport, commitMoneyManagerImport, type CategorySuggestion } from "./actions";
 
 type TxType = "expense" | "income";
@@ -41,6 +42,8 @@ const inputClass =
   "w-full rounded-lg border border-border bg-surface px-2 py-1.5 text-xs text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
 
 export function ImportWizard({ existingCategories }: { existingCategories: ExistingCategory[] }) {
+  const t = useTranslations("settings.moneyManager");
+  const tCommon = useTranslations("common");
   const [step, setStep] = useState<"upload" | "review" | "done">("upload");
   const [file, setFile] = useState<File | null>(null);
   const [previewError, setPreviewError] = useState<string | undefined>();
@@ -128,18 +131,18 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
   if (step === "done" && result) {
     return (
       <div className="rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-1 text-sm text-success">Import complete.</p>
+        <p className="mb-1 text-sm text-success">{t("doneComplete")}</p>
         <ul className="mb-4 space-y-0.5 text-xs text-fg-muted">
-          <li>{result.imported} transactions imported</li>
-          {result.categoriesCreated > 0 && <li>{result.categoriesCreated} new categories created</li>}
-          {result.skippedDuplicates > 0 && <li>{result.skippedDuplicates} duplicates skipped (already in your data)</li>}
+          <li>{t("doneImported", { count: result.imported })}</li>
+          {result.categoriesCreated > 0 && <li>{t("doneCategoriesCreated", { count: result.categoriesCreated })}</li>}
+          {result.skippedDuplicates > 0 && <li>{t("doneDuplicatesSkipped", { count: result.skippedDuplicates })}</li>}
         </ul>
         <div className="flex gap-2">
           <Link href="/dashboard" className="rounded-lg bg-accent px-3 py-2 text-xs font-medium text-accent-fg hover:bg-accent-hover">
-            Go to dashboard
+            {t("goToDashboard")}
           </Link>
           <button onClick={reset} className="rounded-lg border border-border px-3 py-2 text-xs text-fg hover:bg-surface-hover">
-            Import another file
+            {t("importAnother")}
           </button>
         </div>
       </div>
@@ -151,23 +154,18 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
       <div className="space-y-3">
         <div className="rounded-xl border border-border bg-surface/30 p-3">
           <p className="text-xs text-fg-muted">
-            {summary.rowCount} transactions
+            {t("summaryCount", { count: summary.rowCount })}
             {summary.dateRange && (
-              <>
-                {" "}
-                from {summary.dateRange.min} to {summary.dateRange.max}
-              </>
+              <>{t("summaryDateRange", { min: summary.dateRange.min, max: summary.dateRange.max })}</>
             )}
             .
-            {summary.skippedNonEur > 0 && <> {summary.skippedNonEur} non-EUR rows skipped.</>}
-            {summary.skippedInvalid > 0 && <> {summary.skippedInvalid} rows couldn&apos;t be read and were skipped.</>}
+            {summary.skippedNonEur > 0 && <>{t("summaryNonEurSkipped", { count: summary.skippedNonEur })}</>}
+            {summary.skippedInvalid > 0 && <>{t("summaryInvalidSkipped", { count: summary.skippedInvalid })}</>}
           </p>
         </div>
 
         <div className="rounded-xl border border-border bg-surface/30 p-3">
-          <h2 className="mb-2 text-xs font-medium text-fg-muted">
-            Review categories ({mappingRows.length}) before importing
-          </h2>
+          <h2 className="mb-2 text-xs font-medium text-fg-muted">{t("reviewHeading", { count: mappingRows.length })}</h2>
           <div className="space-y-2">
             {mappingRows.map((entry) => {
               const key = mappingKey(entry.name, entry.type);
@@ -177,7 +175,7 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
                   <div className="mb-1.5 flex items-center justify-between gap-2">
                     <span className="text-sm text-fg">{entry.name}</span>
                     <span className="shrink-0 text-xs text-fg-muted">
-                      {entry.count} · {entry.type}
+                      {t("countAndType", { count: entry.count, type: tCommon(entry.type) })}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -186,9 +184,9 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
                       onChange={(e) => updateEntry(key, { action: e.target.value as MappingAction })}
                       className={selectClass}
                     >
-                      <option value="create">Create new category</option>
-                      <option value="map">Map to existing</option>
-                      <option value="skip">Skip these transactions</option>
+                      <option value="create">{t("createNewCategory")}</option>
+                      <option value="map">{t("mapToExisting")}</option>
+                      <option value="skip">{t("skipTransactions")}</option>
                     </select>
                     {entry.action === "create" && (
                       <input
@@ -206,7 +204,7 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
                         className={selectClass}
                       >
                         <option value="" disabled>
-                          Choose category
+                          {t("chooseCategory")}
                         </option>
                         {candidateCategories.map((c) => (
                           <option key={c.id} value={c.id}>
@@ -230,10 +228,10 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
             disabled={isPending || mappingRows.some((r) => r.action === "map" && !r.targetCategoryId)}
             className="rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-40"
           >
-            {isPending ? "Importing..." : "Import"}
+            {isPending ? t("importing") : t("importButton")}
           </button>
           <button onClick={reset} disabled={isPending} className="rounded-lg border border-border px-3 py-2 text-sm text-fg hover:bg-surface-hover">
-            Start over
+            {t("startOver")}
           </button>
         </div>
       </div>
@@ -243,7 +241,7 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
   return (
     <form action={handlePreview} className="rounded-xl border border-border bg-surface/30 p-3">
       <label htmlFor="mmFile" className="mb-1 block text-xs text-fg-muted">
-        Money Manager .xlsx export
+        {t("fileLabel")}
       </label>
       <input
         id="mmFile"
@@ -259,7 +257,7 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
         disabled={isPending || !file}
         className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-40"
       >
-        {isPending ? "Reading file..." : "Preview import"}
+        {isPending ? t("readingFile") : t("previewImport")}
       </button>
       {previewError && <p className="mt-2 text-sm text-danger">{previewError}</p>}
     </form>

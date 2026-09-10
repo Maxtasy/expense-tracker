@@ -2,6 +2,7 @@
 
 import type { RefObject } from "react";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function Dialog({
   dialogRef,
@@ -12,6 +13,8 @@ export function Dialog({
   title: string;
   children: React.ReactNode;
 }) {
+  const t = useTranslations("common");
+
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
     if (e.target === e.currentTarget) dialogRef.current?.close();
   }
@@ -30,7 +33,7 @@ export function Dialog({
       >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-fg">{title}</h2>
-          <button type="button" onClick={() => dialogRef.current?.close()} aria-label="Close" className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
+          <button type="button" onClick={() => dialogRef.current?.close()} aria-label={t("close")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
             <X size={18} />
           </button>
         </div>

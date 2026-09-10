@@ -1,4 +1,5 @@
 import { and, asc, desc, eq, gte, isNull, lte, or, sql, SQL } from "drizzle-orm";
+import { getTranslations, getLocale } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, hiddenCategories, transactions } from "@/db/schema";
@@ -35,7 +36,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   await ensureRecurringGenerated(userId, current);
 
-  const [availableCategories, hiddenIds, allTransactionCount, monthTotals, currency] = await Promise.all([
+  const [availableCategories, hiddenIds, allTransactionCount, monthTotals, currency, locale, t] = await Promise.all([
     db
       .select({ id: categories.id, name: categories.name, type: categories.type })
       .from(categories)
@@ -49,6 +50,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       .where(and(eq(transactions.userId, userId), gte(transactions.date, from), lte(transactions.date, to)))
       .groupBy(transactions.type),
     getUserCurrency(userId),
+    getLocale(),
+    getTranslations("dashboard"),
   ]);
 
   const hiddenIdSet = new Set(hiddenIds.map((h) => h.categoryId));
@@ -56,8 +59,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   // edit form still gets the full list below so an existing (now-hidden) assignment stays visible
   const visibleCategories = availableCategories.filter((c) => !hiddenIdSet.has(c.id));
 
-  const income = Number(monthTotals.find((t) => t.type === "income")?.total ?? 0);
-  const expense = Number(monthTotals.find((t) => t.type === "expense")?.total ?? 0);
+  const income = Number(monthTotals.find((mt) => mt.type === "income")?.total ?? 0);
+  const expense = Number(monthTotals.find((mt) => mt.type === "expense")?.total ?? 0);
 
   const conditions = [eq(transactions.userId, userId), gte(transactions.date, from), lte(transactions.date, to)];
   if (category === "uncategorized") {
@@ -88,7 +91,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <div className="dashboard-grid">
         <div className="dashboard-sidebar">
           <MonthPager current={current} category={category} sort={sort} />
-          <MonthSummary income={income} expense={expense} currency={currency} />
+          <MonthSummary income={income} expense={expense} currency={currency} locale={locale} />
 
           {allTransactionCount > 0 && (
             <TransactionFilters categories={visibleCategories} category={category} sort={sort} month={monthKey(current)} />
@@ -97,7 +100,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
         {userTransactions.length === 0 ? (
           <p className="py-8 text-center text-sm text-fg-muted">
-            {category ? "No transactions match this filter." : `No transactions in ${monthLabel(current)}.`}
+            {category ? t("noTransactionsFilter") : t("noTransactionsMonth", { month: monthLabel(current, locale) })}
           </p>
         ) : (
           <div className="rounded-xl border border-border bg-surface/30 px-3">
