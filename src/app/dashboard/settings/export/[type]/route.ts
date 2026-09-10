@@ -63,7 +63,11 @@ export async function GET(_request: Request, { params }: { params: Promise<{ typ
     return new Response("Not found", { status: 404 });
   }
 
-  const filename = type === "recurring-transactions" ? "recurring_transactions.csv" : `${type}.csv`;
+  const baseName = type === "recurring-transactions" ? "recurring_transactions" : type;
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const timestamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}`;
+  const filename = `${timestamp}_${baseName}.csv`;
   return new Response(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
