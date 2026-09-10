@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { createRecurring } from "./actions";
 import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
+import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 
 type TxType = "expense" | "income";
 type Category = { id: string; name: string; type: TxType };
@@ -48,17 +49,13 @@ export function AddRecurringForm({
     <form ref={formRef} action={handleSubmit} className="space-y-2">
       <div className="grid grid-cols-2 gap-2">
         <label
-          className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${
-            type === "expense" ? "border-accent bg-accent text-accent-fg" : "border-border bg-surface text-fg-muted"
-          }`}
+          className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${typeChipClass("expense", type === "expense")}`}
         >
           <input type="radio" name="type" value="expense" checked={type === "expense"} onChange={() => setType("expense")} className="sr-only" />
           {tCommon("expense")}
         </label>
         <label
-          className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${
-            type === "income" ? "border-accent bg-accent text-accent-fg" : "border-border bg-surface text-fg-muted"
-          }`}
+          className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${typeChipClass("income", type === "income")}`}
         >
           <input type="radio" name="type" value="income" checked={type === "income"} onChange={() => setType("income")} className="sr-only" />
           {tCommon("income")}
@@ -89,7 +86,7 @@ export function AddRecurringForm({
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg transition hover:bg-accent-hover disabled:opacity-60"
+        className={`w-full rounded-lg px-3 py-2 text-sm font-medium transition disabled:opacity-60 ${typeButtonClass(type)}`}
       >
         {isPending ? tCommon("adding") : t("addButton")}
       </button>
