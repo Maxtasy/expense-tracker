@@ -14,6 +14,95 @@
     "add": "Añadir",
     "adding": "Añadiendo..."
   },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "emailLabel": "Correo electrónico",
+      "passwordLabel": "Contraseña",
+      "submit": "Iniciar sesión",
+      "submitPending": "Iniciando sesión...",
+      "noAccount": "¿No tienes una cuenta?",
+      "signupLink": "Regístrate",
+      "invalidCredentials": "Correo electrónico o contraseña incorrectos",
+      "genericError": "Algo salió mal, inténtalo de nuevo"
+    },
+    "signup": {
+      "title": "Registrarse",
+      "emailLabel": "Correo electrónico",
+      "passwordLabel": "Contraseña",
+      "submit": "Registrarse",
+      "submitPending": "Creando cuenta...",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Iniciar sesión",
+      "invalidEmail": "Introduce una dirección de correo electrónico válida",
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+      "emailTaken": "Ya existe una cuenta con ese correo electrónico"
+    }
+  },
+  "landing": {
+    "nav": {
+      "login": "Iniciar sesión",
+      "signup": "Regístrate"
+    },
+    "hero": {
+      "headline": "<hl>Entiende por qué</hl> cada mes sientes que <hl>no te queda dinero</hl>.",
+      "subheadline": "Los pequeños gastos se acumulan sin que te des cuenta. Controla adónde va realmente tu dinero y sabe cuánto te queda antes de que termine el mes — luego empieza a ahorrar algo para los imprevistos.",
+      "tagline": "Gratis para siempre, sin anuncios — empieza a ahorrar ahora mismo.",
+      "getStarted": "Empezar",
+      "login": "Iniciar sesión"
+    },
+    "features": {
+      "track": {
+        "title": "Controla todo",
+        "description": "Registra ingresos y gastos, organizados en categorías que tú controlas."
+      },
+      "monthly": {
+        "title": "Resumen mensual",
+        "description": "Ve tus ingresos, gastos y tu balance neto de cualquier mes de un vistazo."
+      },
+      "recurring": {
+        "title": "Transacciones recurrentes, fácil",
+        "description": "Configura tu salario, alquiler o suscripciones una vez — aparecerán automáticamente cada mes."
+      },
+      "backup": {
+        "title": "Tus datos, respaldados",
+        "description": "Exporta todo a CSV cuando quieras y restáuralo en un par de clics cuando lo necesites."
+      },
+      "languages": {
+        "title": "Habla tu idioma",
+        "description": "Usa la app en inglés, alemán, español, francés o portugués."
+      }
+    },
+    "screenshotsHeading": "Míralo en acción",
+    "screenshots": {
+      "dashboard": {
+        "caption": "Resumen mensual",
+        "alt": "Panel con ingresos, gastos y balance mensual, y una lista de transacciones organizada por categorías"
+      },
+      "insights": {
+        "caption": "Desglose por categoría",
+        "alt": "Página de perspectivas con ingresos y gastos desglosados por categoría en gráficos circulares"
+      },
+      "settings": {
+        "caption": "Exporta e importa tus datos",
+        "alt": "Página de configuración con enlaces de exportación CSV para categorías, transacciones recurrentes y transacciones, y un formulario de importación"
+      }
+    },
+    "roadmapHeading": "Qué viene después",
+    "roadmapSubheading": "La app sigue creciendo. Esto es parte de lo que está previsto:",
+    "roadmap": {
+      "insights": {
+        "title": "Perspectivas más profundas",
+        "description": "Más formas de desglosar y visualizar adónde va tu dinero."
+      },
+      "customization": {
+        "title": "Más personalización",
+        "description": "Detalles como colores de categoría personalizados, para que la app se sienta tuya."
+      }
+    },
+    "feedbackHeading": "¿Tienes una idea para una función?",
+    "feedbackDescription": "Esta app se moldea con el feedback de sus usuarios. Si echas en falta algo que te resultaría útil, avísame."
+  },
   "validation": {
     "notLoggedIn": "Debes iniciar sesión",
     "amountPositive": "El importe debe ser mayor que 0",
