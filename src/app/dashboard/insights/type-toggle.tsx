@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { typeButtonClass } from "@/lib/type-theme";
 
 export async function TypeToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" }) {
   const t = await getTranslations("dashboard.summary");
@@ -14,7 +15,7 @@ export async function TypeToggle({ mode, month, type }: { mode: "month" | "year"
           key={tab.key}
           href={`/dashboard/insights?mode=${mode}&month=${month}&type=${tab.key}`}
           className={`rounded-lg py-1.5 text-center text-sm font-medium transition ${
-            type === tab.key ? "bg-accent text-accent-fg" : "text-fg-muted hover:text-fg"
+            type === tab.key ? typeButtonClass(tab.key) : "text-fg-muted hover:text-fg"
           }`}
         >
           {tab.label}
