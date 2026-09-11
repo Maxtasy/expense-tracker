@@ -24,7 +24,9 @@
       "noAccount": "Vous n'avez pas de compte ?",
       "signupLink": "S'inscrire",
       "invalidCredentials": "E-mail ou mot de passe invalide",
-      "genericError": "Une erreur s'est produite, veuillez réessayer"
+      "genericError": "Une erreur s'est produite, veuillez réessayer",
+      "forgotPasswordLink": "Mot de passe oublié ?",
+      "resetSuccess": "Votre mot de passe a été réinitialisé. Connectez-vous avec votre nouveau mot de passe."
     },
     "signup": {
       "title": "Inscription",
@@ -37,6 +39,27 @@
       "invalidEmail": "Saisissez une adresse e-mail valide",
       "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
       "emailTaken": "Un compte existe déjà avec cet e-mail"
+    },
+    "forgotPassword": {
+      "title": "Réinitialisez votre mot de passe",
+      "description": "Saisissez l'adresse e-mail de votre compte et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+      "emailLabel": "E-mail",
+      "submit": "Envoyer le lien",
+      "submitPending": "Envoi en cours...",
+      "successMessage": "Si un compte existe avec cette adresse e-mail, nous vous avons envoyé un lien pour réinitialiser votre mot de passe. Vérifiez votre boîte de réception.",
+      "backToLogin": "Retour à la connexion"
+    },
+    "resetPassword": {
+      "title": "Choisissez un nouveau mot de passe",
+      "newPasswordLabel": "Nouveau mot de passe",
+      "confirmPasswordLabel": "Confirmer le nouveau mot de passe",
+      "submit": "Réinitialiser le mot de passe",
+      "submitPending": "Réinitialisation...",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+      "invalidOrExpiredTitle": "Ce lien est invalide ou a expiré",
+      "invalidOrExpiredDescription": "Demandez-en un nouveau depuis la page mot de passe oublié.",
+      "requestNewLink": "Demander un nouveau lien"
     }
   },
   "landing": {
@@ -295,6 +318,16 @@
       "doneDuplicatesSkipped": "{count, plural, one {# doublon ignoré (déjà présent dans vos données)} other {# doublons ignorés (déjà présents dans vos données)}}",
       "goToDashboard": "Aller au tableau de bord",
       "importAnother": "Importer un autre fichier"
+    }
+  },
+  "email": {
+    "passwordReset": {
+      "subject": "Réinitialisez votre mot de passe",
+      "heading": "Réinitialisez votre mot de passe",
+      "body": "Nous avons reçu une demande de réinitialisation du mot de passe de votre compte Expense Tracker. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe. Ce lien expire dans 1 heure.",
+      "button": "Réinitialiser le mot de passe",
+      "ignoreNote": "Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail en toute sécurité — votre mot de passe restera inchangé.",
+      "footer": "Expense Tracker"
     }
   }
 }
