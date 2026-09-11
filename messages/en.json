@@ -115,7 +115,10 @@
     "roadmapSubheading": "There’s no fixed feature list — this app grows based on what the people using it actually need. Your feedback shapes what gets built next.",
     "aiDisclosure": "Built solo, with AI assistance for writing code — every change is still reviewed and tested by a human before it ships.",
     "feedbackHeading": "Have a feature in mind?",
-    "feedbackDescription": "This app is shaped by feedback. If there’s something missing you’d find useful, let me know."
+    "feedbackDescription": "This app is shaped by feedback. If there’s something missing you’d find useful, let me know.",
+    "changelogHeading": "Built to last, built with you",
+    "changelogSubheading": "What started as a small personal tool with a solid foundation is growing release by release — shaped by feedback from people actually using it. See how far it’s come.",
+    "changelogCta": "View the changelog"
   },
   "validation": {
     "notLoggedIn": "You must be logged in",

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode, CSSProperties } from "react";
-import { ArrowLeftRight, CalendarDays, Compass, FileSpreadsheet, Languages, Mail, Repeat } from "lucide-react";
+import { ArrowLeftRight, CalendarDays, Compass, FileSpreadsheet, History, Languages, Mail, Repeat } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/logo";
 import { LocaleSwitcher } from "@/components/locale-switcher";
@@ -123,6 +123,20 @@ export default async function Home() {
             >
               contact@maxtasy.me
             </a>
+          </div>
+        </div>
+
+        <div className="mt-16 sm:mt-20">
+          <div className="mx-auto max-w-md rounded-xl border border-border bg-surface/30 p-6 text-center">
+            <History size={20} className="mx-auto text-accent" />
+            <h2 className="mt-3 text-base font-semibold text-fg">{t("changelogHeading")}</h2>
+            <p className="mt-2 text-sm text-fg-muted">{t("changelogSubheading")}</p>
+            <Link
+              href="/changelog"
+              className="mt-4 inline-block rounded-lg border border-border px-4 py-2 text-sm font-medium text-fg hover:text-accent"
+            >
+              {t("changelogCta")}
+            </Link>
           </div>
         </div>
       </main>

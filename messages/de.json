@@ -115,7 +115,10 @@
     "roadmapSubheading": "Es gibt keine feste Feature-Liste — die App wächst danach, was die Nutzer:innen wirklich brauchen. Dein Feedback bestimmt, was als Nächstes entsteht.",
     "aiDisclosure": "Im Alleingang entwickelt, mit KI-Unterstützung beim Programmieren — jede Änderung wird trotzdem von einem Menschen geprüft und getestet, bevor sie veröffentlicht wird.",
     "feedbackHeading": "Hast du eine Idee für ein Feature?",
-    "feedbackDescription": "Diese App wird durch Feedback geformt. Wenn dir etwas Nützliches fehlt, lass es mich wissen."
+    "feedbackDescription": "Diese App wird durch Feedback geformt. Wenn dir etwas Nützliches fehlt, lass es mich wissen.",
+    "changelogHeading": "Gebaut, um zu bleiben – gemeinsam mit dir",
+    "changelogSubheading": "Was als kleines persönliches Tool mit solidem Fundament begann, wächst mit jedem Release – geformt durch das Feedback der Menschen, die es tatsächlich nutzen. Sieh dir an, wie weit es schon gekommen ist.",
+    "changelogCta": "Changelog ansehen"
   },
   "validation": {
     "notLoggedIn": "Du musst angemeldet sein",
