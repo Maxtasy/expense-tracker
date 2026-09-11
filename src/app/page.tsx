@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode, CSSProperties } from "react";
-import { ArrowLeftRight, CalendarDays, FileSpreadsheet, Languages, Mail, PieChart, Repeat, Sparkles } from "lucide-react";
+import { ArrowLeftRight, CalendarDays, Compass, FileSpreadsheet, Languages, Mail, Repeat } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/logo";
 import { LocaleSwitcher } from "@/components/locale-switcher";
@@ -20,11 +20,6 @@ const FEATURES = [
   { icon: Repeat, key: "recurring" },
   { icon: FileSpreadsheet, key: "backup" },
   { icon: Languages, key: "languages" },
-] as const;
-
-const ROADMAP = [
-  { icon: PieChart, key: "insights" },
-  { icon: Sparkles, key: "customization" },
 ] as const;
 
 const SCREENSHOTS = [
@@ -109,17 +104,12 @@ export default async function Home() {
         </div>
 
         <div className="mt-24 sm:mt-28">
-          <h2 className="text-lg font-semibold text-fg sm:text-xl">{t("roadmapHeading")}</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted lg:max-w-lg">{t("roadmapSubheading")}</p>
-          <div className="mt-6 grid gap-3 text-left sm:grid-cols-2 lg:gap-4">
-            {ROADMAP.map(({ icon: Icon, key }) => (
-              <div key={key} className="rounded-xl border border-border bg-surface/30 p-4">
-                <Icon size={18} className="text-accent" />
-                <p className="mt-3 text-sm font-medium text-fg">{t(`roadmap.${key}.title`)}</p>
-                <p className="mt-1 text-xs text-fg-muted">{t(`roadmap.${key}.description`)}</p>
-              </div>
-            ))}
+          <div className="mx-auto max-w-md rounded-xl border border-border bg-surface/30 p-6 text-center">
+            <Compass size={20} className="mx-auto text-accent" />
+            <h2 className="mt-3 text-base font-semibold text-fg">{t("roadmapHeading")}</h2>
+            <p className="mt-2 text-sm text-fg-muted">{t("roadmapSubheading")}</p>
           </div>
+          <p className="mx-auto mt-4 max-w-md text-xs text-fg-muted">{t("aiDisclosure")}</p>
         </div>
 
         <div className="mt-16 sm:mt-20">

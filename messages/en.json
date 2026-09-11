@@ -88,18 +88,9 @@
         "alt": "Settings page with CSV export links for categories, recurring transactions, and transactions, and an import form"
       }
     },
-    "roadmapHeading": "What’s next",
-    "roadmapSubheading": "The app is actively growing. Here’s some of what’s planned:",
-    "roadmap": {
-      "insights": {
-        "title": "Deeper insights",
-        "description": "More ways to break down and visualize where your money goes."
-      },
-      "customization": {
-        "title": "More customization",
-        "description": "Small touches like custom category colors, so the app feels like yours."
-      }
-    },
+    "roadmapHeading": "Be part of the roadmap",
+    "roadmapSubheading": "There’s no fixed feature list — this app grows based on what the people using it actually need. Your feedback shapes what gets built next.",
+    "aiDisclosure": "Built solo, with AI assistance for writing code — every change is still reviewed and tested by a human before it ships.",
     "feedbackHeading": "Have a feature in mind?",
     "feedbackDescription": "This app is shaped by feedback. If there’s something missing you’d find useful, let me know."
   },
