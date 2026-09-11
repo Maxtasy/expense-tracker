@@ -115,7 +115,10 @@
     "roadmapSubheading": "Não há uma lista fixa de funcionalidades — o app evolui de acordo com o que as pessoas realmente precisam. Seu feedback define o que será desenvolvido a seguir.",
     "aiDisclosure": "Desenvolvido sozinho, com ajuda de IA para escrever código — cada alteração ainda é revisada e testada por uma pessoa antes de ser publicada.",
     "feedbackHeading": "Tem uma ideia de funcionalidade?",
-    "feedbackDescription": "Este app é moldado por feedback. Se estiver faltando algo que seria útil para você, me avise."
+    "feedbackDescription": "Este app é moldado por feedback. Se estiver faltando algo que seria útil para você, me avise.",
+    "changelogHeading": "Feito para durar, feito com você",
+    "changelogSubheading": "O que começou como uma pequena ferramenta pessoal com uma base sólida está crescendo a cada versão — moldado pelo feedback de quem realmente usa o app. Veja até onde já chegou.",
+    "changelogCta": "Ver o changelog"
   },
   "validation": {
     "notLoggedIn": "Você precisa estar conectado",
