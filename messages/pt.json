@@ -24,7 +24,9 @@
       "noAccount": "Ainda não tem uma conta?",
       "signupLink": "Cadastre-se",
       "invalidCredentials": "E-mail ou senha inválidos",
-      "genericError": "Algo deu errado, tente novamente"
+      "genericError": "Algo deu errado, tente novamente",
+      "forgotPasswordLink": "Esqueceu sua senha?",
+      "resetSuccess": "Sua senha foi redefinida. Entre com sua nova senha."
     },
     "signup": {
       "title": "Cadastrar",
@@ -37,6 +39,27 @@
       "invalidEmail": "Digite um endereço de e-mail válido",
       "passwordTooShort": "A senha deve ter pelo menos 8 caracteres",
       "emailTaken": "Já existe uma conta com esse e-mail"
+    },
+    "forgotPassword": {
+      "title": "Redefina sua senha",
+      "description": "Digite o e-mail da sua conta e enviaremos um link para redefinir sua senha.",
+      "emailLabel": "E-mail",
+      "submit": "Enviar link",
+      "submitPending": "Enviando...",
+      "successMessage": "Se existir uma conta com esse e-mail, enviamos um link para redefinir sua senha. Verifique sua caixa de entrada.",
+      "backToLogin": "Voltar para o login"
+    },
+    "resetPassword": {
+      "title": "Escolha uma nova senha",
+      "newPasswordLabel": "Nova senha",
+      "confirmPasswordLabel": "Confirmar nova senha",
+      "submit": "Redefinir senha",
+      "submitPending": "Redefinindo...",
+      "passwordTooShort": "A senha deve ter pelo menos 8 caracteres",
+      "passwordsDoNotMatch": "As senhas não coincidem",
+      "invalidOrExpiredTitle": "Este link é inválido ou expirou",
+      "invalidOrExpiredDescription": "Solicite um novo na página de senha esquecida.",
+      "requestNewLink": "Solicitar um novo link"
     }
   },
   "landing": {
@@ -295,6 +318,16 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicata ignorada (já está nos seus dados)} other {# duplicatas ignoradas (já estão nos seus dados)}}",
       "goToDashboard": "Ir para o painel",
       "importAnother": "Importar outro arquivo"
+    }
+  },
+  "email": {
+    "passwordReset": {
+      "subject": "Redefina sua senha",
+      "heading": "Redefina sua senha",
+      "body": "Recebemos uma solicitação para redefinir a senha da sua conta do Expense Tracker. Clique no botão abaixo para escolher uma nova senha. Este link expira em 1 hora.",
+      "button": "Redefinir senha",
+      "ignoreNote": "Se você não solicitou isso, pode ignorar este e-mail com segurança — sua senha permanecerá a mesma.",
+      "footer": "Expense Tracker"
     }
   }
 }
