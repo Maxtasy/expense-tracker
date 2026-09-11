@@ -45,6 +45,8 @@ npm run db:studio     # open Drizzle Studio to browse tables
 
 Migrations need session-level features (e.g. advisory locks) that transaction-mode pooling doesn't support, so they're kept on a separate connection.
 
+`.env.local` (and everything above) always points at the **dev** Supabase project — dev and prod are separate projects (see [RELEASING.md](RELEASING.md)'s "Database split" note). Applying a migration to production is a release-time step using a separate `.env.prod` file (`npm run db:migrate:prod`), documented in RELEASING.md, not something you do during normal day-to-day development.
+
 ### Gotcha: `drizzle-kit migrate` fails silently
 
 `npm run db:migrate` can exit with a non-zero code and **no error message at all** when a migration fails — you just see the spinner stop. This happened when a generated migration tried to `ALTER COLUMN ... SET DATA TYPE uuid` on a column that Postgres couldn't auto-cast (it needs an explicit `USING column::uuid`, even if every existing value is `NULL`); `drizzle-kit`'s CLI swallowed the real Postgres error and gave no clue why it failed.
