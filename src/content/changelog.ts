@@ -12,6 +12,14 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.10.0",
+    date: "2026-09-11",
+    items: [
+      "Forgot your password? Reset it by email from the login page.",
+      "New changelog page (linked from the landing page) showing what's shipped, release by release.",
+    ],
+  },
+  {
     version: "1.9.0",
     date: "2026-09-10",
     items: [
