@@ -45,6 +45,8 @@ npm run db:studio     # open Drizzle Studio to browse tables
 
 Migrations need session-level features (e.g. advisory locks) that transaction-mode pooling doesn't support, so they're kept on a separate connection.
 
+`.env.local` (and everything above) always points at the **dev** Supabase project — dev and prod are separate projects (see [RELEASING.md](RELEASING.md)'s "Database split" note). Applying a migration to production is a release-time step using a separate `.env.prod` file (`npm run db:migrate:prod`), documented in RELEASING.md, not something you do during normal day-to-day development.
+
 ### Gotcha: `drizzle-kit migrate` fails silently
 
 `npm run db:migrate` can exit with a non-zero code and **no error message at all** when a migration fails — you just see the spinner stop. This happened when a generated migration tried to `ALTER COLUMN ... SET DATA TYPE uuid` on a column that Postgres couldn't auto-cast (it needs an explicit `USING column::uuid`, even if every existing value is `NULL`); `drizzle-kit`'s CLI swallowed the real Postgres error and gave no clue why it failed.
@@ -97,9 +99,9 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 Deployed on Vercel, connected to the GitHub repo for auto-deploy on every push to `main`.
 
-- **Database**: production uses the same Supabase project as development. This was a reasonable simplification while the app had one user; now that real Closed-testing accounts exist, it's a known risk rather than a convenience — a migration or query run locally is immediately live for everyone. Splitting into separate environments is planned before promoting to Production, but hasn't happened yet.
-- **Vercel environment variables**: only `DATABASE_URL` (the Transaction pooler string) and `AUTH_SECRET` (a separate secret from the dev one in `.env.local`, generated the same way). `DATABASE_URL_MIGRATIONS` is **not** set in Vercel — it's a `drizzle-kit`-only, local-machine concern.
-- **Schema changes going forward**: since there's no CI migration step, run `npm run db:migrate` locally (against the shared Supabase DB) before or right after pushing a change that depends on it — the deployed app and your local dev environment share the same database, so a migration applied locally is immediately live.
+- **Database**: production and development use **separate Supabase projects** (split 2026-09, see RELEASING.md's branching model section for the history). Vercel's **Production** environment (`main`) points at the prod project; its **Preview** environment (every other branch, including `develop` and PR previews) points at a separate dev project — so local work, `develop`, and any feature-branch PR never touch real user data. `DATABASE_URL` in your local `.env.local` should point at the dev project too.
+- **Vercel environment variables**: `DATABASE_URL` (Transaction pooler string) is set twice — once scoped to Production (the prod DB), once scoped to Preview (the dev DB) — plus `AUTH_SECRET` (a separate secret from the dev one in `.env.local`, generated the same way). `DATABASE_URL_MIGRATIONS` is **not** set in Vercel — it's a `drizzle-kit`-only, local-machine concern.
+- **Schema changes going forward**: since there's no CI migration step, run `npm run db:migrate` locally (against the dev DB) to try out a schema change, then run it again against the prod DB (temporarily point `.env.local` at the prod connection strings, or run the command with them inlined) before or right after merging the release PR that depends on it — migrations still aren't automated, just no longer entangled with local/`develop` work.
 - `trustHost: true` is set in [`src/auth.ts`](src/auth.ts) so Auth.js trusts the `Host`/`X-Forwarded-Host` headers Vercel's proxy sets, rather than requiring a hardcoded canonical URL.
 
 ## Releasing

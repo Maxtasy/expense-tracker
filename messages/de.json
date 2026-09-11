@@ -24,7 +24,9 @@
       "noAccount": "Noch kein Konto?",
       "signupLink": "Registrieren",
       "invalidCredentials": "Ungültige E-Mail oder ungültiges Passwort",
-      "genericError": "Etwas ist schiefgelaufen, bitte versuche es erneut"
+      "genericError": "Etwas ist schiefgelaufen, bitte versuche es erneut",
+      "forgotPasswordLink": "Passwort vergessen?",
+      "resetSuccess": "Dein Passwort wurde zurückgesetzt. Melde dich mit deinem neuen Passwort an."
     },
     "signup": {
       "title": "Registrieren",
@@ -37,6 +39,27 @@
       "invalidEmail": "Gib eine gültige E-Mail-Adresse ein",
       "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein",
       "emailTaken": "Es existiert bereits ein Konto mit dieser E-Mail-Adresse"
+    },
+    "forgotPassword": {
+      "title": "Passwort zurücksetzen",
+      "description": "Gib die E-Mail-Adresse deines Kontos ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.",
+      "emailLabel": "E-Mail",
+      "submit": "Link senden",
+      "submitPending": "Wird gesendet...",
+      "successMessage": "Falls zu dieser E-Mail-Adresse ein Konto existiert, haben wir einen Link zum Zurücksetzen des Passworts gesendet. Prüfe dein Postfach.",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "resetPassword": {
+      "title": "Neues Passwort wählen",
+      "newPasswordLabel": "Neues Passwort",
+      "confirmPasswordLabel": "Neues Passwort bestätigen",
+      "submit": "Passwort zurücksetzen",
+      "submitPending": "Wird zurückgesetzt...",
+      "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein",
+      "passwordsDoNotMatch": "Die Passwörter stimmen nicht überein",
+      "invalidOrExpiredTitle": "Dieser Link ist ungültig oder abgelaufen",
+      "invalidOrExpiredDescription": "Fordere über die Seite \"Passwort vergessen\" einen neuen Link an.",
+      "requestNewLink": "Neuen Link anfordern"
     }
   },
   "landing": {
@@ -92,7 +115,10 @@
     "roadmapSubheading": "Es gibt keine feste Feature-Liste — die App wächst danach, was die Nutzer:innen wirklich brauchen. Dein Feedback bestimmt, was als Nächstes entsteht.",
     "aiDisclosure": "Im Alleingang entwickelt, mit KI-Unterstützung beim Programmieren — jede Änderung wird trotzdem von einem Menschen geprüft und getestet, bevor sie veröffentlicht wird.",
     "feedbackHeading": "Hast du eine Idee für ein Feature?",
-    "feedbackDescription": "Diese App wird durch Feedback geformt. Wenn dir etwas Nützliches fehlt, lass es mich wissen."
+    "feedbackDescription": "Diese App wird durch Feedback geformt. Wenn dir etwas Nützliches fehlt, lass es mich wissen.",
+    "changelogHeading": "Gebaut, um zu bleiben – gemeinsam mit dir",
+    "changelogSubheading": "Was als kleines persönliches Tool mit solidem Fundament begann, wächst mit jedem Release – geformt durch das Feedback der Menschen, die es tatsächlich nutzen. Sieh dir an, wie weit es schon gekommen ist.",
+    "changelogCta": "Changelog ansehen"
   },
   "validation": {
     "notLoggedIn": "Du musst angemeldet sein",
@@ -295,6 +321,16 @@
       "doneDuplicatesSkipped": "{count, plural, one {# Duplikat übersprungen (bereits in deinen Daten)} other {# Duplikate übersprungen (bereits in deinen Daten)}}",
       "goToDashboard": "Zum Dashboard",
       "importAnother": "Weitere Datei importieren"
+    }
+  },
+  "email": {
+    "passwordReset": {
+      "subject": "Setze dein Passwort zurück",
+      "heading": "Setze dein Passwort zurück",
+      "body": "Wir haben eine Anfrage erhalten, das Passwort für dein Expense-Tracker-Konto zurückzusetzen. Klicke auf die Schaltfläche unten, um ein neues Passwort zu wählen. Dieser Link ist 1 Stunde lang gültig.",
+      "button": "Passwort zurücksetzen",
+      "ignoreNote": "Wenn du das nicht angefordert hast, kannst du diese E-Mail ignorieren — dein Passwort bleibt unverändert.",
+      "footer": "Expense Tracker"
     }
   }
 }

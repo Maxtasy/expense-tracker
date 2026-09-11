@@ -1,6 +1,6 @@
 {
   "name": "expense-tracker",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,6 +9,7 @@
     "lint": "eslint",
     "db:generate": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs generate",
     "db:migrate": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs migrate",
+    "db:migrate:prod": "node --env-file=.env.prod node_modules/drizzle-kit/bin.cjs migrate",
     "db:studio": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs studio",
     "db:test-connection": "node --env-file=.env.local --import tsx src/db/test-connection.ts",
     "db:seed": "node --env-file=.env.local --import tsx src/db/seed.ts",
@@ -29,6 +30,7 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "recharts": "^3.10.1",
+    "resend": "^6.27.0",
     "zod": "^4.5.4"
   },
   "devDependencies": {

@@ -24,7 +24,9 @@
       "noAccount": "Don't have an account?",
       "signupLink": "Sign up",
       "invalidCredentials": "Invalid email or password",
-      "genericError": "Something went wrong, please try again"
+      "genericError": "Something went wrong, please try again",
+      "forgotPasswordLink": "Forgot your password?",
+      "resetSuccess": "Your password has been reset. Log in with your new password."
     },
     "signup": {
       "title": "Sign up",
@@ -37,6 +39,27 @@
       "invalidEmail": "Enter a valid email address",
       "passwordTooShort": "Password must be at least 8 characters",
       "emailTaken": "An account with that email already exists"
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "description": "Enter the email address for your account and we'll send you a link to reset your password.",
+      "emailLabel": "Email",
+      "submit": "Send reset link",
+      "submitPending": "Sending...",
+      "successMessage": "If an account exists for that email, we've sent a link to reset your password. Check your inbox.",
+      "backToLogin": "Back to log in"
+    },
+    "resetPassword": {
+      "title": "Choose a new password",
+      "newPasswordLabel": "New password",
+      "confirmPasswordLabel": "Confirm new password",
+      "submit": "Reset password",
+      "submitPending": "Resetting...",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "invalidOrExpiredTitle": "This reset link is invalid or has expired",
+      "invalidOrExpiredDescription": "Request a new one from the forgot password page.",
+      "requestNewLink": "Request a new link"
     }
   },
   "landing": {
@@ -92,7 +115,10 @@
     "roadmapSubheading": "There’s no fixed feature list — this app grows based on what the people using it actually need. Your feedback shapes what gets built next.",
     "aiDisclosure": "Built solo, with AI assistance for writing code — every change is still reviewed and tested by a human before it ships.",
     "feedbackHeading": "Have a feature in mind?",
-    "feedbackDescription": "This app is shaped by feedback. If there’s something missing you’d find useful, let me know."
+    "feedbackDescription": "This app is shaped by feedback. If there’s something missing you’d find useful, let me know.",
+    "changelogHeading": "Built to last, built with you",
+    "changelogSubheading": "What started as a small personal tool with a solid foundation is growing release by release — shaped by feedback from people actually using it. See how far it’s come.",
+    "changelogCta": "View the changelog"
   },
   "validation": {
     "notLoggedIn": "You must be logged in",
@@ -295,6 +321,16 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicate skipped (already in your data)} other {# duplicates skipped (already in your data)}}",
       "goToDashboard": "Go to dashboard",
       "importAnother": "Import another file"
+    }
+  },
+  "email": {
+    "passwordReset": {
+      "subject": "Reset your password",
+      "heading": "Reset your password",
+      "body": "We received a request to reset the password for your Expense Tracker account. Click the button below to choose a new password. This link expires in 1 hour.",
+      "button": "Reset password",
+      "ignoreNote": "If you didn't request this, you can safely ignore this email — your password will stay the same.",
+      "footer": "Expense Tracker"
     }
   }
 }

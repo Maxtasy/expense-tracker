@@ -24,7 +24,9 @@
       "noAccount": "¿No tienes una cuenta?",
       "signupLink": "Regístrate",
       "invalidCredentials": "Correo electrónico o contraseña incorrectos",
-      "genericError": "Algo salió mal, inténtalo de nuevo"
+      "genericError": "Algo salió mal, inténtalo de nuevo",
+      "forgotPasswordLink": "¿Olvidaste tu contraseña?",
+      "resetSuccess": "Tu contraseña se ha restablecido. Inicia sesión con tu nueva contraseña."
     },
     "signup": {
       "title": "Registrarse",
@@ -37,6 +39,27 @@
       "invalidEmail": "Introduce una dirección de correo electrónico válida",
       "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
       "emailTaken": "Ya existe una cuenta con ese correo electrónico"
+    },
+    "forgotPassword": {
+      "title": "Restablece tu contraseña",
+      "description": "Introduce el correo electrónico de tu cuenta y te enviaremos un enlace para restablecer tu contraseña.",
+      "emailLabel": "Correo electrónico",
+      "submit": "Enviar enlace",
+      "submitPending": "Enviando...",
+      "successMessage": "Si existe una cuenta con ese correo electrónico, te hemos enviado un enlace para restablecer tu contraseña. Revisa tu bandeja de entrada.",
+      "backToLogin": "Volver a iniciar sesión"
+    },
+    "resetPassword": {
+      "title": "Elige una nueva contraseña",
+      "newPasswordLabel": "Nueva contraseña",
+      "confirmPasswordLabel": "Confirmar nueva contraseña",
+      "submit": "Restablecer contraseña",
+      "submitPending": "Restableciendo...",
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+      "passwordsDoNotMatch": "Las contraseñas no coinciden",
+      "invalidOrExpiredTitle": "Este enlace no es válido o ha caducado",
+      "invalidOrExpiredDescription": "Solicita uno nuevo desde la página de contraseña olvidada.",
+      "requestNewLink": "Solicitar un nuevo enlace"
     }
   },
   "landing": {
@@ -92,7 +115,10 @@
     "roadmapSubheading": "No hay una lista fija de funciones — la app crece según lo que la gente realmente necesita. Tus comentarios determinan qué se construye a continuación.",
     "aiDisclosure": "Desarrollada en solitario, con ayuda de IA para escribir código — cada cambio es revisado y probado por una persona antes de publicarse.",
     "feedbackHeading": "¿Tienes una idea para una función?",
-    "feedbackDescription": "Esta app se moldea con el feedback de sus usuarios. Si echas en falta algo que te resultaría útil, avísame."
+    "feedbackDescription": "Esta app se moldea con el feedback de sus usuarios. Si echas en falta algo que te resultaría útil, avísame.",
+    "changelogHeading": "Hecha para durar, hecha contigo",
+    "changelogSubheading": "Lo que empezó como una pequeña herramienta personal con una base sólida va creciendo con cada versión, moldeada por el feedback de quienes realmente la usan. Descubre hasta dónde ha llegado.",
+    "changelogCta": "Ver el changelog"
   },
   "validation": {
     "notLoggedIn": "Debes iniciar sesión",
@@ -295,6 +321,16 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicado omitido (ya está en tus datos)} other {# duplicados omitidos (ya están en tus datos)}}",
       "goToDashboard": "Ir al panel",
       "importAnother": "Importar otro archivo"
+    }
+  },
+  "email": {
+    "passwordReset": {
+      "subject": "Restablece tu contraseña",
+      "heading": "Restablece tu contraseña",
+      "body": "Recibimos una solicitud para restablecer la contraseña de tu cuenta de Expense Tracker. Haz clic en el botón de abajo para elegir una nueva contraseña. Este enlace caduca en 1 hora.",
+      "button": "Restablecer contraseña",
+      "ignoreNote": "Si no solicitaste esto, puedes ignorar este correo de forma segura — tu contraseña no cambiará.",
+      "footer": "Expense Tracker"
     }
   }
 }
