@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { changePassword } from "./actions";
+import { Spinner } from "@/components/spinner";
 
 export function ChangePasswordForm() {
   const t = useTranslations("settings.changePassword");
@@ -73,8 +74,9 @@ export function ChangePasswordForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg transition hover:bg-accent-hover disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg transition hover:bg-accent-hover disabled:opacity-60"
       >
+        {isPending && <Spinner size={14} />}
         {isPending ? t("saving") : t("saveButton")}
       </button>
     </form>

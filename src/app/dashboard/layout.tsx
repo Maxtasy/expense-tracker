@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Tags, Repeat, PieChart, Settings, LogOut } from "lucide-react";
+import { Tags, Repeat, PieChart, Settings } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { Logo } from "@/components/logo";
-import { logout } from "./actions";
+import { LogoutButton } from "./logout-button";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -33,11 +33,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Link href="/dashboard/settings" aria-label={t("settings")} className="rounded-lg p-1.5 hover:text-fg">
             <Settings size={18} />
           </Link>
-          <form action={logout} className="contents">
-            <button type="submit" aria-label={t("logOut")} className="rounded-lg p-1.5 hover:text-fg">
-              <LogOut size={18} />
-            </button>
-          </form>
+          <LogoutButton label={t("logOut")} />
         </nav>
       </header>
       {/* Raw CSS, not Tailwind's `md:`/`lg:` responsive utilities: this project's Turbopack dev

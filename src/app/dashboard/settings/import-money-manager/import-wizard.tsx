@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { previewMoneyManagerImport, commitMoneyManagerImport, type CategorySuggestion } from "./actions";
+import { Spinner } from "@/components/spinner";
 
 type TxType = "expense" | "income";
 type ExistingCategory = { id: string; name: string; type: TxType };
@@ -226,8 +227,9 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
           <button
             onClick={handleCommit}
             disabled={isPending || mappingRows.some((r) => r.action === "map" && !r.targetCategoryId)}
-            className="rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-40"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-40"
           >
+            {isPending && <Spinner size={14} />}
             {isPending ? t("importing") : t("importButton")}
           </button>
           <button onClick={reset} disabled={isPending} className="rounded-lg border border-border px-3 py-2 text-sm text-fg hover:bg-surface-hover">
@@ -255,8 +257,9 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
       <button
         type="submit"
         disabled={isPending || !file}
-        className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-40"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-40"
       >
+        {isPending && <Spinner size={14} />}
         {isPending ? t("readingFile") : t("previewImport")}
       </button>
       {previewError && <p className="mt-2 text-sm text-danger">{previewError}</p>}
