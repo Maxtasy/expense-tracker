@@ -1,4 +1,4 @@
-import { Download, Heart, Upload } from "lucide-react";
+import { Heart, Upload } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
@@ -8,6 +8,8 @@ import { ImportForm } from "./import-form";
 import { StartFreshForm } from "./start-fresh-form";
 import { CurrencyForm } from "./currency-form";
 import { LocaleForm } from "./locale-form";
+import { ChangePasswordForm } from "./change-password-form";
+import { ExportLinks } from "./export-links";
 import { version } from "../../../../package.json";
 
 export default async function SettingsPage() {
@@ -39,21 +41,14 @@ export default async function SettingsPage() {
         <LocaleForm locale={locale} />
       </div>
 
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("changePassword.label")}</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <ChangePasswordForm />
+      </div>
+
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("export")}</h2>
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <div className="flex flex-col gap-2">
-          {exportLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              download
-              className="flex items-center justify-between rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg hover:bg-surface-hover"
-            >
-              {link.label}
-              <Download size={16} className="text-fg-muted" />
-            </a>
-          ))}
-        </div>
+        <ExportLinks links={exportLinks} />
       </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("importMoneyManagerLabel")}</h2>

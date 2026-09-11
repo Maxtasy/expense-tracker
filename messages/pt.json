@@ -88,18 +88,9 @@
         "alt": "Página de configurações com links de exportação CSV para categorias, transações recorrentes e transações, além de um formulário de importação"
       }
     },
-    "roadmapHeading": "O que vem a seguir",
-    "roadmapSubheading": "O app está em constante evolução. Aqui está parte do que está planejado:",
-    "roadmap": {
-      "insights": {
-        "title": "Insights mais profundos",
-        "description": "Mais formas de detalhar e visualizar para onde vai o seu dinheiro."
-      },
-      "customization": {
-        "title": "Mais personalização",
-        "description": "Pequenos detalhes como cores de categoria personalizadas, para que o app pareça seu."
-      }
-    },
+    "roadmapHeading": "Faça parte do roteiro",
+    "roadmapSubheading": "Não há uma lista fixa de funcionalidades — o app evolui de acordo com o que as pessoas realmente precisam. Seu feedback define o que será desenvolvido a seguir.",
+    "aiDisclosure": "Desenvolvido sozinho, com ajuda de IA para escrever código — cada alteração ainda é revisada e testada por uma pessoa antes de ser publicada.",
     "feedbackHeading": "Tem uma ideia de funcionalidade?",
     "feedbackDescription": "Este app é moldado por feedback. Se estiver faltando algo que seria útil para você, me avise."
   },
@@ -213,6 +204,18 @@
     "language": "Idioma",
     "languageAriaLabel": "Idioma",
     "saved": "Salvo",
+    "changePassword": {
+      "label": "Alterar senha",
+      "currentPasswordLabel": "Senha atual",
+      "newPasswordLabel": "Nova senha",
+      "confirmPasswordLabel": "Confirmar nova senha",
+      "saveButton": "Alterar senha",
+      "saving": "Alterando...",
+      "success": "Senha alterada.",
+      "currentPasswordIncorrect": "A senha atual está incorreta",
+      "passwordTooShort": "A nova senha deve ter pelo menos 8 caracteres",
+      "passwordsDoNotMatch": "As novas senhas não coincidem"
+    },
     "export": "Exportar",
     "importMoneyManagerLabel": "Importar do Money Manager",
     "importMoneyManagerDescription": "Traga transações de uma exportação .xlsx do Money Manager. Elas são adicionadas aos seus dados existentes — nada é excluído.",

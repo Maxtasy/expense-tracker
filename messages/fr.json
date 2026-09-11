@@ -88,18 +88,9 @@
         "alt": "Page des paramètres avec des liens d'exportation CSV pour les catégories, les transactions récurrentes et les transactions, ainsi qu'un formulaire d'importation"
       }
     },
-    "roadmapHeading": "Prochaines étapes",
-    "roadmapSubheading": "L'application continue d'évoluer. Voici une partie de ce qui est prévu :",
-    "roadmap": {
-      "insights": {
-        "title": "Des aperçus plus poussés",
-        "description": "Plus de moyens d'analyser et de visualiser où va votre argent."
-      },
-      "customization": {
-        "title": "Plus de personnalisation",
-        "description": "De petites touches comme des couleurs de catégorie personnalisées, pour que l'application vous ressemble."
-      }
-    },
+    "roadmapHeading": "Participez à la feuille de route",
+    "roadmapSubheading": "Il n'y a pas de liste de fonctionnalités figée — l'application évolue selon les besoins réels des utilisateurs. Vos retours déterminent ce qui sera développé ensuite.",
+    "aiDisclosure": "Développée en solo, avec l'aide de l'IA pour écrire le code — chaque modification est néanmoins relue et testée par une personne avant d'être publiée.",
     "feedbackHeading": "Une idée de fonctionnalité ?",
     "feedbackDescription": "Cette application évolue grâce à vos retours. S'il manque quelque chose qui vous serait utile, faites-le-moi savoir."
   },
@@ -213,6 +204,18 @@
     "language": "Langue",
     "languageAriaLabel": "Langue",
     "saved": "Enregistré",
+    "changePassword": {
+      "label": "Changer le mot de passe",
+      "currentPasswordLabel": "Mot de passe actuel",
+      "newPasswordLabel": "Nouveau mot de passe",
+      "confirmPasswordLabel": "Confirmer le nouveau mot de passe",
+      "saveButton": "Changer le mot de passe",
+      "saving": "Modification...",
+      "success": "Mot de passe modifié.",
+      "currentPasswordIncorrect": "Le mot de passe actuel est incorrect",
+      "passwordTooShort": "Le nouveau mot de passe doit contenir au moins 8 caractères",
+      "passwordsDoNotMatch": "Les nouveaux mots de passe ne correspondent pas"
+    },
     "export": "Exporter",
     "importMoneyManagerLabel": "Importer depuis Money Manager",
     "importMoneyManagerDescription": "Importez des transactions depuis un export .xlsx de Money Manager. Elles s'ajoutent à vos données existantes — rien n'est supprimé.",

@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { startFresh } from "./actions";
 import { Dialog } from "../dialog";
+import { Spinner } from "@/components/spinner";
 
 export function StartFreshForm() {
   const t = useTranslations("settings.startFresh");
@@ -82,8 +83,9 @@ export function StartFreshForm() {
             <button
               type="submit"
               disabled={!canSubmit || isPending}
-              className="flex-1 rounded-lg bg-danger px-3 py-2 text-sm font-medium text-accent-fg transition disabled:opacity-40"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-danger px-3 py-2 text-sm font-medium text-accent-fg transition disabled:opacity-40"
             >
+              {isPending && <Spinner size={14} />}
               {isPending ? t("deleting") : t("confirmButton")}
             </button>
           </div>

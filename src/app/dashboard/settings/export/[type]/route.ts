@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, recurringTransactions, transactions } from "@/db/schema";
 
-export async function GET(_request: Request, { params }: { params: Promise<{ type: string }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ type: string }> }) {
   const session = await auth();
   if (!session?.user) {
     return new Response("Unauthorized", { status: 401 });
@@ -63,11 +63,36 @@ export async function GET(_request: Request, { params }: { params: Promise<{ typ
     return new Response("Not found", { status: 404 });
   }
 
-  const filename = type === "recurring-transactions" ? "recurring_transactions.csv" : `${type}.csv`;
+  const baseName = type === "recurring-transactions" ? "recurring_transactions" : type;
+  const timestamp = formatFilenameTimestamp(new Date(), new URL(request.url).searchParams.get("tz"));
+  const filename = `${timestamp}_${baseName}.csv`;
   return new Response(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="${filename}"`,
     },
   });
+}
+
+function formatFilenameTimestamp(date: Date, timeZoneParam: string | null): string {
+  let timeZone = "UTC";
+  if (timeZoneParam) {
+    try {
+      new Intl.DateTimeFormat(undefined, { timeZone: timeZoneParam });
+      timeZone = timeZoneParam;
+    } catch {
+      // invalid tz param, fall back to UTC
+    }
+  }
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    hourCycle: "h23",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).formatToParts(date);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
+  return `${get("year")}-${get("month")}-${get("day")}_${get("hour")}-${get("minute")}`;
 }

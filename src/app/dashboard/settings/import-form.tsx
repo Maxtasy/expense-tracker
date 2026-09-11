@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { importData } from "./actions";
+import { Spinner } from "@/components/spinner";
 
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg file:mr-2 file:rounded-md file:border-0 file:bg-accent file:px-2 file:py-1 file:text-xs file:font-medium file:text-accent-fg";
@@ -62,8 +63,9 @@ export function ImportForm() {
       <button
         type="submit"
         disabled={!confirmed || isPending}
-        className="w-full rounded-lg bg-danger px-3 py-2 text-sm font-medium text-accent-fg transition disabled:opacity-40"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-danger px-3 py-2 text-sm font-medium text-accent-fg transition disabled:opacity-40"
       >
+        {isPending && <Spinner size={14} />}
         {isPending ? t("importing") : t("replaceMyData")}
       </button>
       {error && <p className="text-sm text-danger">{error}</p>}

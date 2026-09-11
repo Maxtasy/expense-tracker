@@ -88,18 +88,9 @@
         "alt": "Página de configuración con enlaces de exportación CSV para categorías, transacciones recurrentes y transacciones, y un formulario de importación"
       }
     },
-    "roadmapHeading": "Qué viene después",
-    "roadmapSubheading": "La app sigue creciendo. Esto es parte de lo que está previsto:",
-    "roadmap": {
-      "insights": {
-        "title": "Perspectivas más profundas",
-        "description": "Más formas de desglosar y visualizar adónde va tu dinero."
-      },
-      "customization": {
-        "title": "Más personalización",
-        "description": "Detalles como colores de categoría personalizados, para que la app se sienta tuya."
-      }
-    },
+    "roadmapHeading": "Forma parte de la hoja de ruta",
+    "roadmapSubheading": "No hay una lista fija de funciones — la app crece según lo que la gente realmente necesita. Tus comentarios determinan qué se construye a continuación.",
+    "aiDisclosure": "Desarrollada en solitario, con ayuda de IA para escribir código — cada cambio es revisado y probado por una persona antes de publicarse.",
     "feedbackHeading": "¿Tienes una idea para una función?",
     "feedbackDescription": "Esta app se moldea con el feedback de sus usuarios. Si echas en falta algo que te resultaría útil, avísame."
   },
@@ -213,6 +204,18 @@
     "language": "Idioma",
     "languageAriaLabel": "Idioma",
     "saved": "Guardado",
+    "changePassword": {
+      "label": "Cambiar contraseña",
+      "currentPasswordLabel": "Contraseña actual",
+      "newPasswordLabel": "Nueva contraseña",
+      "confirmPasswordLabel": "Confirmar nueva contraseña",
+      "saveButton": "Cambiar contraseña",
+      "saving": "Cambiando...",
+      "success": "Contraseña cambiada.",
+      "currentPasswordIncorrect": "La contraseña actual es incorrecta",
+      "passwordTooShort": "La nueva contraseña debe tener al menos 8 caracteres",
+      "passwordsDoNotMatch": "Las nuevas contraseñas no coinciden"
+    },
     "export": "Exportar",
     "importMoneyManagerLabel": "Importar desde Money Manager",
     "importMoneyManagerDescription": "Incorpora transacciones desde una exportación .xlsx de Money Manager. Se añaden a tus datos existentes — no se elimina nada.",
