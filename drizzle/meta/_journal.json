@@ -57,6 +57,13 @@
       "when": 1789108125398,
       "tag": "0007_stormy_skin",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1789295568501,
+      "tag": "0008_military_shen",
+      "breakpoints": true
     }
   ]
 }

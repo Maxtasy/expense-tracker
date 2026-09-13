@@ -25,6 +25,7 @@
       "signupLink": "Sign up",
       "invalidCredentials": "Invalid email or password",
       "genericError": "Something went wrong, please try again",
+    "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again.",
       "forgotPasswordLink": "Forgot your password?",
       "resetSuccess": "Your password has been reset. Log in with your new password."
     },
@@ -38,7 +39,8 @@
       "loginLink": "Log in",
       "invalidEmail": "Enter a valid email address",
       "passwordTooShort": "Password must be at least 8 characters",
-      "emailTaken": "An account with that email already exists"
+      "emailTaken": "An account with that email already exists",
+    "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again."
     },
     "forgotPassword": {
       "title": "Reset your password",

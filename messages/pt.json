@@ -25,6 +25,7 @@
       "signupLink": "Cadastre-se",
       "invalidCredentials": "E-mail ou senha inválidos",
       "genericError": "Algo deu errado, tente novamente",
+  "tooManyAttempts": "Muitas tentativas. Aguarde alguns minutos e tente novamente.",
       "forgotPasswordLink": "Esqueceu sua senha?",
       "resetSuccess": "Sua senha foi redefinida. Entre com sua nova senha."
     },
@@ -38,7 +39,8 @@
       "loginLink": "Entrar",
       "invalidEmail": "Digite um endereço de e-mail válido",
       "passwordTooShort": "A senha deve ter pelo menos 8 caracteres",
-      "emailTaken": "Já existe uma conta com esse e-mail"
+      "emailTaken": "Já existe uma conta com esse e-mail",
+  "tooManyAttempts": "Muitas tentativas. Aguarde alguns minutos e tente novamente."
     },
     "forgotPassword": {
       "title": "Redefina sua senha",

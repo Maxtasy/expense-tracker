@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, numeric, date, timestamp, integer, unique } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, numeric, date, timestamp, integer, unique, index } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -22,6 +22,24 @@ export const passwordResetTokens = pgTable("password_reset_tokens", {
   usedAt: timestamp("used_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// records each login/signup/resend attempt so isRateLimited() can count how many happened
+// recently for a given email or IP -- see src/lib/rate-limit.ts
+export const authAttempts = pgTable(
+  "auth_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kind: text("kind", { enum: ["login", "signup", "resend_verification"] }).notNull(),
+    email: text("email"),
+    ip: text("ip").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("auth_attempts_kind_created_idx").on(table.kind, table.createdAt),
+    index("auth_attempts_email_idx").on(table.email),
+    index("auth_attempts_ip_idx").on(table.ip),
+  ],
+);
 
 export const categories = pgTable("categories", {
   id: uuid("id").primaryKey().defaultRandom(),
