@@ -1,0 +1,63 @@
+name: Backup production database
+
+# Daily encrypted pg_dump of the prod Supabase project, uploaded to Cloudflare R2. Dev is
+# disposable/reseedable (see README's Database section) so only prod is backed up. See README's
+# Backups section for the one-time secret setup this needs and how to restore a backup.
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # 03:00 UTC daily
+  workflow_dispatch: {} # allows a manual run from the Actions tab, e.g. to verify setup
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install postgresql-client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Dump, compress, and encrypt
+        env:
+          DATABASE_URL_MIGRATIONS: ${{ secrets.PROD_DATABASE_URL_MIGRATIONS }}
+          BACKUP_ENCRYPTION_PASSPHRASE: ${{ secrets.BACKUP_ENCRYPTION_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          filename="backup-$(date -u +%Y-%m-%dT%H-%M-%SZ).sql.gz.gpg"
+          pg_dump "$DATABASE_URL_MIGRATIONS" \
+            | gzip \
+            | gpg --batch --yes --passphrase "$BACKUP_ENCRYPTION_PASSPHRASE" --symmetric --cipher-algo AES256 -o "$filename"
+          echo "FILENAME=$filename" >> "$GITHUB_ENV"
+
+      - name: Upload to Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          set -euo pipefail
+          aws s3 cp "$FILENAME" "s3://${{ secrets.R2_BUCKET }}/$FILENAME" --endpoint-url "${{ secrets.R2_ENDPOINT }}"
+
+      - name: Prune old backups (keep newest 30)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          set -euo pipefail
+          aws s3api list-objects-v2 \
+            --bucket "${{ secrets.R2_BUCKET }}" \
+            --endpoint-url "${{ secrets.R2_ENDPOINT }}" \
+            --query 'sort_by(Contents, &LastModified)[:-30].Key' \
+            --output text \
+          | tr '\t' '\n' \
+          | while read -r key; do
+              if [ -n "$key" ] && [ "$key" != "None" ]; then
+                echo "Deleting old backup: $key"
+                aws s3 rm "s3://${{ secrets.R2_BUCKET }}/$key" --endpoint-url "${{ secrets.R2_ENDPOINT }}"
+              fi
+            done
