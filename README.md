@@ -85,6 +85,32 @@ If you hit this with no real data to preserve, the practical fix is a clean rese
 
 - `users`, `categories` (global when `user_id IS NULL`, personal otherwise; scoped by `type`: `"expense"` or `"income"`), `transactions` (also typed `"expense"` / `"income"`, amount always stored positive — sign is derived from `type` in the UI), `recurring_transactions` (a rule; `transactions.recurring_transaction_id` links a materialized row back to the rule that generated it).
 
+## Backups
+
+[`.github/workflows/backup.yml`](.github/workflows/backup.yml) runs daily (03:00 UTC, plus a manual `workflow_dispatch` trigger for testing): `pg_dump`s the **prod** database only (dev is disposable — reseed it any time with `npm run db:seed` + `npm run db:seed-demo`), gzips and GPG-encrypts the dump, and uploads it to a Cloudflare R2 bucket. Old backups are pruned automatically, keeping the newest 30 (roughly a month of daily dumps).
+
+The dump is encrypted before it ever leaves the runner — it contains real financial data, so it must never sit in R2 in plaintext.
+
+### One-time setup
+
+The workflow needs these repo secrets (**Settings → Secrets and variables → Actions**), none of which Claude/an agent can create on your behalf since they require your own Cloudflare account:
+
+- `PROD_DATABASE_URL_MIGRATIONS` — copy straight from `.env.prod` (the session-pooler connection string, same one `db:migrate:prod` uses).
+- `BACKUP_ENCRYPTION_PASSPHRASE` — a strong passphrase you generate yourself. **Also save it somewhere outside GitHub** (a password manager, etc.) — if it's ever lost, every existing backup becomes permanently unrecoverable, GitHub secret included, since GitHub secrets can't be read back once set.
+- `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `R2_BUCKET` — from a new bucket + API token in the Cloudflare dashboard (R2 → create a bucket → Manage API tokens → create a token scoped to that bucket). `R2_ENDPOINT` is the account-specific S3 API endpoint Cloudflare shows on the bucket's settings page (`https://<account-id>.r2.cloudflarestorage.com`).
+
+Once the secrets are set, trigger the workflow manually once from the **Actions** tab (`Backup production database` → `Run workflow`) to confirm it actually works end-to-end before trusting the schedule.
+
+### Restoring a backup
+
+Download the encrypted object from R2, then:
+
+```bash
+gpg --batch --passphrase "$BACKUP_ENCRYPTION_PASSPHRASE" --decrypt backup-<timestamp>.sql.gz.gpg | gunzip | psql "$DATABASE_URL_MIGRATIONS"
+```
+
+This is a manual, deliberate, destructive action — never scripted or automated. Point `DATABASE_URL_MIGRATIONS` at whichever database you actually intend to overwrite (almost always prod, and almost always because something has already gone wrong), and double-check that before running it.
+
 ## Auth
 
 Auth.js (`next-auth@5`) with a Credentials provider and JWT sessions (no adapter, no `sessions` table — see [`src/auth.ts`](src/auth.ts)). Signup is handled by our own Server Action (`src/app/signup/actions.ts`) since Auth.js only verifies logins, not registration.
@@ -111,3 +137,5 @@ See [RELEASING.md](RELEASING.md) for the full step-by-step, including repackagin
 ## CI
 
 Every pull request gets its own Vercel preview deployment automatically (no extra config needed — this is Vercel's default behavior once a project is connected to a GitHub repo). The Vercel bot comments the preview URL directly on the PR. Confirmed working 2026-09-05 via a throwaway test PR.
+
+There's also a scheduled GitHub Actions workflow unrelated to pull requests at all — the daily production database backup, see the [Backups](#backups) section above.

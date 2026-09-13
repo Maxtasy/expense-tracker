@@ -25,8 +25,12 @@
       "signupLink": "Registrieren",
       "invalidCredentials": "Ungültige E-Mail oder ungültiges Passwort",
       "genericError": "Etwas ist schiefgelaufen, bitte versuche es erneut",
+      "tooManyAttempts": "Zu viele Versuche. Bitte warte ein paar Minuten und versuche es erneut.",
       "forgotPasswordLink": "Passwort vergessen?",
-      "resetSuccess": "Dein Passwort wurde zurückgesetzt. Melde dich mit deinem neuen Passwort an."
+      "resetSuccess": "Dein Passwort wurde zurückgesetzt. Melde dich mit deinem neuen Passwort an.",
+      "emailNotVerified": "Bitte bestätige deine E-Mail-Adresse, bevor du dich anmeldest.",
+      "resendVerification": "Bestätigungs-E-Mail erneut senden",
+      "resendSuccessMessage": "Falls dein Konto noch nicht bestätigt ist, haben wir dir einen neuen Link geschickt. Sieh in deinem Postfach nach."
     },
     "signup": {
       "title": "Registrieren",
@@ -38,7 +42,8 @@
       "loginLink": "Anmelden",
       "invalidEmail": "Gib eine gültige E-Mail-Adresse ein",
       "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein",
-      "emailTaken": "Es existiert bereits ein Konto mit dieser E-Mail-Adresse"
+      "emailTaken": "Es existiert bereits ein Konto mit dieser E-Mail-Adresse",
+      "tooManyAttempts": "Zu viele Versuche. Bitte warte ein paar Minuten und versuche es erneut."
     },
     "forgotPassword": {
       "title": "Passwort zurücksetzen",
@@ -60,6 +65,24 @@
       "invalidOrExpiredTitle": "Dieser Link ist ungültig oder abgelaufen",
       "invalidOrExpiredDescription": "Fordere über die Seite \"Passwort vergessen\" einen neuen Link an.",
       "requestNewLink": "Neuen Link anfordern"
+    },
+    "verifyEmail": {
+      "successTitle": "E-Mail bestätigt",
+      "successDescription": "Deine E-Mail-Adresse wurde bestätigt.",
+      "goToDashboard": "Zum Dashboard",
+      "invalidOrExpiredTitle": "Dieser Bestätigungslink ist ungültig oder abgelaufen",
+      "invalidOrExpiredDescription": "Gib deine E-Mail-Adresse ein und wir senden dir einen neuen Link.",
+      "emailLabel": "E-Mail",
+      "requestNewLink": "Neuen Link senden",
+      "resendPending": "Wird gesendet...",
+      "resendSuccessMessage": "Falls für diese E-Mail-Adresse ein noch nicht bestätigtes Konto existiert, haben wir einen neuen Link geschickt. Sieh in deinem Postfach nach."
+    },
+    "verifyEmailRequired": {
+      "title": "Bestätige deine E-Mail, um fortzufahren",
+      "description": "Du hast dich vor einer Weile registriert und {email} ist noch nicht bestätigt. Bestätige sie, um dein Konto weiter nutzen zu können.",
+      "resend": "Bestätigungs-E-Mail erneut senden",
+      "resendSuccessMessage": "Wir haben einen neuen Link geschickt. Sieh in deinem Postfach nach.",
+      "logOut": "Abmelden"
     }
   },
   "landing": {
@@ -182,6 +205,11 @@
       "descriptionLabel": "Beschreibung",
       "addTitle": "Transaktion hinzufügen",
       "addFabLabel": "Transaktion hinzufügen"
+    },
+    "verifyEmailBanner": {
+      "message": "Bestätige deine E-Mail, um den Zugriff zu behalten · gesendet an {email}",
+      "resend": "Erneut senden",
+      "sent": "Gesendet — sieh in deinem Postfach nach"
     }
   },
   "categories": {
@@ -330,6 +358,14 @@
       "body": "Wir haben eine Anfrage erhalten, das Passwort für dein Expense-Tracker-Konto zurückzusetzen. Klicke auf die Schaltfläche unten, um ein neues Passwort zu wählen. Dieser Link ist 1 Stunde lang gültig.",
       "button": "Passwort zurücksetzen",
       "ignoreNote": "Wenn du das nicht angefordert hast, kannst du diese E-Mail ignorieren — dein Passwort bleibt unverändert.",
+      "footer": "Expense Tracker"
+    },
+    "verifyEmail": {
+      "subject": "Bestätige deine E-Mail-Adresse",
+      "heading": "Bestätige deine E-Mail-Adresse",
+      "body": "Willkommen bei Expense Tracker! Klicke auf die Schaltfläche unten, um deine E-Mail-Adresse zu bestätigen. Dieser Link läuft in 24 Stunden ab.",
+      "button": "E-Mail bestätigen",
+      "ignoreNote": "Falls du dieses Konto nicht erstellt hast, kannst du diese E-Mail ignorieren.",
       "footer": "Expense Tracker"
     }
   }

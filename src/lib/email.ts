@@ -11,13 +11,15 @@ const MESSAGE_LOADERS: Record<string, () => Promise<any>> = {
   pt: () => import("../../messages/pt.json"),
 };
 
-async function getEmailTranslator(locale: string) {
+async function getEmailTranslator(locale: string, namespace: string) {
   const resolvedLocale = LOCALES.some((l) => l.code === locale) ? locale : DEFAULT_LOCALE;
   const messages = (await MESSAGE_LOADERS[resolvedLocale]()).default;
-  return createTranslator({ locale: resolvedLocale, messages, namespace: "email.passwordReset" });
+  return createTranslator({ locale: resolvedLocale, messages, namespace });
 }
 
-function passwordResetHtml(t: Awaited<ReturnType<typeof getEmailTranslator>>, resetUrl: string) {
+// Shared layout for every transactional email this app sends: heading/body copy, one button
+// linking to actionUrl, a small note, and a footer -- see the `email.*` namespaces in messages/*.json.
+function actionEmailHtml(t: Awaited<ReturnType<typeof getEmailTranslator>>, actionUrl: string) {
   return `<!DOCTYPE html>
 <html>
   <body style="margin:0;padding:0;background-color:#f4f4f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
@@ -33,7 +35,7 @@ function passwordResetHtml(t: Awaited<ReturnType<typeof getEmailTranslator>>, re
             </tr>
             <tr>
               <td style="padding-bottom:24px;">
-                <a href="${resetUrl}" style="display:inline-block;background-color:#4f46e5;color:#f5f5ff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 20px;border-radius:8px;">${t("button")}</a>
+                <a href="${actionUrl}" style="display:inline-block;background-color:#4f46e5;color:#f5f5ff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 20px;border-radius:8px;">${t("button")}</a>
               </td>
             </tr>
             <tr>
@@ -50,23 +52,31 @@ function passwordResetHtml(t: Awaited<ReturnType<typeof getEmailTranslator>>, re
 </html>`;
 }
 
-export async function sendPasswordResetEmail(email: string, resetUrl: string, locale: string) {
+async function sendActionEmail(namespace: string, email: string, actionUrl: string, locale: string) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM_EMAIL;
   if (!apiKey || !from) {
     throw new Error("RESEND_API_KEY and RESEND_FROM_EMAIL must be set to send emails");
   }
 
-  const t = await getEmailTranslator(locale);
+  const t = await getEmailTranslator(locale, namespace);
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
     from,
     to: email,
     subject: t("subject"),
-    html: passwordResetHtml(t, resetUrl),
+    html: actionEmailHtml(t, actionUrl),
   });
 
   if (error) {
     throw new Error(`Resend error: ${error.message}`);
   }
+}
+
+export async function sendPasswordResetEmail(email: string, resetUrl: string, locale: string) {
+  await sendActionEmail("email.passwordReset", email, resetUrl, locale);
+}
+
+export async function sendVerificationEmail(email: string, verifyUrl: string, locale: string) {
+  await sendActionEmail("email.verifyEmail", email, verifyUrl, locale);
 }

@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, numeric, date, timestamp, integer, unique } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, numeric, date, timestamp, integer, unique, index } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -7,6 +7,9 @@ export const users = pgTable("users", {
   name: text("name"),
   currency: text("currency").notNull().default("EUR"),
   locale: text("locale").notNull().default("en"),
+  // null = not verified yet. Verification is a 7-day grace period, not an immediate hard block --
+  // see the authorize() callback in src/auth.ts and the layout check in src/app/dashboard/layout.tsx.
+  emailVerifiedAt: timestamp("email_verified_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -22,6 +25,37 @@ export const passwordResetTokens = pgTable("password_reset_tokens", {
   usedAt: timestamp("used_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// same shape as passwordResetTokens -- a single-use, sha256-hashed token sent in the "verify your
+// email" link
+export const emailVerificationTokens = pgTable("email_verification_tokens", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: timestamp("expires_at").notNull(),
+  usedAt: timestamp("used_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// records each login/signup/resend attempt so isRateLimited() can count how many happened
+// recently for a given email or IP -- see src/lib/rate-limit.ts
+export const authAttempts = pgTable(
+  "auth_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kind: text("kind", { enum: ["login", "signup", "resend_verification"] }).notNull(),
+    email: text("email"),
+    ip: text("ip").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("auth_attempts_kind_created_idx").on(table.kind, table.createdAt),
+    index("auth_attempts_email_idx").on(table.email),
+    index("auth_attempts_ip_idx").on(table.ip),
+  ],
+);
 
 export const categories = pgTable("categories", {
   id: uuid("id").primaryKey().defaultRandom(),

@@ -1,0 +1,73 @@
+name: Backup production database
+
+# Daily encrypted pg_dump of the prod Supabase project, uploaded to Cloudflare R2. Dev is
+# disposable/reseedable (see README's Database section) so only prod is backed up. See README's
+# Backups section for the one-time secret setup this needs and how to restore a backup.
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # 03:00 UTC daily
+  workflow_dispatch: {} # allows a manual run from the Actions tab, e.g. to verify setup
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      # pg_dump refuses to dump from a server newer than itself, and ubuntu-latest's default
+      # apt package lags behind Supabase's Postgres version -- pull the matching client from the
+      # official PGDG repo instead. If this starts failing again after a future Supabase Postgres
+      # upgrade, bump the "17" below to match (check the error message's "server version").
+      - name: Install postgresql-client (matching Supabase's Postgres version)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-17
+
+      - name: Dump, compress, and encrypt
+        env:
+          DATABASE_URL_MIGRATIONS: ${{ secrets.PROD_DATABASE_URL_MIGRATIONS }}
+          BACKUP_ENCRYPTION_PASSPHRASE: ${{ secrets.BACKUP_ENCRYPTION_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          filename="backup-$(date -u +%Y-%m-%dT%H-%M-%SZ).sql.gz.gpg"
+          # The plain `pg_dump` on PATH still resolves to the runner image's pre-existing older
+          # version even after installing postgresql-client-17 alongside it -- call the versioned
+          # binary directly so there's no ambiguity about which one actually runs.
+          /usr/lib/postgresql/17/bin/pg_dump "$DATABASE_URL_MIGRATIONS" \
+            | gzip \
+            | gpg --batch --yes --passphrase "$BACKUP_ENCRYPTION_PASSPHRASE" --symmetric --cipher-algo AES256 -o "$filename"
+          echo "FILENAME=$filename" >> "$GITHUB_ENV"
+
+      - name: Upload to Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          set -euo pipefail
+          aws s3 cp "$FILENAME" "s3://${{ secrets.R2_BUCKET }}/$FILENAME" --endpoint-url "${{ secrets.R2_ENDPOINT }}"
+
+      - name: Prune old backups (keep newest 30)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          set -euo pipefail
+          aws s3api list-objects-v2 \
+            --bucket "${{ secrets.R2_BUCKET }}" \
+            --endpoint-url "${{ secrets.R2_ENDPOINT }}" \
+            --query 'sort_by(Contents, &LastModified)[:-30].Key' \
+            --output text \
+          | tr '\t' '\n' \
+          | while read -r key; do
+              if [ -n "$key" ] && [ "$key" != "None" ]; then
+                echo "Deleting old backup: $key"
+                aws s3 rm "s3://${{ secrets.R2_BUCKET }}/$key" --endpoint-url "${{ secrets.R2_ENDPOINT }}"
+              fi
+            done

@@ -25,8 +25,12 @@
       "signupLink": "Sign up",
       "invalidCredentials": "Invalid email or password",
       "genericError": "Something went wrong, please try again",
+      "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again.",
       "forgotPasswordLink": "Forgot your password?",
-      "resetSuccess": "Your password has been reset. Log in with your new password."
+      "resetSuccess": "Your password has been reset. Log in with your new password.",
+      "emailNotVerified": "Please verify your email before logging in.",
+      "resendVerification": "Resend verification email",
+      "resendSuccessMessage": "If your account isn't verified yet, we've sent a new link. Check your inbox."
     },
     "signup": {
       "title": "Sign up",
@@ -38,7 +42,8 @@
       "loginLink": "Log in",
       "invalidEmail": "Enter a valid email address",
       "passwordTooShort": "Password must be at least 8 characters",
-      "emailTaken": "An account with that email already exists"
+      "emailTaken": "An account with that email already exists",
+      "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again."
     },
     "forgotPassword": {
       "title": "Reset your password",
@@ -60,6 +65,24 @@
       "invalidOrExpiredTitle": "This reset link is invalid or has expired",
       "invalidOrExpiredDescription": "Request a new one from the forgot password page.",
       "requestNewLink": "Request a new link"
+    },
+    "verifyEmail": {
+      "successTitle": "Email verified",
+      "successDescription": "Your email address has been verified.",
+      "goToDashboard": "Go to dashboard",
+      "invalidOrExpiredTitle": "This verification link is invalid or has expired",
+      "invalidOrExpiredDescription": "Enter your email address and we'll send you a new one.",
+      "emailLabel": "Email",
+      "requestNewLink": "Send new link",
+      "resendPending": "Sending...",
+      "resendSuccessMessage": "If an account exists for that email and isn't verified yet, we've sent a new link. Check your inbox."
+    },
+    "verifyEmailRequired": {
+      "title": "Verify your email to continue",
+      "description": "It's been a while since you signed up and {email} still isn't verified. Verify it to keep using your account.",
+      "resend": "Resend verification email",
+      "resendSuccessMessage": "We've sent a new link. Check your inbox.",
+      "logOut": "Log out"
     }
   },
   "landing": {
@@ -182,6 +205,11 @@
       "descriptionLabel": "Description",
       "addTitle": "Add transaction",
       "addFabLabel": "Add transaction"
+    },
+    "verifyEmailBanner": {
+      "message": "Verify your email to keep access · sent to {email}",
+      "resend": "Resend",
+      "sent": "Sent — check your inbox"
     }
   },
   "categories": {
@@ -330,6 +358,14 @@
       "body": "We received a request to reset the password for your Expense Tracker account. Click the button below to choose a new password. This link expires in 1 hour.",
       "button": "Reset password",
       "ignoreNote": "If you didn't request this, you can safely ignore this email — your password will stay the same.",
+      "footer": "Expense Tracker"
+    },
+    "verifyEmail": {
+      "subject": "Verify your email",
+      "heading": "Verify your email",
+      "body": "Welcome to Expense Tracker! Click the button below to verify your email address. This link expires in 24 hours.",
+      "button": "Verify email",
+      "ignoreNote": "If you didn't create this account, you can safely ignore this email.",
       "footer": "Expense Tracker"
     }
   }
