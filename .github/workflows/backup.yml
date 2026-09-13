@@ -35,7 +35,10 @@ jobs:
         run: |
           set -euo pipefail
           filename="backup-$(date -u +%Y-%m-%dT%H-%M-%SZ).sql.gz.gpg"
-          pg_dump "$DATABASE_URL_MIGRATIONS" \
+          # The plain `pg_dump` on PATH still resolves to the runner image's pre-existing older
+          # version even after installing postgresql-client-17 alongside it -- call the versioned
+          # binary directly so there's no ambiguity about which one actually runs.
+          /usr/lib/postgresql/17/bin/pg_dump "$DATABASE_URL_MIGRATIONS" \
             | gzip \
             | gpg --batch --yes --passphrase "$BACKUP_ENCRYPTION_PASSPHRASE" --symmetric --cipher-algo AES256 -o "$filename"
           echo "FILENAME=$filename" >> "$GITHUB_ENV"
