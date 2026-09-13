@@ -25,6 +25,7 @@
       "signupLink": "Regístrate",
       "invalidCredentials": "Correo electrónico o contraseña incorrectos",
       "genericError": "Algo salió mal, inténtalo de nuevo",
+  "tooManyAttempts": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
       "forgotPasswordLink": "¿Olvidaste tu contraseña?",
       "resetSuccess": "Tu contraseña se ha restablecido. Inicia sesión con tu nueva contraseña."
     },
@@ -38,7 +39,8 @@
       "loginLink": "Iniciar sesión",
       "invalidEmail": "Introduce una dirección de correo electrónico válida",
       "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
-      "emailTaken": "Ya existe una cuenta con ese correo electrónico"
+      "emailTaken": "Ya existe una cuenta con ese correo electrónico",
+  "tooManyAttempts": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo."
     },
     "forgotPassword": {
       "title": "Restablece tu contraseña",

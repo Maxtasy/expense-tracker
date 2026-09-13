@@ -25,6 +25,7 @@
       "signupLink": "S'inscrire",
       "invalidCredentials": "E-mail ou mot de passe invalide",
       "genericError": "Une erreur s'est produite, veuillez réessayer",
+  "tooManyAttempts": "Trop de tentatives. Veuillez patienter quelques minutes et réessayer.",
       "forgotPasswordLink": "Mot de passe oublié ?",
       "resetSuccess": "Votre mot de passe a été réinitialisé. Connectez-vous avec votre nouveau mot de passe."
     },
@@ -38,7 +39,8 @@
       "loginLink": "Se connecter",
       "invalidEmail": "Saisissez une adresse e-mail valide",
       "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
-      "emailTaken": "Un compte existe déjà avec cet e-mail"
+      "emailTaken": "Un compte existe déjà avec cet e-mail",
+  "tooManyAttempts": "Trop de tentatives. Veuillez patienter quelques minutes et réessayer."
     },
     "forgotPassword": {
       "title": "Réinitialisez votre mot de passe",
