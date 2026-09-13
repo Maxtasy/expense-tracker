@@ -7,12 +7,28 @@ export const users = pgTable("users", {
   name: text("name"),
   currency: text("currency").notNull().default("EUR"),
   locale: text("locale").notNull().default("en"),
+  // null = not verified yet. Verification is a 7-day grace period, not an immediate hard block --
+  // see the authorize() callback in src/auth.ts and the layout check in src/app/dashboard/layout.tsx.
+  emailVerifiedAt: timestamp("email_verified_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 // a single-use, short-lived token issued when a user requests a password reset email; the token
 // itself is never stored, only its sha256 hash, so a leaked DB row can't be used to reset a password
 export const passwordResetTokens = pgTable("password_reset_tokens", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: timestamp("expires_at").notNull(),
+  usedAt: timestamp("used_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// same shape as passwordResetTokens -- a single-use, sha256-hashed token sent in the "verify your
+// email" link
+export const emailVerificationTokens = pgTable("email_verification_tokens", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
     .notNull()

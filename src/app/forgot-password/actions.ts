@@ -2,21 +2,14 @@
 
 import { z } from "zod";
 import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { db } from "@/db";
 import { users, passwordResetTokens } from "@/db/schema";
-import { generateResetToken, hashResetToken, PASSWORD_RESET_TOKEN_TTL_MS } from "@/lib/reset-token";
+import { generateToken, hashToken, PASSWORD_RESET_TOKEN_TTL_MS } from "@/lib/token";
+import { getBaseUrl } from "@/lib/base-url";
 import { sendPasswordResetEmail } from "@/lib/email";
 
 export type ForgotPasswordState = { error?: string; success?: boolean } | undefined;
-
-async function getBaseUrl() {
-  const h = await headers();
-  const host = h.get("host");
-  const proto = h.get("x-forwarded-proto") ?? "https";
-  return `${proto}://${host}`;
-}
 
 export async function requestPasswordReset(
   _prevState: ForgotPasswordState,
@@ -41,10 +34,10 @@ export async function requestPasswordReset(
     // Only the most recently requested link should work -- clear out any earlier ones.
     await db.delete(passwordResetTokens).where(eq(passwordResetTokens.userId, user.id));
 
-    const token = generateResetToken();
+    const token = generateToken();
     await db.insert(passwordResetTokens).values({
       userId: user.id,
-      tokenHash: hashResetToken(token),
+      tokenHash: hashToken(token),
       expiresAt: new Date(Date.now() + PASSWORD_RESET_TOKEN_TTL_MS),
     });
 

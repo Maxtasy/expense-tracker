@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { db } from "@/db";
 import { users, passwordResetTokens } from "@/db/schema";
-import { hashResetToken } from "@/lib/reset-token";
+import { hashToken } from "@/lib/token";
 
 export type ResetPasswordState = { error: string } | undefined;
 
@@ -37,7 +37,7 @@ export async function resetPassword(_prevState: ResetPasswordState, formData: Fo
     return { error: parsed.error.issues[0].message };
   }
 
-  const tokenHash = hashResetToken(token);
+  const tokenHash = hashToken(token);
   const [resetToken] = await db
     .select({ userId: passwordResetTokens.userId, expiresAt: passwordResetTokens.expiresAt })
     .from(passwordResetTokens)

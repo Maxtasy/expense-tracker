@@ -3,8 +3,10 @@ import { redirect } from "next/navigation";
 import { Tags, Repeat, PieChart, Settings } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
+import { getVerificationStatus, isVerificationGracePeriodExpired } from "@/lib/verification";
 import { Logo } from "@/components/logo";
 import { LogoutButton } from "./logout-button";
+import { VerifyEmailBanner } from "./verify-email-banner";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -12,6 +14,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect("/login");
   }
   const t = await getTranslations("nav");
+
+  // Defense in depth alongside auth.ts's authorize() check: a JWT session created before the
+  // 7-day grace period expired stays valid past it (Auth.js doesn't re-check the DB per request),
+  // so this is the backstop that actually enforces the deadline for an already-open session.
+  const verification = await getVerificationStatus(session.user.id);
+  const isUnverified = verification && !verification.emailVerifiedAt;
+  if (isUnverified && isVerificationGracePeriodExpired(verification.createdAt)) {
+    redirect("/verify-email-required");
+  }
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -52,7 +63,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
           .md-wide { max-width: 64rem !important; }
         }
       `}</style>
-      <main className="md-wide mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-4">{children}</main>
+      <main className="md-wide mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-4">
+        {isUnverified && <VerifyEmailBanner email={verification.email} />}
+        {children}
+      </main>
     </div>
   );
 }

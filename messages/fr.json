@@ -25,9 +25,12 @@
       "signupLink": "S'inscrire",
       "invalidCredentials": "E-mail ou mot de passe invalide",
       "genericError": "Une erreur s'est produite, veuillez réessayer",
-  "tooManyAttempts": "Trop de tentatives. Veuillez patienter quelques minutes et réessayer.",
+      "tooManyAttempts": "Trop de tentatives. Veuillez patienter quelques minutes et réessayer.",
       "forgotPasswordLink": "Mot de passe oublié ?",
-      "resetSuccess": "Votre mot de passe a été réinitialisé. Connectez-vous avec votre nouveau mot de passe."
+      "resetSuccess": "Votre mot de passe a été réinitialisé. Connectez-vous avec votre nouveau mot de passe.",
+      "emailNotVerified": "Veuillez vérifier votre e-mail avant de vous connecter.",
+      "resendVerification": "Renvoyer l'e-mail de vérification",
+      "resendSuccessMessage": "Si votre compte n'est pas encore vérifié, nous vous avons envoyé un nouveau lien. Consultez votre boîte de réception."
     },
     "signup": {
       "title": "Inscription",
@@ -40,7 +43,7 @@
       "invalidEmail": "Saisissez une adresse e-mail valide",
       "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
       "emailTaken": "Un compte existe déjà avec cet e-mail",
-  "tooManyAttempts": "Trop de tentatives. Veuillez patienter quelques minutes et réessayer."
+      "tooManyAttempts": "Trop de tentatives. Veuillez patienter quelques minutes et réessayer."
     },
     "forgotPassword": {
       "title": "Réinitialisez votre mot de passe",
@@ -62,6 +65,24 @@
       "invalidOrExpiredTitle": "Ce lien est invalide ou a expiré",
       "invalidOrExpiredDescription": "Demandez-en un nouveau depuis la page mot de passe oublié.",
       "requestNewLink": "Demander un nouveau lien"
+    },
+    "verifyEmail": {
+      "successTitle": "E-mail vérifié",
+      "successDescription": "Votre adresse e-mail a été vérifiée.",
+      "goToDashboard": "Accéder au tableau de bord",
+      "invalidOrExpiredTitle": "Ce lien de vérification est invalide ou a expiré",
+      "invalidOrExpiredDescription": "Saisissez votre adresse e-mail et nous vous enverrons un nouveau lien.",
+      "emailLabel": "E-mail",
+      "requestNewLink": "Envoyer un nouveau lien",
+      "resendPending": "Envoi en cours...",
+      "resendSuccessMessage": "Si un compte existe pour cet e-mail et n'est pas encore vérifié, nous vous avons envoyé un nouveau lien. Consultez votre boîte de réception."
+    },
+    "verifyEmailRequired": {
+      "title": "Vérifiez votre e-mail pour continuer",
+      "description": "Cela fait un moment que vous vous êtes inscrit et {email} n'est toujours pas vérifié. Vérifiez-le pour continuer à utiliser votre compte.",
+      "resend": "Renvoyer l'e-mail de vérification",
+      "resendSuccessMessage": "Nous vous avons envoyé un nouveau lien. Consultez votre boîte de réception.",
+      "logOut": "Se déconnecter"
     }
   },
   "landing": {
@@ -184,6 +205,11 @@
       "descriptionLabel": "Description",
       "addTitle": "Ajouter une transaction",
       "addFabLabel": "Ajouter une transaction"
+    },
+    "verifyEmailBanner": {
+      "message": "Vérifiez votre e-mail pour conserver l'accès · envoyé à {email}",
+      "resend": "Renvoyer",
+      "sent": "Envoyé — consultez votre boîte de réception"
     }
   },
   "categories": {
@@ -332,6 +358,14 @@
       "body": "Nous avons reçu une demande de réinitialisation du mot de passe de votre compte Expense Tracker. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe. Ce lien expire dans 1 heure.",
       "button": "Réinitialiser le mot de passe",
       "ignoreNote": "Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail en toute sécurité — votre mot de passe restera inchangé.",
+      "footer": "Expense Tracker"
+    },
+    "verifyEmail": {
+      "subject": "Vérifiez votre e-mail",
+      "heading": "Vérifiez votre e-mail",
+      "body": "Bienvenue sur Expense Tracker ! Cliquez sur le bouton ci-dessous pour vérifier votre adresse e-mail. Ce lien expire dans 24 heures.",
+      "button": "Vérifier l'e-mail",
+      "ignoreNote": "Si vous n'avez pas créé ce compte, vous pouvez ignorer cet e-mail en toute sécurité.",
       "footer": "Expense Tracker"
     }
   }
