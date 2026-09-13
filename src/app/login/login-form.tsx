@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { login } from "./actions";
+import { resendVerificationEmail } from "@/app/verify-email/actions";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Spinner } from "@/components/spinner";
 
@@ -13,6 +14,8 @@ const inputClass =
 export function LoginForm({ resetSuccess }: { resetSuccess?: boolean }) {
   const t = useTranslations("auth.login");
   const [state, formAction, pending] = useActionState(login, undefined);
+  const [resendSent, setResendSent] = useState(false);
+  const [isResending, startResend] = useTransition();
 
   return (
     <main className="relative flex min-h-dvh flex-col items-center justify-center px-4">
@@ -48,6 +51,27 @@ export function LoginForm({ resetSuccess }: { resetSuccess?: boolean }) {
             {pending ? t("submitPending") : t("submit")}
           </button>
         </form>
+        {state?.needsVerification &&
+          (resendSent ? (
+            <p className="mt-3 text-sm text-success">{t("resendSuccessMessage")}</p>
+          ) : (
+            <button
+              type="button"
+              disabled={isResending}
+              onClick={() => {
+                const email = state.email;
+                if (!email) return;
+                startResend(async () => {
+                  await resendVerificationEmail(email);
+                  setResendSent(true);
+                });
+              }}
+              className="mt-3 inline-flex items-center gap-2 text-sm text-accent hover:text-accent-hover"
+            >
+              {isResending && <Spinner size={14} />}
+              {t("resendVerification")}
+            </button>
+          ))}
         <p className="mt-4 text-sm text-fg-muted">
           {t("noAccount")}{" "}
           <Link href="/signup" className="text-accent hover:text-accent-hover">

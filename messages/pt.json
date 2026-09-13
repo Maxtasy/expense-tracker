@@ -25,9 +25,12 @@
       "signupLink": "Cadastre-se",
       "invalidCredentials": "E-mail ou senha inválidos",
       "genericError": "Algo deu errado, tente novamente",
-  "tooManyAttempts": "Muitas tentativas. Aguarde alguns minutos e tente novamente.",
+      "tooManyAttempts": "Muitas tentativas. Aguarde alguns minutos e tente novamente.",
       "forgotPasswordLink": "Esqueceu sua senha?",
-      "resetSuccess": "Sua senha foi redefinida. Entre com sua nova senha."
+      "resetSuccess": "Sua senha foi redefinida. Entre com sua nova senha.",
+      "emailNotVerified": "Verifique seu e-mail antes de entrar.",
+      "resendVerification": "Reenviar e-mail de verificação",
+      "resendSuccessMessage": "Se sua conta ainda não estiver verificada, enviamos um novo link. Confira sua caixa de entrada."
     },
     "signup": {
       "title": "Cadastrar",
@@ -40,7 +43,7 @@
       "invalidEmail": "Digite um endereço de e-mail válido",
       "passwordTooShort": "A senha deve ter pelo menos 8 caracteres",
       "emailTaken": "Já existe uma conta com esse e-mail",
-  "tooManyAttempts": "Muitas tentativas. Aguarde alguns minutos e tente novamente."
+      "tooManyAttempts": "Muitas tentativas. Aguarde alguns minutos e tente novamente."
     },
     "forgotPassword": {
       "title": "Redefina sua senha",
@@ -62,6 +65,24 @@
       "invalidOrExpiredTitle": "Este link é inválido ou expirou",
       "invalidOrExpiredDescription": "Solicite um novo na página de senha esquecida.",
       "requestNewLink": "Solicitar um novo link"
+    },
+    "verifyEmail": {
+      "successTitle": "E-mail verificado",
+      "successDescription": "Seu endereço de e-mail foi verificado.",
+      "goToDashboard": "Ir para o painel",
+      "invalidOrExpiredTitle": "Este link de verificação é inválido ou expirou",
+      "invalidOrExpiredDescription": "Digite seu e-mail e enviaremos um novo link.",
+      "emailLabel": "E-mail",
+      "requestNewLink": "Enviar novo link",
+      "resendPending": "Enviando...",
+      "resendSuccessMessage": "Se existir uma conta com esse e-mail e ela ainda não estiver verificada, enviamos um novo link. Confira sua caixa de entrada."
+    },
+    "verifyEmailRequired": {
+      "title": "Verifique seu e-mail para continuar",
+      "description": "Já faz um tempo desde que você se cadastrou e {email} ainda não foi verificado. Verifique-o para continuar usando sua conta.",
+      "resend": "Reenviar e-mail de verificação",
+      "resendSuccessMessage": "Enviamos um novo link. Confira sua caixa de entrada.",
+      "logOut": "Sair"
     }
   },
   "landing": {
@@ -184,6 +205,11 @@
       "descriptionLabel": "Descrição",
       "addTitle": "Adicionar transação",
       "addFabLabel": "Adicionar transação"
+    },
+    "verifyEmailBanner": {
+      "message": "Verifique seu e-mail para manter o acesso · enviado para {email}",
+      "resend": "Reenviar",
+      "sent": "Enviado — confira sua caixa de entrada"
     }
   },
   "categories": {
@@ -332,6 +358,14 @@
       "body": "Recebemos uma solicitação para redefinir a senha da sua conta do Expense Tracker. Clique no botão abaixo para escolher uma nova senha. Este link expira em 1 hora.",
       "button": "Redefinir senha",
       "ignoreNote": "Se você não solicitou isso, pode ignorar este e-mail com segurança — sua senha permanecerá a mesma.",
+      "footer": "Expense Tracker"
+    },
+    "verifyEmail": {
+      "subject": "Verifique seu e-mail",
+      "heading": "Verifique seu e-mail",
+      "body": "Bem-vindo ao Expense Tracker! Clique no botão abaixo para verificar seu endereço de e-mail. Este link expira em 24 horas.",
+      "button": "Verificar e-mail",
+      "ignoreNote": "Se você não criou esta conta, pode ignorar este e-mail com segurança.",
       "footer": "Expense Tracker"
     }
   }

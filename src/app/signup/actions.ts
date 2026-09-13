@@ -9,6 +9,8 @@ import { users } from "@/db/schema";
 import { signIn } from "@/auth";
 import { getClientIp } from "@/lib/client-ip";
 import { isRateLimited, recordAttempt } from "@/lib/rate-limit";
+import { issueAndSendVerificationEmail } from "@/lib/verification";
+import { getPreAuthLocale } from "@/lib/locale-server";
 
 export type SignupState = { error: string } | undefined;
 
@@ -43,7 +45,14 @@ export async function signup(_prevState: SignupState, formData: FormData): Promi
   }
 
   const passwordHash = await hash(password, 10);
-  await db.insert(users).values({ email, passwordHash });
+  const [user] = await db.insert(users).values({ email, passwordHash }).returning({ id: users.id });
+
+  try {
+    await issueAndSendVerificationEmail(user.id, email, await getPreAuthLocale());
+  } catch (err) {
+    // Best-effort, same as the password-reset flow -- a Resend hiccup should never block signup.
+    console.error("Failed to send verification email:", err);
+  }
 
   await signIn("credentials", { email, password, redirectTo: "/dashboard" });
 }

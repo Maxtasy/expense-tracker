@@ -64,6 +64,13 @@
       "when": 1789295568501,
       "tag": "0008_military_shen",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1789298812049,
+      "tag": "0009_blushing_valkyrie",
+      "breakpoints": true
     }
   ]
 }
