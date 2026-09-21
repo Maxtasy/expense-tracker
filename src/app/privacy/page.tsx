@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 const CONTACT_EMAIL = 'contact@maxtasy.me';
-const LAST_UPDATED = 'September 3, 2026';
+const LAST_UPDATED = 'September 21, 2026';
 
 const sectionClass = 'space-y-2';
 const headingClass = 'text-base font-semibold text-fg';
@@ -44,7 +44,9 @@ export default function PrivacyPage() {
             <p className={bodyClass}>
               <strong className="text-fg">Account data.</strong> Your email address and password.
               Passwords are hashed (bcrypt) before storage — we never store or can see your
-              plain-text password.
+              plain-text password. We also store whether your email address has been verified, plus
+              a hashed, single-use token for email verification or password reset while one is
+              outstanding.
             </p>
             <p className={bodyClass}>
               <strong className="text-fg">Financial data you enter.</strong> Transaction amounts,
@@ -55,6 +57,12 @@ export default function PrivacyPage() {
             <p className={bodyClass}>
               We don&rsquo;t collect analytics, advertising identifiers, or any usage tracking
               beyond what&rsquo;s needed to keep you signed in (a session cookie).
+            </p>
+            <p className={bodyClass}>
+              <strong className="text-fg">Sign-in attempt records.</strong> To limit brute-force
+              and abuse, each login, signup, and verification-resend attempt is recorded with the
+              email address entered and the IP address it came from. These records are deleted
+              automatically after 24 hours.
             </p>
           </section>
 
@@ -89,6 +97,24 @@ export default function PrivacyPage() {
               >
                 Vercel
               </a>
+              . Transactional emails (such as email verification) are sent through{' '}
+              <a
+                href="https://resend.com/legal/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent hover:text-accent-hover"
+              >
+                Resend
+              </a>
+              , and encrypted database backups are stored with{' '}
+              <a
+                href="https://www.cloudflare.com/privacypolicy/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent hover:text-accent-hover"
+              >
+                Cloudflare R2
+              </a>
               . These providers process data on our behalf as infrastructure providers, under their
               own security and privacy practices — we don&rsquo;t share your data with them for any
               other purpose.
@@ -108,12 +134,22 @@ export default function PrivacyPage() {
           <section className={sectionClass}>
             <h2 className={headingClass}>Data retention and deletion</h2>
             <p className={bodyClass}>
-              Your data is kept for as long as your account exists. To request deletion of your
-              account and all associated data, or to request a copy of your data, email us at{' '}
+              Your data is kept for as long as your account exists. In Settings you can export your
+              data as CSV at any time, and &ldquo;Start fresh&rdquo; permanently deletes all your
+              transactions and recurring rules. Deletions are permanent, not archived.
+            </p>
+            <p className={bodyClass}>
+              To request deletion of your account and all associated data, email us at{' '}
               <a href={`mailto:${CONTACT_EMAIL}`} className="text-accent hover:text-accent-hover">
                 {CONTACT_EMAIL}
               </a>
-              .
+              . Account deletion removes everything from the live database.
+            </p>
+            <p className={bodyClass}>
+              <strong className="text-fg">Backups.</strong> The production database is backed up
+              daily. Backups are encrypted before leaving our servers and the newest 30 are kept, so
+              data you delete may remain in backups for up to about 30 days before being overwritten.
+              Backups are only ever used to recover from data loss.
             </p>
           </section>
 
