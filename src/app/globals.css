@@ -22,6 +22,9 @@
 
 html {
   color-scheme: dark;
+  --logo-mint: #3ad69b;
+  --logo-sky: #38bdf8;
+  --logo-indigo: #6366f1;
 }
 
 /* Light palette: same token names, overridden per user theme (see src/lib/theme.ts). `system`
@@ -29,6 +32,9 @@ html {
    blocks must stay in sync. */
 :root[data-theme="light"] {
   color-scheme: light;
+  --logo-mint: #22b07d;
+  --logo-sky: #1fa3de;
+  --logo-indigo: #5457e0;
   --color-background: #f6f7fb;
   --color-surface: #ffffff;
   --color-surface-hover: #eef0f6;
@@ -49,6 +55,9 @@ html {
 @media (prefers-color-scheme: light) {
   :root[data-theme="system"] {
     color-scheme: light;
+    --logo-mint: #22b07d;
+    --logo-sky: #1fa3de;
+    --logo-indigo: #5457e0;
     --color-background: #f6f7fb;
     --color-surface: #ffffff;
     --color-surface-hover: #eef0f6;
