@@ -11,6 +11,8 @@ import { db } from "@/db";
 import { categories, recurringTransactions, transactions, users } from "@/db/schema";
 import { CURRENCIES } from "@/lib/currency";
 import { LOCALES } from "@/lib/locale";
+import { DATE_FORMATS } from "@/lib/date-format";
+import { THEMES } from "@/lib/theme";
 
 const typeSchema = z.enum(["expense", "income"]);
 
@@ -265,6 +267,41 @@ export async function updateLocale(formData: FormData) {
   revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard/insights");
   revalidatePath("/dashboard/settings");
+  return { success: true };
+}
+
+export async function updateDateFormat(formData: FormData) {
+  const session = await auth();
+  const t = await getTranslations("settings");
+  if (!session?.user) return { error: t("notSignedIn") };
+
+  const dateFormat = formData.get("dateFormat");
+  if (typeof dateFormat !== "string" || !DATE_FORMATS.some((f) => f.code === dateFormat)) {
+    return { error: t("invalidDateFormat") };
+  }
+
+  await db.update(users).set({ dateFormat }).where(eq(users.id, session.user.id));
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/recurring");
+  revalidatePath("/dashboard/settings");
+  return { success: true };
+}
+
+export async function updateTheme(formData: FormData) {
+  const session = await auth();
+  const t = await getTranslations("settings");
+  if (!session?.user) return { error: t("notSignedIn") };
+
+  const theme = formData.get("theme");
+  if (typeof theme !== "string" || !THEMES.some((x) => x === theme)) {
+    return { error: t("invalidTheme") };
+  }
+
+  await db.update(users).set({ theme }).where(eq(users.id, session.user.id));
+
+  // the theme is read in the root layout, so every route needs to re-render
+  revalidatePath("/", "layout");
   return { success: true };
 }
 

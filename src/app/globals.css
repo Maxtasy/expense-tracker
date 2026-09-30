@@ -24,6 +24,49 @@ html {
   color-scheme: dark;
 }
 
+/* Light palette: same token names, overridden per user theme (see src/lib/theme.ts). `system`
+   only switches when the OS prefers light, so the dark tokens above remain the fallback. The two
+   blocks must stay in sync. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-background: #f6f7fb;
+  --color-surface: #ffffff;
+  --color-surface-hover: #eef0f6;
+  --color-border: #dde1ea;
+  --color-fg: #151823;
+  --color-fg-muted: #5b6378;
+  --color-accent: #4f46e5;
+  --color-accent-hover: #4338ca;
+  --color-accent-fg: #f5f5ff;
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-success: #059669;
+  --color-expense: #d97706;
+  --color-expense-hover: #b45309;
+  --color-expense-fg: #ffffff;
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme="system"] {
+    color-scheme: light;
+    --color-background: #f6f7fb;
+    --color-surface: #ffffff;
+    --color-surface-hover: #eef0f6;
+    --color-border: #dde1ea;
+    --color-fg: #151823;
+    --color-fg-muted: #5b6378;
+    --color-accent: #4f46e5;
+    --color-accent-hover: #4338ca;
+    --color-accent-fg: #f5f5ff;
+    --color-danger: #dc2626;
+    --color-danger-hover: #b91c1c;
+    --color-success: #059669;
+    --color-expense: #d97706;
+    --color-expense-hover: #b45309;
+    --color-expense-fg: #ffffff;
+  }
+}
+
 body {
   background: var(--color-background);
   color: var(--color-fg);

@@ -8,6 +8,11 @@ import { ImportForm } from "./import-form";
 import { StartFreshForm } from "./start-fresh-form";
 import { CurrencyForm } from "./currency-form";
 import { LocaleForm } from "./locale-form";
+import { SelectSettingForm } from "./select-setting-form";
+import { updateDateFormat, updateTheme } from "./actions";
+import { getUserDateFormat, getUserTheme } from "@/lib/preferences-server";
+import { DATE_FORMATS } from "@/lib/date-format";
+import { THEMES } from "@/lib/theme";
 import { ChangePasswordForm } from "./change-password-form";
 import { ExportLinks } from "./export-links";
 import { version } from "../../../../package.json";
@@ -15,9 +20,11 @@ import { version } from "../../../../package.json";
 export default async function SettingsPage() {
   const session = await auth();
   if (!session?.user) return null;
-  const [currency, locale, t] = await Promise.all([
+  const [currency, locale, dateFormat, theme, t] = await Promise.all([
     getUserCurrency(session.user.id),
     getUserLocale(session.user.id),
+    getUserDateFormat(session.user.id),
+    getUserTheme(session.user.id),
     getTranslations("settings"),
   ]);
 
@@ -39,6 +46,28 @@ export default async function SettingsPage() {
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("language")}</h2>
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
         <LocaleForm locale={locale} />
+      </div>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("theme.label")}</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <SelectSettingForm
+          action={updateTheme}
+          name="theme"
+          value={theme}
+          ariaLabel={t("theme.ariaLabel")}
+          options={THEMES.map((code) => ({ value: code, label: t(`theme.options.${code}`) }))}
+        />
+      </div>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("dateFormat.label")}</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <SelectSettingForm
+          action={updateDateFormat}
+          name="dateFormat"
+          value={dateFormat}
+          ariaLabel={t("dateFormat.ariaLabel")}
+          options={DATE_FORMATS.map((f) => ({ value: f.code, label: f.pattern ?? t("dateFormat.auto") }))}
+        />
       </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("changePassword.label")}</h2>

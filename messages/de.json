@@ -257,6 +257,20 @@
     "currencyAriaLabel": "Währung",
     "language": "Sprache",
     "languageAriaLabel": "Sprache",
+    "theme": {
+      "label": "Darstellung",
+      "ariaLabel": "Darstellung",
+      "options": {
+        "dark": "Dunkel",
+        "light": "Hell",
+        "system": "System folgen"
+      }
+    },
+    "dateFormat": {
+      "label": "Datumsformat",
+      "ariaLabel": "Datumsformat",
+      "auto": "Automatisch (nach Sprache)"
+    },
     "saved": "Gespeichert",
     "changePassword": {
       "label": "Passwort ändern",
@@ -294,6 +308,8 @@
     "notSignedIn": "Nicht angemeldet",
     "invalidCurrency": "Ungültige Währung",
     "invalidLocale": "Ungültige Sprache",
+    "invalidDateFormat": "Ungültiges Datumsformat",
+    "invalidTheme": "Ungültige Darstellung",
     "csvImport": {
       "categoriesFileLabel": "categories.csv",
       "recurringFileLabel": "recurring_transactions.csv",

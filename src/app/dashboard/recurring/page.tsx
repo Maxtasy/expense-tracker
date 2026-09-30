@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, hiddenCategories, recurringTransactions } from "@/db/schema";
 import { getUserCurrency } from "@/lib/currency-server";
+import { getUserDateFormat } from "@/lib/preferences-server";
 import { AddRecurringModal } from "./add-recurring-modal";
 import { RecurringRow } from "./recurring-row";
 
@@ -13,7 +14,7 @@ export default async function RecurringPage() {
   const userId = session.user.id;
   const t = await getTranslations("recurring");
 
-  const [availableCategories, hiddenIds, userRecurring, currency] = await Promise.all([
+  const [availableCategories, hiddenIds, userRecurring, currency, dateFormat] = await Promise.all([
     db
       .select({ id: categories.id, name: categories.name, type: categories.type })
       .from(categories)
@@ -37,6 +38,7 @@ export default async function RecurringPage() {
       .where(eq(recurringTransactions.userId, userId))
       .orderBy(recurringTransactions.startDate),
     getUserCurrency(userId),
+    getUserDateFormat(userId),
   ]);
 
   const hiddenIdSet = new Set(hiddenIds.map((h) => h.categoryId));
@@ -53,7 +55,7 @@ export default async function RecurringPage() {
       ) : (
         <div className="rounded-xl border border-border bg-surface/30 px-3">
           {userRecurring.map((recurring) => (
-            <RecurringRow key={recurring.id} recurring={recurring} categories={availableCategories} currency={currency} />
+            <RecurringRow key={recurring.id} recurring={recurring} categories={availableCategories} currency={currency} dateFormat={dateFormat} />
           ))}
         </div>
       )}
