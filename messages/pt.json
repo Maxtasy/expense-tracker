@@ -172,6 +172,41 @@
     "settings": "Configurações",
     "logOut": "Sair"
   },
+  "onboarding": {
+    "ariaLabel": "Tour rápido",
+    "next": "Seguinte",
+    "back": "Voltar",
+    "skip": "Saltar o tour",
+    "done": "Começar",
+    "progress": "{current} de {total}",
+    "replayButton": "Mostrar o tour",
+    "steps": {
+      "welcome": {
+        "title": "Bem-vindo ao Expense Tracker",
+        "body": "Uma vista rápida. Demora menos de um minuto e podes repeti-la quando quiseres em Definições."
+      },
+      "add": {
+        "title": "Adicionar uma transação",
+        "body": "Toca no botão de mais, em baixo à direita, para registar uma despesa ou um rendimento. Escolhe categoria, valor e data."
+      },
+      "recurring": {
+        "title": "Transações recorrentes",
+        "body": "Renda, salário, subscrições: configura uma vez e aparecem automaticamente no mês certo."
+      },
+      "insights": {
+        "title": "Análises",
+        "body": "Vê para onde vai o teu dinheiro por categoria, num mês ou num ano inteiro, em barras e gráficos circulares."
+      },
+      "categories": {
+        "title": "Categorias",
+        "body": "Cria as tuas próprias categorias e cores, ou oculta as predefinidas que não usas."
+      },
+      "settings": {
+        "title": "Personaliza",
+        "body": "Em Definições podes mudar a moeda, o idioma, a aparência e o formato da data, e exportar ou importar os teus dados."
+      }
+    }
+  },
   "dashboard": {
     "noTransactionsFilter": "Nenhuma transação corresponde a este filtro.",
     "noTransactionsMonth": "Nenhuma transação em {month}.",
@@ -270,6 +305,10 @@
       "label": "Formato de data",
       "ariaLabel": "Formato de data",
       "auto": "Automático (conforme o idioma)"
+    },
+    "tour": {
+      "label": "Tour da app",
+      "description": "Revê os ecrãs principais."
     },
     "saved": "Salvo",
     "changePassword": {

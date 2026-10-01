@@ -15,6 +15,7 @@ import { DATE_FORMATS } from "@/lib/date-format";
 import { THEMES } from "@/lib/theme";
 import { ChangePasswordForm } from "./change-password-form";
 import { ExportLinks } from "./export-links";
+import { OnboardingTour } from "../onboarding-tour";
 import { version } from "../../../../package.json";
 
 export default async function SettingsPage() {
@@ -68,6 +69,12 @@ export default async function SettingsPage() {
           ariaLabel={t("dateFormat.ariaLabel")}
           options={DATE_FORMATS.map((f) => ({ value: f.code, label: f.pattern ?? t("dateFormat.auto") }))}
         />
+      </div>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("tour.label")}</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <p className="mb-3 text-xs text-fg-muted">{t("tour.description")}</p>
+        <OnboardingTour trigger />
       </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("changePassword.label")}</h2>

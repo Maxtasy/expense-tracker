@@ -9,6 +9,11 @@ export async function getUserDateFormat(userId: string): Promise<string> {
   return row?.dateFormat ?? DEFAULT_DATE_FORMAT;
 }
 
+export async function hasCompletedOnboarding(userId: string): Promise<boolean> {
+  const [row] = await db.select({ onboardedAt: users.onboardedAt }).from(users).where(eq(users.id, userId)).limit(1);
+  return row?.onboardedAt != null;
+}
+
 export async function getUserTheme(userId: string): Promise<Theme> {
   const [row] = await db.select({ theme: users.theme }).from(users).where(eq(users.id, userId)).limit(1);
   return THEMES.find((t) => t === row?.theme) ?? DEFAULT_THEME;
