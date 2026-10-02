@@ -53,15 +53,52 @@ async function main() {
       .values({ name: "Hobbies", type: "expense", userId })
       .returning({ id: categories.id });
 
-    await tx.insert(recurringTransactions).values({
-      userId,
-      type: "expense",
-      categoryId: categoryId("Housing"),
-      amount: "950.00",
-      description: "Rent",
-      startDate: isoDate(year, month - 6, 1),
-      endDate: null,
-    });
+    const [freelance] = await tx
+      .insert(categories)
+      .values({ name: "Freelance", type: "income", userId })
+      .returning({ id: categories.id });
+
+    const [rent] = await tx
+      .insert(recurringTransactions)
+      .values({
+        userId,
+        type: "expense",
+        categoryId: categoryId("Housing"),
+        amount: "950.00",
+        description: "Rent",
+        startDate: isoDate(year, month - 9, 1),
+        endDate: null,
+      })
+      .returning({ id: recurringTransactions.id });
+
+    // Nine months of history so the account looks lived-in and the insights year view has data.
+    // Amounts vary deterministically by month offset (no randomness, so re-runs are identical).
+    // Rent rows are linked to the recurring rule, exactly as lazy generation would create them.
+    const history: (typeof transactions.$inferInsert)[] = [];
+    for (let back = 9; back >= 1; back--) {
+      const m = month - back;
+      const wobble = (n: number) => ((back * 7 + n * 3) % 9) - 4; // -4..4
+      history.push(
+        { userId, type: "income", categoryId: categoryId("Salary"), amount: "3200.00", description: "Monthly salary", date: isoDate(year, m, 1) },
+        { userId, type: "expense", categoryId: categoryId("Housing"), recurringTransactionId: rent.id, amount: "950.00", description: "Rent", date: isoDate(year, m, 1) },
+        { userId, type: "expense", categoryId: categoryId("Food"), amount: (210 + wobble(1) * 6).toFixed(2), description: "Groceries", date: isoDate(year, m, 6) },
+        { userId, type: "expense", categoryId: categoryId("Food"), amount: (95 + wobble(2) * 4).toFixed(2), description: "Groceries", date: isoDate(year, m, 18) },
+        { userId, type: "expense", categoryId: categoryId("Utilities"), amount: (115 + wobble(3) * 3).toFixed(2), description: "Electricity bill", date: isoDate(year, m, 5) },
+        { userId, type: "expense", categoryId: categoryId("Transport"), amount: "40.00", description: "Bus pass", date: isoDate(year, m, 3) },
+        { userId, type: "expense", categoryId: categoryId("Entertainment"), amount: (55 + wobble(4) * 5).toFixed(2), description: "Cinema and dinner", date: isoDate(year, m, 14) },
+        { userId, type: "expense", categoryId: hobbies.id, amount: (30 + wobble(5) * 3).toFixed(2), description: "Board game night", date: isoDate(year, m, 21) },
+      );
+      if (back % 3 === 0) {
+        history.push({ userId, type: "expense", categoryId: categoryId("Shopping"), amount: (80 + wobble(6) * 8).toFixed(2), description: "Clothes", date: isoDate(year, m, 12) });
+      }
+      if (back % 3 === 1) {
+        history.push({ userId, type: "income", categoryId: freelance.id, amount: (380 + wobble(7) * 25).toFixed(2), description: "Freelance project", date: isoDate(year, m, 20) });
+      }
+      if (back % 4 === 0) {
+        history.push({ userId, type: "income", categoryId: categoryId("Salary"), amount: "300.00", description: "Bonus", date: isoDate(year, m, 25) });
+      }
+    }
+    await tx.insert(transactions).values(history);
 
     await tx.insert(transactions).values([
       { userId, type: "income", categoryId: categoryId("Salary"), amount: "3200.00", description: "Monthly salary", date: isoDate(year, month, 1) },
