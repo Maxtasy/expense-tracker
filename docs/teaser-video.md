@@ -31,14 +31,14 @@ Notes for the edit:
 
 ## Producing it
 
-The finished files are in [`docs/media/`](media/): `teaser.mp4`, `teaser.webm`, `teaser.gif` (about 1 MB total). Captions and the end card are drawn into the footage by the recorder, so there is no separate edit step.
+The finished files are in [`docs/media/`](media/): `teaser.mp4`, `teaser.webm`, `teaser.gif` (about 1.2 MB for the mp4 and webm, 2 MB for the gif). Captions and the end card are drawn into the footage by the recorder, so there is no separate edit step.
 
 To re-record after a UI change, follow the header of `scripts/record-teaser.mjs` (it drives the local app at phone size with Playwright, using the demo account), then convert the raw clip:
 
 ```bash
-ffmpeg -i docs/media/teaser-raw.webm -vf "scale=390:844:flags=lanczos,fps=30" -c:v libx264 -pix_fmt yuv420p -crf 20 -an -movflags +faststart docs/media/teaser.mp4
-ffmpeg -i docs/media/teaser-raw.webm -vf "scale=390:844:flags=lanczos,fps=30" -c:v libvpx-vp9 -b:v 0 -crf 34 -an docs/media/teaser.webm
-ffmpeg -i docs/media/teaser-raw.webm -vf "fps=12,scale=390:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=96[p];[b][p]paletteuse=dither=bayer:bayer_scale=4" docs/media/teaser.gif
+ffmpeg -i docs/media/teaser-raw.webm -vf "fps=30" -c:v libx264 -pix_fmt yuv420p -crf 20 -an -movflags +faststart docs/media/teaser.mp4
+ffmpeg -i docs/media/teaser-raw.webm -vf "fps=30" -c:v libvpx-vp9 -b:v 0 -crf 34 -an docs/media/teaser.webm
+ffmpeg -i docs/media/teaser-raw.webm -vf "fps=12,split[a][b];[a]palettegen=max_colors=96[p];[b][p]paletteuse=dither=bayer:bayer_scale=4" docs/media/teaser.gif
 ```
 
 Known gaps against the plan above: captions use the app's own font (Geist) rather than Schibsted Grotesk, and the add-expense shot appears over a list dated up to the 25th because the demo seed spreads data across the whole month.

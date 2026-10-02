@@ -17,11 +17,13 @@ const exe = process.env.CHROMIUM_PATH ?? `${homedir()}/AppData/Local/ms-playwrig
 const browser = await chromium.launch({ executablePath: exe, headless: true });
 const context = await browser.newContext({
   viewport: { width: 390, height: 844 },
-  deviceScaleFactor: 2,
+  // Must be 1: with a higher scale factor Playwright draws the page at 1x in the top-left corner of
+  // a larger video canvas instead of scaling it to fill the frame.
+  deviceScaleFactor: 1,
   isMobile: true,
   hasTouch: true,
   locale: "en",
-  recordVideo: { dir: OUT, size: { width: 780, height: 1688 } },
+  recordVideo: { dir: OUT, size: { width: 390, height: 844 } },
 });
 const page = await context.newPage();
 const wait = (ms) => page.waitForTimeout(ms);
