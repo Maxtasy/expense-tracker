@@ -45,7 +45,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           id="register-sw"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js").catch(function () {}); }`,
+            // Dev server chunk URLs aren't content-hashed, and sw.js caches /_next/static/*
+            // cache-first, so in development a registered worker serves stale JS/CSS after any
+            // code change or branch switch. Dev therefore unregisters instead of registering.
+            __html:
+              process.env.NODE_ENV === "production"
+                ? `if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js").catch(function () {}); }`
+                : `if ("serviceWorker" in navigator) { navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); }); if (window.caches) { caches.keys().then(function (ks) { ks.forEach(function (k) { caches.delete(k); }); }); } }`,
           }}
         />
         <NextIntlClientProvider locale={locale} messages={messages}>
