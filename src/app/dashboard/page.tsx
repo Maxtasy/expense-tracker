@@ -12,6 +12,7 @@ import { SwipeMonthNav } from "./swipe-month-nav";
 import { ensureRecurringGenerated } from "./generate-recurring";
 import { monthKey, monthLabel, monthRange, parseMonth } from "@/lib/month";
 import { getUserCurrency } from "@/lib/currency-server";
+import { getUserDateFormat } from "@/lib/preferences-server";
 
 type SearchParams = { category?: string; sort?: string; month?: string };
 
@@ -36,7 +37,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   await ensureRecurringGenerated(userId, current);
 
-  const [availableCategories, hiddenIds, allTransactionCount, monthTotals, currency, locale, t] = await Promise.all([
+  const [availableCategories, hiddenIds, allTransactionCount, monthTotals, currency, dateFormat, locale, t] = await Promise.all([
     db
       .select({ id: categories.id, name: categories.name, type: categories.type })
       .from(categories)
@@ -50,6 +51,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       .where(and(eq(transactions.userId, userId), gte(transactions.date, from), lte(transactions.date, to)))
       .groupBy(transactions.type),
     getUserCurrency(userId),
+    getUserDateFormat(userId),
     getLocale(),
     getTranslations("dashboard"),
   ]);
@@ -105,7 +107,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         ) : (
           <div className="rounded-xl border border-border bg-surface/30 px-3">
             {userTransactions.map((transaction) => (
-              <TransactionRow key={transaction.id} transaction={transaction} categories={availableCategories} currency={currency} />
+              <TransactionRow key={transaction.id} transaction={transaction} categories={availableCategories} currency={currency} dateFormat={dateFormat} />
             ))}
           </div>
         )}

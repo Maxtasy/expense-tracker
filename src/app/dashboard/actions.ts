@@ -1,15 +1,24 @@
 "use server";
 
 import { z } from "zod";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { auth, signOut } from "@/auth";
 import { db } from "@/db";
-import { recurringTransactionSkips, transactions } from "@/db/schema";
+import { recurringTransactionSkips, transactions, users } from "@/db/schema";
 
 export async function logout() {
   await signOut({ redirectTo: "/login" });
+}
+
+export async function completeOnboarding() {
+  const session = await auth();
+  if (!session?.user) return;
+  await db
+    .update(users)
+    .set({ onboardedAt: new Date() })
+    .where(and(eq(users.id, session.user.id), isNull(users.onboardedAt)));
 }
 
 async function buildTransactionSchema() {

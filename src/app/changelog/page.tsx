@@ -22,7 +22,7 @@ export default function ChangelogPage() {
       </header>
 
       <main className="mx-auto max-w-2xl px-4 pb-16 pt-4 sm:px-6">
-        <History size={22} className="text-accent" />
+        <History size={22} className="text-accent-text" />
         <h1 className="mt-3 text-2xl font-semibold text-fg">Changelog</h1>
         <p className="mt-2 text-sm text-fg-muted leading-relaxed">
           Everything that&rsquo;s shipped so far, newest first. Internal cleanup and behind-the-scenes

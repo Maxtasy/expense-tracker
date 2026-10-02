@@ -1,32 +1,122 @@
 @import "tailwindcss";
 
+/* Design tokens follow the Maxtasy design system (cool neutral ramp at hue 255, one indigo
+   accent, status hues only for status). The token *names* are the app's own (bg-surface,
+   text-fg-muted, ...); the values are the design system's. The system defines no light theme, so
+   the light palette below is the same ramp mirrored: same hue, same accent. */
 @theme {
-  --color-background: #0b0e14;
-  --color-surface: #12161f;
-  --color-surface-hover: #171c27;
-  --color-border: #1f2430;
-  --color-fg: #e8eaf0;
-  --color-fg-muted: #8890a3;
-  --color-accent: #4f46e5;
-  --color-accent-hover: #6366f1;
-  --color-accent-fg: #f5f5ff;
-  --color-danger: #f87171;
-  --color-danger-hover: #fca5a5;
-  --color-success: #34d399;
-  --color-expense: #f59e0b;
-  --color-expense-hover: #fbbf24;
-  --color-expense-fg: #1c1206;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: oklch(0.135 0.006 255);
+  --color-surface: oklch(0.16 0.007 255);
+  --color-surface-hover: oklch(0.185 0.008 255);
+  --color-border: oklch(0.255 0.01 255);
+  --color-fg: oklch(0.97 0.004 255);
+  --color-fg-muted: oklch(0.715 0.01 255);
+  --color-accent: oklch(0.56 0.2 277);
+  --color-accent-hover: oklch(0.61 0.19 277);
+  --color-accent-fg: oklch(0.985 0.004 277);
+  /* indigo for text/icons on the page background (the plain accent is tuned for white labels) */
+  --color-accent-text: oklch(0.74 0.13 277);
+  --color-danger: oklch(0.69 0.18 22);
+  --color-danger-hover: oklch(0.76 0.15 22);
+  --color-success: oklch(0.76 0.15 155);
+  --color-expense: oklch(0.82 0.15 80);
+  --color-expense-hover: oklch(0.87 0.14 80);
+  --color-expense-fg: oklch(0.22 0.04 80);
+  --font-sans: var(--font-schibsted);
+  --font-mono: var(--font-jetbrains);
+  /* design system radii: cards, dialogs and toasts are sharp (2px); controls are 6px */
+  --radius-md: 6px;
+  --radius-lg: 6px;
+  --radius-xl: 2px;
+  --radius-2xl: 2px;
 }
 
 html {
   color-scheme: dark;
+  --logo-mint: #3ad69b;
+  --logo-sky: #38bdf8;
+  --logo-indigo: #6366f1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light palette: same token names, overridden per user theme (see src/lib/theme.ts). `system`
+   only switches when the OS prefers light, so the dark tokens above remain the fallback. The two
+   blocks must stay in sync. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --logo-mint: #22b07d;
+  --logo-sky: #1fa3de;
+  --logo-indigo: #5457e0;
+  --color-background: oklch(0.975 0.004 255);
+  --color-surface: oklch(1 0 0);
+  --color-surface-hover: oklch(0.955 0.005 255);
+  --color-border: oklch(0.9 0.006 255);
+  --color-fg: oklch(0.2 0.01 255);
+  --color-fg-muted: oklch(0.45 0.012 255);
+  --color-accent: oklch(0.56 0.2 277);
+  --color-accent-hover: oklch(0.5 0.2 277);
+  --color-accent-fg: oklch(0.985 0.004 277);
+  --color-accent-text: oklch(0.5 0.2 277);
+  --color-danger: oklch(0.55 0.2 25);
+  --color-danger-hover: oklch(0.48 0.2 25);
+  --color-success: oklch(0.5 0.14 155);
+  --color-expense: oklch(0.76 0.15 75);
+  --color-expense-hover: oklch(0.7 0.15 75);
+  --color-expense-fg: oklch(0.22 0.04 80);
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme="system"] {
+    color-scheme: light;
+    --logo-mint: #22b07d;
+    --logo-sky: #1fa3de;
+    --logo-indigo: #5457e0;
+    --color-background: oklch(0.975 0.004 255);
+    --color-surface: oklch(1 0 0);
+    --color-surface-hover: oklch(0.955 0.005 255);
+    --color-border: oklch(0.9 0.006 255);
+    --color-fg: oklch(0.2 0.01 255);
+    --color-fg-muted: oklch(0.45 0.012 255);
+    --color-accent: oklch(0.56 0.2 277);
+    --color-accent-hover: oklch(0.5 0.2 277);
+    --color-accent-fg: oklch(0.985 0.004 277);
+    --color-accent-text: oklch(0.5 0.2 277);
+    --color-danger: oklch(0.55 0.2 25);
+    --color-danger-hover: oklch(0.48 0.2 25);
+    --color-success: oklch(0.5 0.14 155);
+    --color-expense: oklch(0.76 0.15 75);
+    --color-expense-hover: oklch(0.7 0.15 75);
+    --color-expense-fg: oklch(0.22 0.04 80);
+  }
 }
 
 body {
   background: var(--color-background);
   color: var(--color-fg);
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: oklch(0.59 0.2 277 / 0.4);
+}
+
+/* Focus: 2px gap + 2px indigo ring for buttons and links, a soft halo for text fields. */
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-background),
+    0 0 0 4px oklch(0.68 0.17 277 / 0.85);
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  box-shadow: 0 0 0 3px oklch(0.59 0.2 277 / 0.25);
 }
 
 button:not(:disabled) {

@@ -1,6 +1,6 @@
 {
   "name": "expense-tracker",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,7 +14,10 @@
     "db:test-connection": "node --env-file=.env.local --import tsx src/db/test-connection.ts",
     "db:seed": "node --env-file=.env.local --import tsx src/db/seed.ts",
     "db:seed-demo": "node --env-file=.env.local --import tsx src/db/seed-demo.ts",
-    "icons:build": "node scripts/build-icons.mjs"
+    "icons:build": "node scripts/build-icons.mjs",
+    "db:up": "docker compose up -d --wait db",
+    "db:down": "docker compose stop db",
+    "db:reset-local": "docker compose down -v"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

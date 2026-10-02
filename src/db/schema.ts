@@ -7,6 +7,12 @@ export const users = pgTable("users", {
   name: text("name"),
   currency: text("currency").notNull().default("EUR"),
   locale: text("locale").notNull().default("en"),
+  // "auto" = the locale's default date format; see src/lib/date-format.ts for the other values
+  dateFormat: text("date_format").notNull().default("auto"),
+  // "dark" | "light" | "system" -- see src/lib/theme.ts
+  theme: text("theme").notNull().default("dark"),
+  // null = hasn't seen the first-run tour yet (see src/app/dashboard/onboarding-tour.tsx)
+  onboardedAt: timestamp("onboarded_at"),
   // null = not verified yet. Verification is a 7-day grace period, not an immediate hard block --
   // see the authorize() callback in src/auth.ts and the layout check in src/app/dashboard/layout.tsx.
   emailVerifiedAt: timestamp("email_verified_at"),

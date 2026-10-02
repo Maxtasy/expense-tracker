@@ -97,6 +97,7 @@
       "getStarted": "Empezar",
       "login": "Iniciar sesión"
     },
+    "videoLabel": "Vídeo de demostración breve: crear una categoría, añadir un gasto y un ingreso y ver el análisis anual",
     "features": {
       "track": {
         "title": "Controla todo",
@@ -171,6 +172,41 @@
     "categories": "Categorías",
     "settings": "Ajustes",
     "logOut": "Cerrar sesión"
+  },
+  "onboarding": {
+    "ariaLabel": "Recorrido rápido",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "skip": "Omitir recorrido",
+    "done": "Empezar",
+    "progress": "{current} de {total}",
+    "replayButton": "Mostrar el recorrido",
+    "steps": {
+      "welcome": {
+        "title": "Te damos la bienvenida a Expense Tracker",
+        "body": "Un vistazo rápido. Lleva menos de un minuto y puedes repetirlo cuando quieras desde Ajustes."
+      },
+      "add": {
+        "title": "Añadir una transacción",
+        "body": "Toca el botón más de abajo a la derecha para registrar un gasto o un ingreso. Elige categoría, importe y fecha."
+      },
+      "recurring": {
+        "title": "Transacciones recurrentes",
+        "body": "Alquiler, nómina, suscripciones: configúralos una vez y aparecerán solos en el mes correcto."
+      },
+      "insights": {
+        "title": "Análisis",
+        "body": "Mira adónde va tu dinero por categoría, durante un mes o un año completo, en barras y gráficos circulares."
+      },
+      "categories": {
+        "title": "Categorías",
+        "body": "Crea tus propias categorías y colores, o oculta las predeterminadas que no uses."
+      },
+      "settings": {
+        "title": "Hazla tuya",
+        "body": "En Ajustes puedes cambiar la moneda, el idioma, la apariencia y el formato de fecha, y exportar o importar tus datos."
+      }
+    }
   },
   "dashboard": {
     "noTransactionsFilter": "Ninguna transacción coincide con este filtro.",
@@ -257,6 +293,24 @@
     "currencyAriaLabel": "Moneda",
     "language": "Idioma",
     "languageAriaLabel": "Idioma",
+    "theme": {
+      "label": "Apariencia",
+      "ariaLabel": "Apariencia",
+      "options": {
+        "dark": "Oscuro",
+        "light": "Claro",
+        "system": "Según el sistema"
+      }
+    },
+    "dateFormat": {
+      "label": "Formato de fecha",
+      "ariaLabel": "Formato de fecha",
+      "auto": "Automático (según el idioma)"
+    },
+    "tour": {
+      "label": "Recorrido de la app",
+      "description": "Repasa de nuevo las pantallas principales."
+    },
     "saved": "Guardado",
     "changePassword": {
       "label": "Cambiar contraseña",
@@ -294,6 +348,8 @@
     "notSignedIn": "No has iniciado sesión",
     "invalidCurrency": "Moneda no válida",
     "invalidLocale": "Idioma no válido",
+    "invalidDateFormat": "Formato de fecha no válido",
+    "invalidTheme": "Apariencia no válida",
     "csvImport": {
       "categoriesFileLabel": "categories.csv",
       "recurringFileLabel": "recurring_transactions.csv",

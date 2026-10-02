@@ -29,10 +29,12 @@ export function RecurringRow({
   recurring,
   categories,
   currency,
+  dateFormat,
 }: {
   recurring: Recurring;
   categories: Category[];
   currency: string;
+  dateFormat: string;
 }) {
   const t = useTranslations("recurring");
   const tCommon = useTranslations("common");
@@ -60,7 +62,7 @@ export function RecurringRow({
         <p className="truncate text-sm text-fg">{recurring.description || recurring.categoryName || t("fallbackName")}</p>
         <p className="text-xs text-fg-muted">
           {recurring.categoryName ?? tCommon("uncategorized")} &middot; {t("dayOfMonth", { day })}
-          {recurring.endDate ? t("until", { date: formatDate(recurring.endDate, locale) }) : ""}
+          {recurring.endDate ? t("until", { date: formatDate(recurring.endDate, locale, dateFormat) }) : ""}
         </p>
       </div>
       <span className={`shrink-0 text-sm font-medium ${isIncome ? "text-success" : "text-fg"}`}>

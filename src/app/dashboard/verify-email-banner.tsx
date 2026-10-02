@@ -23,7 +23,7 @@ export function VerifyEmailBanner({ email }: { email: string }) {
             await resendVerificationEmail(email);
             setSent(true);
           })}
-          className="inline-flex items-center gap-2 text-accent hover:text-accent-hover"
+          className="inline-flex items-center gap-2 text-accent-text hover:text-accent-hover"
         >
           {isPending && <Spinner size={14} />}
           {t("resend")}

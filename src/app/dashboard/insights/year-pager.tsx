@@ -21,7 +21,7 @@ export async function YearPager({ current, type }: { current: YearMonth; type: "
         <Link href={hrefFor(current, prevYear, type)} className="px-1 text-xs text-fg-muted hover:text-fg">
           {prevYear}
         </Link>
-        <span className="rounded-full bg-accent/15 px-3 py-1 font-medium text-accent">{current.year}</span>
+        <span className="rounded-md bg-accent/15 px-3 py-1 font-medium text-accent-text">{current.year}</span>
         <Link href={hrefFor(current, nextYear, type)} className="px-1 text-xs text-fg-muted hover:text-fg">
           {nextYear}
         </Link>
