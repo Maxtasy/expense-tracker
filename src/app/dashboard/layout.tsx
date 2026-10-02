@@ -5,6 +5,8 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { getVerificationStatus, isVerificationGracePeriodExpired } from "@/lib/verification";
 import { Logo } from "@/components/logo";
+import { hasCompletedOnboarding } from "@/lib/preferences-server";
+import { OnboardingTour } from "./onboarding-tour";
 import { LogoutButton } from "./logout-button";
 import { VerifyEmailBanner } from "./verify-email-banner";
 
@@ -23,6 +25,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (isUnverified && isVerificationGracePeriodExpired(verification.createdAt)) {
     redirect("/verify-email-required");
   }
+
+  const onboarded = await hasCompletedOnboarding(session.user.id);
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -67,6 +71,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {isUnverified && <VerifyEmailBanner email={verification.email} />}
         {children}
       </main>
+      {!onboarded && <OnboardingTour autoOpen />}
     </div>
   );
 }

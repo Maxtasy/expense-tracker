@@ -1,0 +1,24 @@
+# Local development database -- a plain Postgres, used instead of the dev Supabase project.
+# Start: npm run db:up   Stop: npm run db:down   Wipe data: npm run db:reset-local
+# Host port 54322 (not 5432) so it never clashes with a Postgres installed on the machine.
+services:
+  db:
+    image: postgres:17
+    container_name: expense-tracker-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: expense_tracker
+    ports:
+      - "54322:5432"
+    volumes:
+      - expense-tracker-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d expense_tracker"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  expense-tracker-pgdata:

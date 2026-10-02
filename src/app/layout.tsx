@@ -1,17 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { auth } from "@/auth";
+import { getUserTheme } from "@/lib/preferences-server";
+import { DEFAULT_THEME, THEME_COLOR, type Theme } from "@/lib/theme";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Maxtasy design system typefaces: Schibsted Grotesk for all UI, JetBrains Mono for code and data.
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
 });
 
@@ -20,18 +24,34 @@ export const metadata: Metadata = {
   description: "Track and categorize your personal income and expenses",
 };
 
-export const viewport: Viewport = {
-  themeColor: "#0b0e14",
-};
+async function resolveTheme(): Promise<Theme> {
+  const session = await auth();
+  return session?.user ? getUserTheme(session.user.id) : DEFAULT_THEME;
+}
+
+export async function generateViewport(): Promise<Viewport> {
+  const theme = await resolveTheme();
+  if (theme === "system") {
+    return {
+      themeColor: [
+        { media: "(prefers-color-scheme: light)", color: THEME_COLOR.light },
+        { media: "(prefers-color-scheme: dark)", color: THEME_COLOR.dark },
+      ],
+    };
+  }
+  return { themeColor: THEME_COLOR[theme] };
+}
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const theme = await resolveTheme();
 
   return (
     <html
       lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      data-theme={theme}
+      className={`${schibsted.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-fg">
         {/* next/script with beforeInteractive, not a React effect: PWA/store-listing
@@ -45,7 +65,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           id="register-sw"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js").catch(function () {}); }`,
+            // Dev server chunk URLs aren't content-hashed, and sw.js caches /_next/static/*
+            // cache-first, so in development a registered worker serves stale JS/CSS after any
+            // code change or branch switch. Dev therefore unregisters instead of registering.
+            __html:
+              process.env.NODE_ENV === "production"
+                ? `if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js").catch(function () {}); }`
+                : `if ("serviceWorker" in navigator) { navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); }); if (window.caches) { caches.keys().then(function (ks) { ks.forEach(function (k) { caches.delete(k); }); }); } }`,
           }}
         />
         <NextIntlClientProvider locale={locale} messages={messages}>

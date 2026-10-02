@@ -12,6 +12,18 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.12.0",
+    date: "2026-10-02",
+    items: [
+      "Choose a light or dark appearance, or follow your device, in Settings.",
+      "Pick how dates are shown (for example DD.MM.YYYY or MM/DD/YYYY) in Settings.",
+      "New to the app? A short tour now walks you through the main screens. You can replay it any time from Settings.",
+      "A new logo and a fresh look across the whole app.",
+      "A new loading animation: coins drop in, stack up and fall away.",
+      "A redesigned landing page with a short demo video.",
+    ],
+  },
+  {
     version: "1.11.0",
     date: "2026-09-13",
     items: [

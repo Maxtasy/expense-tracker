@@ -4,6 +4,8 @@ An expense tracker built with Next.js (App Router), TypeScript, Drizzle ORM, Sup
 
 ## Screenshots
 
+![Short demo: creating a category, adding an expense and an income, yearly insights](docs/media/teaser.gif)
+
 | Dashboard | Insights | Recurring |
 |---|---|---|
 | ![Dashboard](public/screenshots/dashboard.png) | ![Insights](public/screenshots/insights.png) | ![Recurring](public/screenshots/recurring.png) |
@@ -36,7 +38,20 @@ npm run db:studio     # open Drizzle Studio to browse tables
 
 `db:seed-demo` reads `DEMO_ACCOUNT_EMAIL` / `DEMO_ACCOUNT_PASSWORD` from `.env.local` and wipes + rebuilds just that one account's data — safe to re-run any time you need a clean, realistic dataset.
 
-### Two connection strings
+### Local database (Docker)
+
+Day-to-day development can run against a local Postgres instead of the dev Supabase project (the free tier pauses projects and caps how many can run at once):
+
+```bash
+npm run db:up            # starts Postgres 17 in Docker on localhost:54322 (docker-compose.yml)
+npm run db:migrate       # apply migrations
+npm run db:seed          # global categories
+npm run db:seed-demo     # demo account
+```
+
+Point both `DATABASE_URL` and `DATABASE_URL_MIGRATIONS` in `.env.local` at `postgresql://postgres:postgres@localhost:54322/expense_tracker` (`.env.local.example` has the line ready). `npm run db:down` stops it (data kept); `npm run db:reset-local` wipes the volume. Note that Vercel's Preview environment (`develop`, PR previews) still uses the Supabase dev project, not this local one.
+
+### Two connection strings (Supabase)
 
 `.env.local` has both `DATABASE_URL` and `DATABASE_URL_MIGRATIONS`, pointing at different Supabase poolers:
 

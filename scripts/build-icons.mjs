@@ -33,6 +33,17 @@ async function buildIco(pngBuffers) {
   return Buffer.concat([header, ...entries, ...datas]);
 }
 
+// The mark runs nearly edge to edge in its viewBox, so icons that sit on a solid background get
+// padding; the transparent favicon keeps the full-bleed mark for legibility at 16px.
+async function paddedIcon(size) {
+  const inner = Math.round(size * 0.66);
+  const logo = await sharp(svgPath).resize(inner, inner).png().toBuffer();
+  return sharp({ create: { width: size, height: size, channels: 4, background: "#07080b" } })
+    .composite([{ input: logo, gravity: "center" }])
+    .png()
+    .toBuffer();
+}
+
 async function main() {
   const sizes = [16, 32, 48];
   const pngBuffers = await Promise.all(
@@ -46,14 +57,14 @@ async function main() {
   writeFileSync(new URL("../src/app/favicon.ico", import.meta.url), ico);
   console.log("Wrote src/app/favicon.ico");
 
-  const appleIcon = await sharp(svgPath).resize(180, 180).flatten({ color: "#0b0e14" }).png().toBuffer();
+  const appleIcon = await paddedIcon(180);
   writeFileSync(new URL("../src/app/apple-icon.png", import.meta.url), appleIcon);
   console.log("Wrote src/app/apple-icon.png");
 
   mkdirSync(fileURLToPath(new URL("../public/icons", import.meta.url)), { recursive: true });
 
   for (const size of [192, 512]) {
-    const pwaIcon = await sharp(svgPath).resize(size, size).flatten({ color: "#0b0e14" }).png().toBuffer();
+    const pwaIcon = await paddedIcon(size);
     writeFileSync(new URL(`../public/icons/icon-${size}.png`, import.meta.url), pwaIcon);
     console.log(`Wrote public/icons/icon-${size}.png`);
   }
@@ -61,7 +72,7 @@ async function main() {
   // Maskable icon: pad the logo into a safe zone (~60% of the canvas) so Android's
   // adaptive-icon mask doesn't crop it, per https://web.dev/maskable-icon/
   const maskableLogo = await sharp(svgPath).resize(307, 307).png().toBuffer();
-  const maskableIcon = await sharp({ create: { width: 512, height: 512, channels: 4, background: "#0b0e14" } })
+  const maskableIcon = await sharp({ create: { width: 512, height: 512, channels: 4, background: "#07080b" } })
     .composite([{ input: maskableLogo, gravity: "center" }])
     .png()
     .toBuffer();

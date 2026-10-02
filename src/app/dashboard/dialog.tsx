@@ -24,7 +24,7 @@ export function Dialog({
       {/* Raw CSS, not a Tailwind `backdrop:` utility: ::backdrop is a pseudo-element, so it
           can't be reached via inline style, and this dev environment has proven unreliable
           at compiling first-time-used utility classes (see CLAUDE.md gotchas). */}
-      <style>{`.app-dialog::backdrop { background: rgba(0, 0, 0, 0.6); }`}</style>
+      <style>{`.app-dialog::backdrop { background: oklch(0.08 0.005 255 / 0.66); backdrop-filter: blur(2px); } @keyframes dialog-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } } .app-dialog[open] { animation: dialog-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1); } @media (prefers-reduced-motion: reduce) { .app-dialog[open] { animation: none; } }`}</style>
       <dialog
         ref={dialogRef}
         onClick={handleBackdropClick}

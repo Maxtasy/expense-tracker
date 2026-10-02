@@ -1,4 +1,6 @@
-export type YearMonth = { year: number; month: number };
+import { DEFAULT_DATE_FORMAT, formatWithPattern } from "@/lib/date-format";
+
+export type YearMonth ={ year: number; month: number };
 
 export function parseMonth(value: string | undefined): YearMonth {
   if (value && /^\d{4}-\d{2}$/.test(value)) {
@@ -39,9 +41,9 @@ export function monthLabel({ year, month }: YearMonth, locale: string, style: "s
 // dateStr is a plain "YYYY-MM-DD" string with no time component — parsed via the Date(y, m, d)
 // constructor (local time) rather than new Date(dateStr) (parsed as UTC midnight), since the
 // latter can roll back a day once formatted in a timezone behind UTC.
-export function formatDate(dateStr: string, locale: string): string {
+export function formatDate(dateStr: string, locale: string, dateFormat: string = DEFAULT_DATE_FORMAT): string {
   const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString(locale);
+  return formatWithPattern(year, month, day, dateFormat) ?? new Date(year, month - 1, day).toLocaleDateString(locale);
 }
 
 export function yearRange(year: number): { from: string; to: string } {
