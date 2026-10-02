@@ -84,7 +84,7 @@ export default function PrivacyPage() {
                 href="https://supabase.com/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-accent hover:text-accent-hover"
+                className="text-accent-text hover:text-accent-hover"
               >
                 Supabase
               </a>
@@ -93,7 +93,7 @@ export default function PrivacyPage() {
                 href="https://vercel.com/legal/privacy-policy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-accent hover:text-accent-hover"
+                className="text-accent-text hover:text-accent-hover"
               >
                 Vercel
               </a>
@@ -102,7 +102,7 @@ export default function PrivacyPage() {
                 href="https://resend.com/legal/privacy-policy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-accent hover:text-accent-hover"
+                className="text-accent-text hover:text-accent-hover"
               >
                 Resend
               </a>
@@ -111,7 +111,7 @@ export default function PrivacyPage() {
                 href="https://www.cloudflare.com/privacypolicy/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-accent hover:text-accent-hover"
+                className="text-accent-text hover:text-accent-hover"
               >
                 Cloudflare R2
               </a>
@@ -140,7 +140,7 @@ export default function PrivacyPage() {
             </p>
             <p className={bodyClass}>
               To request deletion of your account and all associated data, email us at{' '}
-              <a href={`mailto:${CONTACT_EMAIL}`} className="text-accent hover:text-accent-hover">
+              <a href={`mailto:${CONTACT_EMAIL}`} className="text-accent-text hover:text-accent-hover">
                 {CONTACT_EMAIL}
               </a>
               . Account deletion removes everything from the live database.
@@ -172,7 +172,7 @@ export default function PrivacyPage() {
             <h2 className={headingClass}>Contact</h2>
             <p className={bodyClass}>
               Questions about this policy or your data? Email{' '}
-              <a href={`mailto:${CONTACT_EMAIL}`} className="text-accent hover:text-accent-hover">
+              <a href={`mailto:${CONTACT_EMAIL}`} className="text-accent-text hover:text-accent-hover">
                 {CONTACT_EMAIL}
               </a>
               .

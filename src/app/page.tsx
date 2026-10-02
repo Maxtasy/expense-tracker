@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
 import {
   ArrowLeftRight,
   CalendarDays,
@@ -18,10 +17,6 @@ import { Logo } from "@/components/logo";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { TeaserVideo } from "@/components/teaser-video";
 import "./landing.css";
-
-// Maxtasy design system typefaces, loaded for the landing page only (the app itself uses Geist).
-const schibsted = Schibsted_Grotesk({ variable: "--font-schibsted", subsets: ["latin"] });
-const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"] });
 
 const FEATURES = [
   { icon: ArrowLeftRight, key: "track" },
@@ -43,7 +38,7 @@ export default async function Home() {
   const t = await getTranslations("landing");
 
   return (
-    <div className={`lp ${schibsted.variable} ${jetbrains.variable}`}>
+    <div className="lp">
       <header className="lp-header">
         <div className="lp-wrap">
           <Link href="/" className="lp-brand">

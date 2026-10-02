@@ -18,8 +18,8 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["finance", "productivity"],
     // No separate native app exists (this *is* the app, wrapped in a TWA) — never suggest one instead.
     prefer_related_applications: false,
-    background_color: "#0b0e14",
-    theme_color: "#0b0e14",
+    background_color: "#07080b",
+    theme_color: "#07080b",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },

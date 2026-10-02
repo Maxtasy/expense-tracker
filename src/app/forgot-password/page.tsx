@@ -1,5 +1,7 @@
 "use client";
 
+import { AuthBrand } from "@/components/auth-brand";
+
 import { useActionState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -18,6 +20,7 @@ export default function ForgotPasswordPage() {
     <main className="relative flex min-h-dvh flex-col items-center justify-center px-4">
       <LocaleSwitcher className="absolute right-4 top-4" />
       <div className="w-full max-w-xs">
+        <AuthBrand />
         <h1 className="mb-1 text-lg font-semibold text-fg">{t("title")}</h1>
         {state?.success ? (
           <p className="mt-3 text-sm text-success">{t("successMessage")}</p>
@@ -44,7 +47,7 @@ export default function ForgotPasswordPage() {
           </>
         )}
         <p className="mt-4 text-sm text-fg-muted">
-          <Link href="/login" className="text-accent hover:text-accent-hover">
+          <Link href="/login" className="text-accent-text hover:text-accent-hover">
             {t("backToLogin")}
           </Link>
         </p>
