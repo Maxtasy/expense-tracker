@@ -41,4 +41,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-docs/media/teaser-raw.webm
+docs/media/teaser-raw.mp4

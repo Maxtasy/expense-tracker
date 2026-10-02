@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// Silent looping product teaser. Autoplays muted; for visitors who prefer reduced motion it
-// stays paused with native controls instead. Tapping the video toggles pause otherwise, so
-// there's always a way to stop it.
+// Silent looping product teaser (styled by .lp-video in src/app/landing.css). Autoplays muted;
+// for visitors who prefer reduced motion it stays paused with native controls instead. Tapping
+// the video toggles pause otherwise, so there's always a way to stop it.
 export function TeaserVideo({ label }: { label: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -24,10 +24,7 @@ export function TeaserVideo({ label }: { label: string }) {
   }
 
   return (
-    <div
-      style={{ width: "100%", maxWidth: 240, margin: "0 auto", borderRadius: "1.75rem", overflow: "hidden" }}
-      className="border border-border shadow-2xl shadow-black/40"
-    >
+    <div className="lp-video">
       <video
         ref={ref}
         muted
@@ -38,7 +35,6 @@ export function TeaserVideo({ label }: { label: string }) {
         poster="/media/teaser-poster.jpg"
         aria-label={label}
         onClick={toggle}
-        style={{ display: "block", width: "100%", height: "auto", aspectRatio: "390 / 844" }}
       >
         <source src="/media/teaser.webm" type="video/webm" />
         <source src="/media/teaser.mp4" type="video/mp4" />
