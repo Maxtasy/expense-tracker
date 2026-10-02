@@ -29,9 +29,9 @@ const FEATURES = [
 // The -vN suffix is bumped whenever the screenshots are regenerated: Next's image optimizer (and
 // Vercel's) caches by URL, so reusing a filename can serve the old picture for hours.
 const SCREENSHOTS = [
-  { src: "/landing/dashboard-v2.png", key: "dashboard" },
-  { src: "/landing/insights-v2.png", key: "insights" },
-  { src: "/landing/settings-v2.png", key: "settings" },
+  { src: "/landing/dashboard-v3.png", key: "dashboard" },
+  { src: "/landing/insights-v3.png", key: "insights" },
+  { src: "/landing/settings-v3.png", key: "settings" },
 ] as const;
 
 export default async function Home() {
