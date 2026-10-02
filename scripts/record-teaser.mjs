@@ -6,8 +6,12 @@
 // Needs the dev server running on :3000. Writes docs/media/teaser-raw.webm (not committed);
 // convert with ffmpeg as described in the doc. Re-seed before every take: the run creates a
 // category, an expense and an income in the demo account.
+// Frames are captured with a continuous page.screenshot() loop at true 2x (780x1688, about 30 fps)
+// and assembled with ffmpeg (must be on PATH). Playwright's own recordVideo can't capture above
+// 1x, and the DevTools screencast also returns 1x frames.
 import { chromium } from "playwright-core";
-import { mkdirSync, readdirSync, renameSync } from "fs";
+import { mkdirSync, rmSync, writeFileSync } from "fs";
+import { execFileSync } from "child_process";
 import { homedir } from "os";
 
 const OUT = process.env.OUT_DIR ?? "docs/media";
@@ -18,9 +22,7 @@ const exe = process.env.CHROMIUM_PATH ?? `${homedir()}/AppData/Local/ms-playwrig
 const browser = await chromium.launch({ executablePath: exe, headless: true });
 const contextOptions = {
   viewport: { width: 390, height: 844 },
-  // Must be 1: with a higher scale factor Playwright draws the page at 1x in the top-left corner of
-  // a larger video canvas instead of scaling it to fill the frame.
-  deviceScaleFactor: 1,
+  deviceScaleFactor: 2,
   isMobile: true,
   hasTouch: true,
   locale: "en",
@@ -28,6 +30,17 @@ const contextOptions = {
 
 // ---- sign in off camera (demo account from .env.local; not echoed), keep only the session ----
 const loginContext = await browser.newContext(contextOptions);
+// Hide the Next.js dev overlay (error/issue badge) so it never ends up in the footage.
+await loginContext.addInitScript(() => {
+  const hide = () => {
+    const style = document.createElement("style");
+    style.textContent = "nextjs-portal { display: none !important; }";
+    document.documentElement.appendChild(style);
+  };
+  if (document.documentElement) hide();
+  else document.addEventListener("DOMContentLoaded", hide);
+});
+
 const loginPage = await loginContext.newPage();
 await loginPage.goto(`${BASE}/login`);
 await loginPage.getByLabel("Email").fill(process.env.DEMO_ACCOUNT_EMAIL);
@@ -44,9 +57,32 @@ await loginContext.close();
 const context = await browser.newContext({
   ...contextOptions,
   storageState,
-  recordVideo: { dir: OUT, size: { width: 390, height: 844 } },
+});
+// Hide the Next.js dev overlay (error/issue badge) so it never ends up in the footage.
+await context.addInitScript(() => {
+  const hide = () => {
+    const style = document.createElement("style");
+    style.textContent = "nextjs-portal { display: none !important; }";
+    document.documentElement.appendChild(style);
+  };
+  if (document.documentElement) hide();
+  else document.addEventListener("DOMContentLoaded", hide);
 });
 const page = await context.newPage();
+
+// ---- frame capture ----
+const FRAMES = `${OUT}/frames`;
+rmSync(FRAMES, { recursive: true, force: true });
+mkdirSync(FRAMES, { recursive: true });
+const frames = [];
+let capturing = true;
+const captureLoop = (async () => {
+  while (capturing) {
+    const data = await page.screenshot({ type: "jpeg", quality: 92 }).catch(() => null);
+    if (data) frames.push({ t: Date.now() / 1000, data });
+  }
+})();
+
 const wait = (ms) => page.waitForTimeout(ms);
 
 // ---- caption overlay ----
@@ -98,7 +134,10 @@ async function fillAndAdd(dialog, { amount, category, description }) {
 
 // 1. overview of a lived-in account
 await page.goto(`${BASE}/dashboard`);
-await wait(500);
+await page.waitForLoadState("networkidle");
+await wait(300);
+// drop everything captured so far (blank page, navigation) so the video opens on the overview
+frames.length = 0;
 await caption("See where your money goes.");
 mark("1 overview");
 await wait(3200);
@@ -176,9 +215,25 @@ await page.evaluate(() => {
 await wait(3200);
 mark("end");
 
+capturing = false;
+await captureLoop;
 await context.close();
 await browser.close();
 
-const webm = readdirSync(OUT).find((f) => f.endsWith(".webm") && f !== "teaser.webm" && f !== "teaser-raw.webm");
-renameSync(`${OUT}/${webm}`, `${OUT}/teaser-raw.webm`);
-console.log("saved", `${OUT}/teaser-raw.webm`);
+// Each frame is shown until the next one was captured.
+const lines = [];
+frames.forEach((f, i) => {
+  writeFileSync(`${FRAMES}/${String(i).padStart(5, "0")}.jpg`, f.data);
+  const next = frames[i + 1];
+  const duration = next ? Math.max(next.t - f.t, 0.001) : 0.5;
+  lines.push(`file '${String(i).padStart(5, "0")}.jpg'`, `duration ${duration.toFixed(4)}`);
+});
+lines.push(`file '${String(frames.length - 1).padStart(5, "0")}.jpg'`); // concat needs the last file repeated
+writeFileSync(`${FRAMES}/list.txt`, lines.join("\n"));
+execFileSync(
+  "ffmpeg",
+  ["-loglevel", "error", "-y", "-f", "concat", "-safe", "0", "-i", `${FRAMES}/list.txt`, "-vf", "fps=30,scale=780:1688:flags=lanczos", "-pix_fmt", "yuv420p", "-c:v", "libx264", "-crf", "16", "-an", `${OUT}/teaser-raw.mp4`],
+  { stdio: "inherit" },
+);
+rmSync(FRAMES, { recursive: true, force: true });
+console.log("saved", `${OUT}/teaser-raw.mp4`, `(${frames.length} frames)`);
