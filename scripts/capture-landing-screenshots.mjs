@@ -1,4 +1,5 @@
-// Refreshes the phone screenshots on the landing page (public/landing/*.png) from the demo account.
+// Refreshes the phone screenshots from the demo account: the landing page set (public/landing/*-vN.png)
+// and the store/README set (public/screenshots/*.png, referenced by the web manifest and the README).
 // Same setup as scripts/record-teaser.mjs:
 //   npm i --no-save playwright-core
 //   npm run db:seed-demo   (then mark the demo user onboarded + email-verified, theme dark)
@@ -50,5 +51,20 @@ for (const [name, path] of [
   await page.waitForTimeout(800);
   await page.screenshot({ path: `${OUT}/${name}-${VERSION}.png` });
   console.log("saved", `${OUT}/${name}-${VERSION}.png`);
+}
+// store / README / manifest set (plain filenames: not served through next/image, so no cache suffix)
+const STORE_OUT = process.env.STORE_OUT_DIR ?? "public/screenshots";
+for (const [name, path] of [
+  ["dashboard", "/dashboard"],
+  ["insights", "/dashboard/insights"],
+  ["categories", "/dashboard/categories"],
+  ["recurring", "/dashboard/recurring"],
+  ["settings", "/dashboard/settings"],
+]) {
+  await page.goto(`${BASE}${path}`);
+  await page.waitForLoadState("networkidle");
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: `${STORE_OUT}/${name}.png` });
+  console.log("saved", `${STORE_OUT}/${name}.png`);
 }
 await browser.close();
