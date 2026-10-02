@@ -5,6 +5,7 @@ import { ArrowLeftRight, CalendarDays, Compass, FileSpreadsheet, History, Langua
 import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/logo";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { TeaserVideo } from "@/components/teaser-video";
 
 const GRADIENT_TEXT_STYLE: CSSProperties = {
   backgroundImage: "linear-gradient(135deg, #6366F1, #38BDF8, #34D399)",
@@ -70,6 +71,10 @@ export default async function Home() {
               {t("hero.login")}
             </Link>
           </div>
+        </div>
+
+        <div className="mt-10">
+          <TeaserVideo label={t("videoLabel")} />
         </div>
 
         <div className="mt-12 grid gap-3 text-left sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-4">
