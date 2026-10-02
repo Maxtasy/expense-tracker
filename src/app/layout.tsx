@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { auth } from "@/auth";
+import { getUserTheme } from "@/lib/preferences-server";
+import { DEFAULT_THEME, THEME_COLOR, type Theme } from "@/lib/theme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,17 +23,33 @@ export const metadata: Metadata = {
   description: "Track and categorize your personal income and expenses",
 };
 
-export const viewport: Viewport = {
-  themeColor: "#0b0e14",
-};
+async function resolveTheme(): Promise<Theme> {
+  const session = await auth();
+  return session?.user ? getUserTheme(session.user.id) : DEFAULT_THEME;
+}
+
+export async function generateViewport(): Promise<Viewport> {
+  const theme = await resolveTheme();
+  if (theme === "system") {
+    return {
+      themeColor: [
+        { media: "(prefers-color-scheme: light)", color: THEME_COLOR.light },
+        { media: "(prefers-color-scheme: dark)", color: THEME_COLOR.dark },
+      ],
+    };
+  }
+  return { themeColor: THEME_COLOR[theme] };
+}
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const theme = await resolveTheme();
 
   return (
     <html
       lang={locale}
+      data-theme={theme}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-fg">

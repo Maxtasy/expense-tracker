@@ -29,10 +29,12 @@ export function TransactionRow({
   transaction,
   categories,
   currency,
+  dateFormat,
 }: {
   transaction: Transaction;
   categories: Category[];
   currency: string;
+  dateFormat: string;
 }) {
   const t = useTranslations("dashboard");
   const tCommon = useTranslations("common");
@@ -62,7 +64,7 @@ export function TransactionRow({
           )}
         </p>
         <p className="text-xs text-fg-muted">
-          {transaction.categoryName ?? tCommon("uncategorized")} &middot; {formatDate(transaction.date, locale)}
+          {transaction.categoryName ?? tCommon("uncategorized")} &middot; {formatDate(transaction.date, locale, dateFormat)}
         </p>
       </div>
       <span className={`shrink-0 text-sm font-medium ${isIncome ? "text-success" : "text-fg"}`}>

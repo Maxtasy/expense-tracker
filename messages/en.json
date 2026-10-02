@@ -172,6 +172,41 @@
     "settings": "Settings",
     "logOut": "Log out"
   },
+  "onboarding": {
+    "ariaLabel": "Quick tour",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip tour",
+    "done": "Get started",
+    "progress": "{current} of {total}",
+    "replayButton": "Show the tour",
+    "steps": {
+      "welcome": {
+        "title": "Welcome to Expense Tracker",
+        "body": "Here’s a quick look around. It takes under a minute, and you can replay it any time from Settings."
+      },
+      "add": {
+        "title": "Add a transaction",
+        "body": "Tap the plus button at the bottom right to log an expense or income. Pick a category, an amount and a date."
+      },
+      "recurring": {
+        "title": "Recurring transactions",
+        "body": "Rent, salary, subscriptions: set them up once and they show up in the right month automatically."
+      },
+      "insights": {
+        "title": "Insights",
+        "body": "See where your money goes by category, for a month or a whole year, as bars and pie charts."
+      },
+      "categories": {
+        "title": "Categories",
+        "body": "Create your own categories and colors, or hide the default ones you don’t use."
+      },
+      "settings": {
+        "title": "Make it yours",
+        "body": "In Settings you can change currency, language, appearance and date format, and export or import your data."
+      }
+    }
+  },
   "dashboard": {
     "noTransactionsFilter": "No transactions match this filter.",
     "noTransactionsMonth": "No transactions in {month}.",
@@ -257,6 +292,24 @@
     "currencyAriaLabel": "Currency",
     "language": "Language",
     "languageAriaLabel": "Language",
+    "theme": {
+      "label": "Appearance",
+      "ariaLabel": "Appearance",
+      "options": {
+        "dark": "Dark",
+        "light": "Light",
+        "system": "Match system"
+      }
+    },
+    "dateFormat": {
+      "label": "Date format",
+      "ariaLabel": "Date format",
+      "auto": "Automatic (from language)"
+    },
+    "tour": {
+      "label": "App tour",
+      "description": "Walk through the main screens again."
+    },
     "saved": "Saved",
     "changePassword": {
       "label": "Change password",
@@ -294,6 +347,8 @@
     "notSignedIn": "Not signed in",
     "invalidCurrency": "Invalid currency",
     "invalidLocale": "Invalid language",
+    "invalidDateFormat": "Invalid date format",
+    "invalidTheme": "Invalid appearance",
     "csvImport": {
       "categoriesFileLabel": "categories.csv",
       "recurringFileLabel": "recurring_transactions.csv",
