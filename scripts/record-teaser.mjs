@@ -95,7 +95,7 @@ async function caption(text) {
       el.style.cssText =
         "position:fixed;left:16px;right:16px;bottom:96px;z-index:2147483000;padding:12px 16px;border-radius:12px;" +
         "background:var(--color-surface);color:var(--color-fg);border:1px solid var(--color-border);" +
-        "font:600 16px/1.3 var(--font-geist-sans),system-ui,sans-serif;letter-spacing:-0.01em;text-align:center;" +
+        "font:600 16px/1.3 var(--font-schibsted),system-ui,sans-serif;letter-spacing:-0.01em;text-align:center;" +
         "opacity:0;transition:opacity .4s;pointer-events:none";
       document.body.appendChild(el);
     }
@@ -204,7 +204,7 @@ await page.evaluate(() => {
   el.style.cssText =
     "position:fixed;inset:0;z-index:2147483600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;" +
     "background:var(--color-background);color:var(--color-fg);opacity:0;transition:opacity .4s;" +
-    "font:600 28px/1.2 var(--font-geist-sans),system-ui,sans-serif;letter-spacing:-0.02em";
+    "font:600 28px/1.2 var(--font-schibsted),system-ui,sans-serif;letter-spacing:-0.02em";
   el.innerHTML =
     '<svg width="96" height="96" viewBox="0 0 48 48" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">' +
     '<path d="M13 12H35" style="stroke:var(--logo-mint)"/><path d="M8 24H40" style="stroke:var(--logo-sky)"/><path d="M8 36H40" style="stroke:var(--logo-indigo)"/></svg>' +

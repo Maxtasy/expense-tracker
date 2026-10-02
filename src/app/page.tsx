@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
 import {
   ArrowLeftRight,
   CalendarDays,
@@ -19,10 +18,6 @@ import { LocaleSwitcher } from "@/components/locale-switcher";
 import { TeaserVideo } from "@/components/teaser-video";
 import "./landing.css";
 
-// Maxtasy design system typefaces, loaded for the landing page only (the app itself uses Geist).
-const schibsted = Schibsted_Grotesk({ variable: "--font-schibsted", subsets: ["latin"] });
-const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"] });
-
 const FEATURES = [
   { icon: ArrowLeftRight, key: "track" },
   { icon: CalendarDays, key: "monthly" },
@@ -34,16 +29,16 @@ const FEATURES = [
 // The -vN suffix is bumped whenever the screenshots are regenerated: Next's image optimizer (and
 // Vercel's) caches by URL, so reusing a filename can serve the old picture for hours.
 const SCREENSHOTS = [
-  { src: "/landing/dashboard-v2.png", key: "dashboard" },
-  { src: "/landing/insights-v2.png", key: "insights" },
-  { src: "/landing/settings-v2.png", key: "settings" },
+  { src: "/landing/dashboard-v3.png", key: "dashboard" },
+  { src: "/landing/insights-v3.png", key: "insights" },
+  { src: "/landing/settings-v3.png", key: "settings" },
 ] as const;
 
 export default async function Home() {
   const t = await getTranslations("landing");
 
   return (
-    <div className={`lp ${schibsted.variable} ${jetbrains.variable}`}>
+    <div className="lp">
       <header className="lp-header">
         <div className="lp-wrap">
           <Link href="/" className="lp-brand">

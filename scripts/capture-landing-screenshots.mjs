@@ -11,7 +11,7 @@ import { homedir } from "os";
 const BASE = "http://localhost:3000";
 // Bump when regenerating and update SCREENSHOTS in src/app/page.tsx to match: Next's image cache is
 // keyed by URL, so reusing a filename can serve the old picture for hours.
-const VERSION = "v2";
+const VERSION = "v3";
 const OUT = process.env.OUT_DIR ?? "public/landing";
 const exe = process.env.CHROMIUM_PATH ?? `${homedir()}/AppData/Local/ms-playwright/chromium-1234/chrome-win64/chrome.exe`;
 

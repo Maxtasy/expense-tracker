@@ -61,7 +61,11 @@ export function OnboardingTour({ autoOpen = false, trigger = false }: { autoOpen
         </button>
       )}
       <style>{`
-        .onboarding-dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
+        .onboarding-dialog::backdrop { background: oklch(0.08 0.005 255 / 0.66); backdrop-filter: blur(2px); }
+        @keyframes dialog-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+        .onboarding-dialog[open] { animation: dialog-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+        @media (prefers-reduced-motion: reduce) {
+        .onboarding-dialog[open] { animation: none; } }
         .onboarding-dialog { padding: 1.25rem; }
         .onboarding-icon { display: flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; margin-bottom: 1rem; }
         .onboarding-title { margin-bottom: 0.375rem; }
@@ -77,7 +81,7 @@ export function OnboardingTour({ autoOpen = false, trigger = false }: { autoOpen
         style={{ position: "fixed", inset: 0, margin: "auto", width: "calc(100% - 2rem)", maxWidth: "24rem" }}
         className="onboarding-dialog rounded-xl border border-border bg-surface text-fg"
       >
-        <div className="onboarding-icon rounded-xl border border-border bg-background text-accent">
+        <div className="onboarding-icon rounded-xl border border-border bg-background text-accent-text">
           {Icon ? <Icon size={22} /> : <Logo size={24} />}
         </div>
         <h2 className="onboarding-title text-base font-semibold text-fg">{t(`steps.${current.key}.title`)}</h2>

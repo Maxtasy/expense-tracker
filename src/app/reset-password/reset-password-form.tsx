@@ -1,5 +1,7 @@
 "use client";
 
+import { AuthBrand } from "@/components/auth-brand";
+
 import { useActionState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -19,9 +21,10 @@ export function ResetPasswordForm({ token }: { token?: string }) {
       <main className="relative flex min-h-dvh flex-col items-center justify-center px-4">
         <LocaleSwitcher className="absolute right-4 top-4" />
         <div className="w-full max-w-xs text-center">
+        <AuthBrand centered />
           <h1 className="mb-2 text-lg font-semibold text-fg">{t("invalidOrExpiredTitle")}</h1>
           <p className="mb-4 text-sm text-fg-muted">{t("invalidOrExpiredDescription")}</p>
-          <Link href="/forgot-password" className="text-sm text-accent hover:text-accent-hover">
+          <Link href="/forgot-password" className="text-sm text-accent-text hover:text-accent-hover">
             {t("requestNewLink")}
           </Link>
         </div>
@@ -33,6 +36,7 @@ export function ResetPasswordForm({ token }: { token?: string }) {
     <main className="relative flex min-h-dvh flex-col items-center justify-center px-4">
       <LocaleSwitcher className="absolute right-4 top-4" />
       <div className="w-full max-w-xs">
+        <AuthBrand />
         <h1 className="mb-4 text-lg font-semibold text-fg">{t("title")}</h1>
         <form action={formAction} className="space-y-3">
           <input type="hidden" name="token" value={token} />

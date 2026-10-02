@@ -1,5 +1,7 @@
 "use client";
 
+import { AuthBrand } from "@/components/auth-brand";
+
 import { useActionState, useState, useTransition } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -21,6 +23,7 @@ export function LoginForm({ resetSuccess }: { resetSuccess?: boolean }) {
     <main className="relative flex min-h-dvh flex-col items-center justify-center px-4">
       <LocaleSwitcher className="absolute right-4 top-4" />
       <div className="w-full max-w-xs">
+        <AuthBrand />
         <h1 className="mb-4 text-lg font-semibold text-fg">{t("title")}</h1>
         {resetSuccess && <p className="mb-4 text-sm text-success">{t("resetSuccess")}</p>}
         <form action={formAction} className="space-y-3">
@@ -35,7 +38,7 @@ export function LoginForm({ resetSuccess }: { resetSuccess?: boolean }) {
               <label htmlFor="password" className="block text-xs text-fg-muted">
                 {t("passwordLabel")}
               </label>
-              <Link href="/forgot-password" className="text-xs text-accent hover:text-accent-hover">
+              <Link href="/forgot-password" className="text-xs text-accent-text hover:text-accent-hover">
                 {t("forgotPasswordLink")}
               </Link>
             </div>
@@ -66,7 +69,7 @@ export function LoginForm({ resetSuccess }: { resetSuccess?: boolean }) {
                   setResendSent(true);
                 });
               }}
-              className="mt-3 inline-flex items-center gap-2 text-sm text-accent hover:text-accent-hover"
+              className="mt-3 inline-flex items-center gap-2 text-sm text-accent-text hover:text-accent-hover"
             >
               {isResending && <Spinner size={14} />}
               {t("resendVerification")}
@@ -74,7 +77,7 @@ export function LoginForm({ resetSuccess }: { resetSuccess?: boolean }) {
           ))}
         <p className="mt-4 text-sm text-fg-muted">
           {t("noAccount")}{" "}
-          <Link href="/signup" className="text-accent hover:text-accent-hover">
+          <Link href="/signup" className="text-accent-text hover:text-accent-hover">
             {t("signupLink")}
           </Link>
         </p>

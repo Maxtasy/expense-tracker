@@ -26,7 +26,7 @@ The video starts already signed in (the recorder logs in off camera and keeps on
 | 6 | 0:38-0:41 | End card | Logo mark and app name on a flat background. | Free. No ads. |
 
 Notes for the edit:
-- Captions: lower third, Schibsted Grotesk semibold, one line, 0.4 s fade. Flat solid caption background, no gradients.
+- Captions: lower third, Schibsted Grotesk semibold (the app's own font), one line, 0.4 s fade. Flat solid caption background, no gradients.
 - Cuts are hard cuts; no transitions, no zoom effects (matches the system's "no bounce, no spring" motion rule).
 - End card uses `src/app/icon.svg` at 96 px and the name set in Schibsted Grotesk semibold, tracking -0.02em.
 - Keep the loop point clean: shot 1 and the end card both sit on the dark background.
@@ -46,4 +46,4 @@ ffmpeg -ss 0 -i docs/media/teaser.mp4 -frames:v 1 -q:v 4 public/media/teaser-pos
 
 Then copy `teaser.mp4` and `teaser.webm` into `public/media/`. The landing page's phone screenshots come from `scripts/capture-landing-screenshots.mjs` (run it on a freshly seeded account, before recording).
 
-Known gaps against the plan above: captions use the app's own font (Geist) rather than Schibsted Grotesk, and the overview list shows transactions dated up to the 25th because the demo seed spreads the current month's data across the whole month.
+Known gaps against the plan above: the overview list shows transactions dated up to the 25th because the demo seed spreads the current month's data across the whole month.

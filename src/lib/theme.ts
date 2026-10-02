@@ -6,6 +6,6 @@ export type Theme = (typeof THEMES)[number];
 export const DEFAULT_THEME: Theme = "dark";
 
 export const THEME_COLOR: Record<"dark" | "light", string> = {
-  dark: "#0b0e14",
-  light: "#f6f7fb",
+  dark: "#07080b",
+  light: "#f5f7f9",
 };

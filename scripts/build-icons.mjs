@@ -38,7 +38,7 @@ async function buildIco(pngBuffers) {
 async function paddedIcon(size) {
   const inner = Math.round(size * 0.66);
   const logo = await sharp(svgPath).resize(inner, inner).png().toBuffer();
-  return sharp({ create: { width: size, height: size, channels: 4, background: "#0b0e14" } })
+  return sharp({ create: { width: size, height: size, channels: 4, background: "#07080b" } })
     .composite([{ input: logo, gravity: "center" }])
     .png()
     .toBuffer();
@@ -72,7 +72,7 @@ async function main() {
   // Maskable icon: pad the logo into a safe zone (~60% of the canvas) so Android's
   // adaptive-icon mask doesn't crop it, per https://web.dev/maskable-icon/
   const maskableLogo = await sharp(svgPath).resize(307, 307).png().toBuffer();
-  const maskableIcon = await sharp({ create: { width: 512, height: 512, channels: 4, background: "#0b0e14" } })
+  const maskableIcon = await sharp({ create: { width: 512, height: 512, channels: 4, background: "#07080b" } })
     .composite([{ input: maskableLogo, gravity: "center" }])
     .png()
     .toBuffer();

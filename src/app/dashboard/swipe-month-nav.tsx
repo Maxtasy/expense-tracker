@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Logo } from "@/components/logo";
+import { CoinLoader } from "@/components/coin-loader";
 import { monthHref, shiftMonth, type YearMonth } from "@/lib/month";
 // PrefetchKind isn't part of next/navigation's public API, but router.prefetch()'s default
 // "auto" kind only prefetches the shared shell for a fully dynamic route like this one (it
@@ -85,34 +85,12 @@ export function SwipeMonthNav({
       <div className="relative flex flex-1 flex-col" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         {children}
         {isPending && (
-          <>
-            {/* Raw CSS, not Tailwind's `animate-spin`/`animate-pulse`: this project's Turbopack
-                dev server has been observed to silently drop newly-added utility classes (see
-                CLAUDE.md gotchas) — a loading indicator is exactly the load-bearing visual that
-                can't depend on that. */}
-            <style>{`
-              @keyframes dashboard-loading-spin {
-                to { transform: rotate(360deg); }
-              }
-              @keyframes dashboard-loading-pulse {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.5; }
-              }
-            `}</style>
-            <div
-              style={{ position: "absolute", inset: 0, zIndex: 5 }}
-              className="flex items-center justify-center bg-background/60 backdrop-blur-[1px]"
-            >
-              <div
-                style={{
-                  animation:
-                    "dashboard-loading-spin 1.1s linear infinite, dashboard-loading-pulse 1.6s ease-in-out infinite",
-                }}
-              >
-                <Logo size={40} />
-              </div>
-            </div>
-          </>
+          <div
+            style={{ position: "absolute", inset: 0, zIndex: 5 }}
+            className="flex items-center justify-center bg-background/60 backdrop-blur-[1px]"
+          >
+            <CoinLoader size={48} />
+          </div>
         )}
       </div>
     </NavPendingContext.Provider>
