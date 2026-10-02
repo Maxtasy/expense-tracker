@@ -58,33 +58,63 @@ async function main() {
       .values({ name: "Freelance", type: "income", userId })
       .returning({ id: categories.id });
 
-    const [rent] = await tx
+    // Recurring rules. startBack/endBack are months before the current one (endBack null = open
+    // ended); the "Language course" rule has ended, so the recurring page also shows an end date.
+    const ruleDefs = [
+      { type: "income", category: categoryId("Salary"), amount: "3200.00", description: "Monthly salary", day: 1, startBack: 9, endBack: null },
+      { type: "expense", category: categoryId("Housing"), amount: "950.00", description: "Rent", day: 1, startBack: 9, endBack: null },
+      { type: "expense", category: categoryId("Transport"), amount: "40.00", description: "Bus pass", day: 3, startBack: 9, endBack: null },
+      { type: "expense", category: categoryId("Utilities"), amount: "39.90", description: "Internet", day: 7, startBack: 9, endBack: null },
+      { type: "expense", category: categoryId("Entertainment"), amount: "12.99", description: "Streaming subscription", day: 12, startBack: 7, endBack: null },
+      { type: "expense", category: categoryId("Utilities"), amount: "19.99", description: "Phone plan", day: 15, startBack: 9, endBack: null },
+      { type: "expense", category: categoryId("Other"), amount: "45.00", description: "Language course", day: 20, startBack: 8, endBack: 3 },
+    ] as const;
+    const insertedRules = await tx
       .insert(recurringTransactions)
-      .values({
-        userId,
-        type: "expense",
-        categoryId: categoryId("Housing"),
-        amount: "950.00",
-        description: "Rent",
-        startDate: isoDate(year, month - 9, 1),
-        endDate: null,
-      })
-      .returning({ id: recurringTransactions.id });
+      .values(
+        ruleDefs.map((r) => ({
+          userId,
+          type: r.type,
+          categoryId: r.category,
+          amount: r.amount,
+          description: r.description,
+          startDate: isoDate(year, month - r.startBack, r.day),
+          endDate: r.endBack === null ? null : isoDate(year, month - r.endBack, r.day),
+        })),
+      )
+      .returning({ id: recurringTransactions.id, description: recurringTransactions.description });
+    const ruleId = new Map(insertedRules.map((r) => [r.description, r.id]));
+
+    // The rows those rules would have generated, linked to their rule exactly as lazy generation
+    // creates them (so viewing a month later doesn't generate duplicates). Includes the current month.
+    const generated: (typeof transactions.$inferInsert)[] = [];
+    for (let back = 9; back >= 0; back--) {
+      for (const r of ruleDefs) {
+        if (back > r.startBack || (r.endBack !== null && back < r.endBack)) continue;
+        generated.push({
+          userId,
+          type: r.type,
+          categoryId: r.category,
+          recurringTransactionId: ruleId.get(r.description),
+          amount: r.amount,
+          description: r.description,
+          date: isoDate(year, month - back, r.day),
+        });
+      }
+    }
+    await tx.insert(transactions).values(generated);
 
     // Nine months of history so the account looks lived-in and the insights year view has data.
     // Amounts vary deterministically by month offset (no randomness, so re-runs are identical).
-    // Rent rows are linked to the recurring rule, exactly as lazy generation would create them.
+    // Salary, rent, bus pass and the other recurring items come from the rules above.
     const history: (typeof transactions.$inferInsert)[] = [];
     for (let back = 9; back >= 1; back--) {
       const m = month - back;
       const wobble = (n: number) => ((back * 7 + n * 3) % 9) - 4; // -4..4
       history.push(
-        { userId, type: "income", categoryId: categoryId("Salary"), amount: "3200.00", description: "Monthly salary", date: isoDate(year, m, 1) },
-        { userId, type: "expense", categoryId: categoryId("Housing"), recurringTransactionId: rent.id, amount: "950.00", description: "Rent", date: isoDate(year, m, 1) },
         { userId, type: "expense", categoryId: categoryId("Food"), amount: (210 + wobble(1) * 6).toFixed(2), description: "Groceries", date: isoDate(year, m, 6) },
         { userId, type: "expense", categoryId: categoryId("Food"), amount: (95 + wobble(2) * 4).toFixed(2), description: "Groceries", date: isoDate(year, m, 18) },
         { userId, type: "expense", categoryId: categoryId("Utilities"), amount: (115 + wobble(3) * 3).toFixed(2), description: "Electricity bill", date: isoDate(year, m, 5) },
-        { userId, type: "expense", categoryId: categoryId("Transport"), amount: "40.00", description: "Bus pass", date: isoDate(year, m, 3) },
         { userId, type: "expense", categoryId: categoryId("Entertainment"), amount: (55 + wobble(4) * 5).toFixed(2), description: "Cinema and dinner", date: isoDate(year, m, 14) },
         { userId, type: "expense", categoryId: hobbies.id, amount: (30 + wobble(5) * 3).toFixed(2), description: "Board game night", date: isoDate(year, m, 21) },
       );
@@ -101,9 +131,7 @@ async function main() {
     await tx.insert(transactions).values(history);
 
     await tx.insert(transactions).values([
-      { userId, type: "income", categoryId: categoryId("Salary"), amount: "3200.00", description: "Monthly salary", date: isoDate(year, month, 1) },
       { userId, type: "expense", categoryId: categoryId("Food"), amount: "45.30", description: "Grocery run", date: isoDate(year, month, 2) },
-      { userId, type: "expense", categoryId: categoryId("Transport"), amount: "40.00", description: "Bus pass", date: isoDate(year, month, 3) },
       { userId, type: "expense", categoryId: categoryId("Utilities"), amount: "120.00", description: "Electricity bill", date: isoDate(year, month, 5) },
       { userId, type: "expense", categoryId: categoryId("Food"), amount: "18.75", description: "Grocery run", date: isoDate(year, month, 8) },
       { userId, type: "expense", categoryId: hobbies.id, amount: "35.00", description: "Board game night", date: isoDate(year, month, 9) },
@@ -118,7 +146,6 @@ async function main() {
   });
 
   console.log(`Demo account ready: ${email} (id ${userId})`);
-  console.log("Visit /dashboard once after seeding so the recurring rent charge materializes for the current month.");
   process.exit(0);
 }
 
