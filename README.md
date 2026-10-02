@@ -4,7 +4,7 @@ An expense tracker built with Next.js (App Router), TypeScript, Drizzle ORM, Sup
 
 ## Screenshots
 
-![Short demo: adding an expense, recurring transactions, insights, light theme](docs/media/teaser.gif)
+![Short demo: creating a category, adding an expense and an income, yearly insights](docs/media/teaser.gif)
 
 | Dashboard | Insights | Recurring |
 |---|---|---|
