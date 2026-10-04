@@ -14,9 +14,14 @@ export function isVerificationGracePeriodExpired(createdAt: Date): boolean {
   return Date.now() - createdAt.getTime() > EMAIL_VERIFICATION_GRACE_PERIOD_MS;
 }
 
+// Guests have no email to verify -- they're governed by the guest expiry in src/lib/guest.ts instead.
+export function needsVerification(account: { isGuest: boolean; emailVerifiedAt: Date | null }): boolean {
+  return !account.isGuest && !account.emailVerifiedAt;
+}
+
 export async function getVerificationStatus(userId: string) {
   const [row] = await db
-    .select({ email: users.email, emailVerifiedAt: users.emailVerifiedAt, createdAt: users.createdAt })
+    .select({ email: users.email, emailVerifiedAt: users.emailVerifiedAt, createdAt: users.createdAt, isGuest: users.isGuest })
     .from(users)
     .where(eq(users.id, userId))
     .limit(1);

@@ -3,8 +3,8 @@ import { LoginForm } from "./login-form";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ reset?: string }>;
+  searchParams: Promise<{ reset?: string; guest?: string; deleted?: string }>;
 }) {
-  const { reset } = await searchParams;
-  return <LoginForm resetSuccess={reset === "success"} />;
+  const { reset, guest, deleted } = await searchParams;
+  return <LoginForm resetSuccess={reset === "success"} guestExpired={guest === "expired"} accountDeleted={deleted === "1"} />;
 }

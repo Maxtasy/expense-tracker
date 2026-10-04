@@ -30,7 +30,9 @@
       "resetSuccess": "Tu contraseña se ha restablecido. Inicia sesión con tu nueva contraseña.",
       "emailNotVerified": "Verifica tu correo electrónico antes de iniciar sesión.",
       "resendVerification": "Reenviar correo de verificación",
-      "resendSuccessMessage": "Si tu cuenta aún no está verificada, te hemos enviado un nuevo enlace. Revisa tu bandeja de entrada."
+      "resendSuccessMessage": "Si tu cuenta aún no está verificada, te hemos enviado un nuevo enlace. Revisa tu bandeja de entrada.",
+      "guestExpired": "Tu cuenta de invitado ha caducado y sus datos se han eliminado. La próxima vez crea una cuenta para conservar tus datos.",
+      "accountDeleted": "Tu cuenta y todos sus datos se han eliminado."
     },
     "signup": {
       "title": "Registrarse",
@@ -83,6 +85,41 @@
       "resend": "Reenviar correo de verificación",
       "resendSuccessMessage": "Te hemos enviado un nuevo enlace. Revisa tu bandeja de entrada.",
       "logOut": "Cerrar sesión"
+    },
+    "guest": {
+      "linkLabel": "Probar sin cuenta",
+      "or": "o",
+      "title": "Probar sin cuenta",
+      "intro": "Empieza ahora mismo sin correo ni contraseña. Antes, esto es lo que debes saber:",
+      "points": {
+        "full": {
+          "title": "Todo funciona",
+          "body": "Las cuentas de invitado no tienen límites. Todas las funciones trabajan igual que en una cuenta normal."
+        },
+        "expiry": {
+          "title": "Se conserva {days} días",
+          "body": "Tus datos se guardan durante {days} días a partir de hoy. Después, la cuenta de invitado y todo lo que contiene se eliminan de forma permanente. Crea una cuenta antes para conservarlos."
+        },
+        "device": {
+          "title": "Ligada a este navegador",
+          "body": "Tu sesión de invitado vive en una cookie de este dispositivo. Si borras las cookies o los datos del sitio, reinstalas la app o cambias de navegador o dispositivo, pierdes el acceso a tus datos y no podemos recuperarlos."
+        },
+        "logout": {
+          "title": "Cerrar sesión es definitivo",
+          "body": "Una cuenta de invitado no tiene correo ni contraseña para volver a entrar, así que no cierres sesión a menos que hayas terminado."
+        },
+        "keep": {
+          "title": "Conserva tus datos cuando quieras",
+          "body": "Crea una cuenta en Ajustes cuando quieras. Todo lo que has introducido se mantiene, sin tener que volver a escribirlo. Se te pedirá verificar tu correo como en cualquier cuenta nueva."
+        }
+      },
+      "privacyNote": "Los datos de invitado se guardan en nuestros servidores sin ningún correo electrónico ni otros datos personales.",
+      "privacyLink": "Política de privacidad",
+      "start": "Empezar como invitado",
+      "starting": "Iniciando...",
+      "createAccountInstead": "Crear una cuenta en su lugar",
+      "tooManyAttempts": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+      "genericError": "Algo salió mal, inténtalo de nuevo"
     }
   },
   "landing": {
@@ -171,7 +208,8 @@
     "insights": "Estadísticas",
     "categories": "Categorías",
     "settings": "Ajustes",
-    "logOut": "Cerrar sesión"
+    "logOut": "Cerrar sesión",
+    "guestLogOutConfirm": "Estás usando una cuenta de invitado. Si cierras sesión no podrás volver a entrar y perderás tus datos. ¿Cerrar sesión de todos modos?"
   },
   "onboarding": {
     "ariaLabel": "Recorrido rápido",
@@ -246,6 +284,10 @@
       "message": "Verifica tu correo para conservar el acceso · enviado a {email}",
       "resend": "Reenviar",
       "sent": "Enviado — revisa tu bandeja de entrada"
+    },
+    "guestBanner": {
+      "message": "Cuenta de invitado: tus datos se eliminarán en {days, plural, one {# día} other {# días}} si no creas una cuenta.",
+      "createAccount": "Crear cuenta"
     }
   },
   "categories": {
@@ -405,6 +447,28 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicado omitido (ya está en tus datos)} other {# duplicados omitidos (ya están en tus datos)}}",
       "goToDashboard": "Ir al panel",
       "importAnother": "Importar otro archivo"
+    },
+    "upgradeGuest": {
+      "label": "Crea tu cuenta",
+      "description": "Estás usando una cuenta de invitado. Añade un correo y una contraseña para conservar tus datos más allá de {days} días, volver a iniciar sesión y usarlos en otros dispositivos. Todo se queda como está.",
+      "emailLabel": "Correo electrónico",
+      "passwordLabel": "Contraseña",
+      "submit": "Crear cuenta",
+      "submitPending": "Creando cuenta..."
+    },
+    "deleteAccount": {
+      "label": "Eliminar cuenta",
+      "description": "Elimina de forma permanente tu cuenta y todos sus datos: transacciones, transacciones recurrentes y categorías. No se puede deshacer.",
+      "openButton": "Eliminar cuenta",
+      "modalTitle": "Eliminar cuenta",
+      "modalWarning": "Esto elimina de forma permanente tu cuenta y todo lo que contiene, y cierra tu sesión. No se puede deshacer.",
+      "confirmCheckbox": "Entiendo que esto elimina de forma permanente mi cuenta y todos mis datos.",
+      "typeToConfirmLabel": "Escribe DELETE para confirmar",
+      "passwordLabel": "Tu contraseña",
+      "confirmButton": "Eliminar mi cuenta",
+      "deleting": "Eliminando...",
+      "passwordIncorrect": "La contraseña es incorrecta",
+      "tooManyAttempts": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo."
     }
   },
   "email": {

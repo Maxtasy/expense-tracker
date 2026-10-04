@@ -12,6 +12,15 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.13.0",
+    date: "2026-10-04",
+    items: [
+      "Try the app without an account: tap \"Try without an account\" on the login or sign-up screen and start right away. Guest data is kept for 30 days, and you can add an email and password in Settings at any time to keep it.",
+      "You can now delete your account and all of your data yourself, from Settings.",
+      "The privacy policy now says the app is intended for ages 13 and over.",
+    ],
+  },
+  {
     version: "1.12.0",
     date: "2026-10-02",
     items: [

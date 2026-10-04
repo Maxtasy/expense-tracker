@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 const CONTACT_EMAIL = 'contact@maxtasy.me';
-const LAST_UPDATED = 'September 21, 2026';
+const LAST_UPDATED = 'October 4, 2026';
 
 const sectionClass = 'space-y-2';
 const headingClass = 'text-base font-semibold text-fg';
@@ -47,6 +47,13 @@ export default function PrivacyPage() {
               plain-text password. We also store whether your email address has been verified, plus
               a hashed, single-use token for email verification or password reset while one is
               outstanding.
+            </p>
+            <p className={bodyClass}>
+              <strong className="text-fg">Guest accounts.</strong> If you choose &ldquo;Try without
+              an account&rdquo;, we create an account with no email address and no password, tied
+              only to a session cookie on your device. It holds the financial data you enter, and
+              it is permanently deleted 30 days after it was created unless you add an email and
+              password first. Without them it cannot be recovered if the cookie is lost.
             </p>
             <p className={bodyClass}>
               <strong className="text-fg">Financial data you enter.</strong> Transaction amounts,
@@ -139,11 +146,19 @@ export default function PrivacyPage() {
               transactions and recurring rules. Deletions are permanent, not archived.
             </p>
             <p className={bodyClass}>
-              To request deletion of your account and all associated data, email us at{' '}
+              You can delete your account and all associated data yourself at any time in the app
+              under Settings &rarr; Delete account (see{' '}
+              <Link href="/delete-account" className="text-accent-text hover:text-accent-hover">
+                how to delete your account
+              </Link>
+              ). If you can&rsquo;t log in, email us at{' '}
               <a href={`mailto:${CONTACT_EMAIL}`} className="text-accent-text hover:text-accent-hover">
                 {CONTACT_EMAIL}
               </a>
               . Account deletion removes everything from the live database.
+            </p>
+            <p className={bodyClass}>
+              Guest accounts are deleted automatically 30 days after creation.
             </p>
             <p className={bodyClass}>
               <strong className="text-fg">Backups.</strong> The production database is backed up
@@ -154,10 +169,18 @@ export default function PrivacyPage() {
           </section>
 
           <section className={sectionClass}>
-            <h2 className={headingClass}>Children&rsquo;s privacy</h2>
+            <h2 className={headingClass}>Children and teens</h2>
             <p className={bodyClass}>
-              The app is not directed at children, and we do not knowingly collect data from
-              children under 13.
+              The app is intended for people aged 13 and over, including teenagers. It is not
+              directed at children under 13, and we do not knowingly collect personal data from
+              children under 13. If you believe a child under 13 has given us personal data, email
+              us and we will delete it.
+            </p>
+            <p className={bodyClass}>
+              Depending on where you live, you may need a parent&rsquo;s or guardian&rsquo;s
+              permission to create an account, since the minimum age for this differs between
+              countries. Teens can delete their account and data at any time, the same way as
+              everyone else (see above).
             </p>
           </section>
 

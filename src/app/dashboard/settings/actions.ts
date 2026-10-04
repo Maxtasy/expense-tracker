@@ -2,17 +2,21 @@
 
 import { z } from "zod";
 import { compare, hash } from "bcryptjs";
-import { eq, isNull } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { parse } from "csv-parse/sync";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { db } from "@/db";
 import { categories, recurringTransactions, transactions, users } from "@/db/schema";
 import { CURRENCIES } from "@/lib/currency";
 import { LOCALES } from "@/lib/locale";
 import { DATE_FORMATS } from "@/lib/date-format";
 import { THEMES } from "@/lib/theme";
+import { getClientIp } from "@/lib/client-ip";
+import { isRateLimited, recordAttempt } from "@/lib/rate-limit";
+import { getUserLocale } from "@/lib/locale-server";
+import { issueAndSendVerificationEmail } from "@/lib/verification";
 
 const typeSchema = z.enum(["expense", "income"]);
 
@@ -333,7 +337,7 @@ export async function changePassword(formData: FormData) {
   }
 
   const [user] = await db.select({ passwordHash: users.passwordHash }).from(users).where(eq(users.id, userId)).limit(1);
-  if (!user) return { error: tSettings("notSignedIn") };
+  if (!user?.passwordHash) return { error: tSettings("notSignedIn") };
 
   const currentPasswordMatches = await compare(parsed.data.currentPassword, user.passwordHash);
   if (!currentPasswordMatches) {
@@ -362,4 +366,91 @@ export async function startFresh() {
   revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard/insights");
   return { success: true };
+}
+
+// Turns the signed-in guest account into a regular one in place -- same users row, so every
+// transaction/category/rule stays attached with nothing to migrate.
+export async function upgradeGuestAccount(formData: FormData) {
+  const session = await auth();
+  const tSettings = await getTranslations("settings");
+  if (!session?.user) return { error: tSettings("notSignedIn") };
+  const userId = session.user.id;
+  const t = await getTranslations("auth.signup");
+
+  const schema = z.object({
+    email: z.string().trim().email(t("invalidEmail")),
+    password: z.string().min(8, t("passwordTooShort")),
+  });
+  const parsed = schema.safeParse({ email: formData.get("email"), password: formData.get("password") });
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const { email, password } = parsed.data;
+
+  const ip = await getClientIp();
+  if (await isRateLimited("signup", { ip })) return { error: t("tooManyAttempts") };
+  await recordAttempt("signup", { email, ip });
+
+  const [existing] = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
+  if (existing) return { error: t("emailTaken") };
+
+  const passwordHash = await hash(password, 10);
+  let upgraded: { id: string }[];
+  try {
+    upgraded = await db
+      .update(users)
+      // createdAt is reset because the 7-day email-verification grace period (src/lib/verification.ts)
+      // counts from it -- a guest who upgrades on day 25 would otherwise be locked out immediately.
+      .set({ email, passwordHash, isGuest: false, emailVerifiedAt: null, createdAt: new Date() })
+      .where(and(eq(users.id, userId), eq(users.isGuest, true)))
+      .returning({ id: users.id });
+  } catch {
+    // lost a race with someone registering the same email between the check above and this write
+    return { error: t("emailTaken") };
+  }
+  if (upgraded.length === 0) return { error: tSettings("notSignedIn") };
+
+  try {
+    await issueAndSendVerificationEmail(userId, email, await getUserLocale(userId));
+  } catch (err) {
+    // Best-effort, same as signup -- the dashboard banner has a resend button.
+    console.error("Failed to send verification email:", err);
+  }
+
+  // the guest banner (layout) and this page's own sections both depend on is_guest
+  revalidatePath("/dashboard", "layout");
+  return { success: true };
+}
+
+// Permanently deletes the signed-in account. Every table that holds user data references users.id
+// with ON DELETE CASCADE, so removing the one row removes everything. Regular accounts must
+// re-enter their password (so an unattended open session can't wipe an account); guests have none.
+export async function deleteAccount(formData: FormData) {
+  const session = await auth();
+  const tSettings = await getTranslations("settings");
+  if (!session?.user) return { error: tSettings("notSignedIn") };
+  const userId = session.user.id;
+  const t = await getTranslations("settings.deleteAccount");
+
+  const [user] = await db
+    .select({ email: users.email, passwordHash: users.passwordHash, isGuest: users.isGuest })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  if (!user) return { error: tSettings("notSignedIn") };
+
+  if (!user.isGuest) {
+    const password = formData.get("password");
+    const ip = await getClientIp();
+    // same budget as logging in -- this is also a place to guess the password
+    if (await isRateLimited("login", { email: user.email ?? undefined, ip })) {
+      return { error: t("tooManyAttempts") };
+    }
+    if (typeof password !== "string" || !user.passwordHash || !(await compare(password, user.passwordHash))) {
+      await recordAttempt("login", { email: user.email ?? undefined, ip });
+      return { error: t("passwordIncorrect") };
+    }
+  }
+
+  await db.delete(users).where(eq(users.id, userId));
+  // clears the session cookie; throws a redirect, so nothing after this runs
+  await signOut({ redirectTo: "/login?deleted=1" });
 }

@@ -30,7 +30,9 @@
       "resetSuccess": "Your password has been reset. Log in with your new password.",
       "emailNotVerified": "Please verify your email before logging in.",
       "resendVerification": "Resend verification email",
-      "resendSuccessMessage": "If your account isn't verified yet, we've sent a new link. Check your inbox."
+      "resendSuccessMessage": "If your account isn't verified yet, we've sent a new link. Check your inbox.",
+      "guestExpired": "Your guest account has expired and its data was deleted. Create an account to keep your data next time.",
+      "accountDeleted": "Your account and all of its data have been deleted."
     },
     "signup": {
       "title": "Sign up",
@@ -83,6 +85,41 @@
       "resend": "Resend verification email",
       "resendSuccessMessage": "We've sent a new link. Check your inbox.",
       "logOut": "Log out"
+    },
+    "guest": {
+      "linkLabel": "Try without an account",
+      "or": "or",
+      "title": "Try without an account",
+      "intro": "Start right away with no email or password. Before you do, here is what you should know:",
+      "points": {
+        "full": {
+          "title": "Everything works",
+          "body": "Guest accounts have no limits. Every feature works exactly as in a regular account."
+        },
+        "expiry": {
+          "title": "Kept for {days} days",
+          "body": "Your data is stored for {days} days from today. After that, the guest account and everything in it is permanently deleted. Create an account before then to keep it."
+        },
+        "device": {
+          "title": "Tied to this browser",
+          "body": "Your guest session lives in a cookie on this device. If you clear cookies or site data, reinstall the app, or switch browser or device, you lose access to your data and we cannot restore it."
+        },
+        "logout": {
+          "title": "Logging out is final",
+          "body": "A guest account has no email or password to log back in with, so don't log out unless you are done with it."
+        },
+        "keep": {
+          "title": "Keep your data any time",
+          "body": "Create an account in Settings whenever you like. Everything you entered stays, nothing has to be re-entered. You will be asked to verify your email like any new account."
+        }
+      },
+      "privacyNote": "Guest data is stored on our servers without any email address or other personal details.",
+      "privacyLink": "Privacy policy",
+      "start": "Start as guest",
+      "starting": "Starting...",
+      "createAccountInstead": "Create an account instead",
+      "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again.",
+      "genericError": "Something went wrong, please try again"
     }
   },
   "landing": {
@@ -171,7 +208,8 @@
     "insights": "Insights",
     "categories": "Categories",
     "settings": "Settings",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "guestLogOutConfirm": "You are using a guest account. If you log out you can't log back in and your data will be lost. Log out anyway?"
   },
   "onboarding": {
     "ariaLabel": "Quick tour",
@@ -246,6 +284,10 @@
       "message": "Verify your email to keep access · sent to {email}",
       "resend": "Resend",
       "sent": "Sent — check your inbox"
+    },
+    "guestBanner": {
+      "message": "Guest account: your data is deleted in {days, plural, one {# day} other {# days}} unless you create an account.",
+      "createAccount": "Create account"
     }
   },
   "categories": {
@@ -405,6 +447,28 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicate skipped (already in your data)} other {# duplicates skipped (already in your data)}}",
       "goToDashboard": "Go to dashboard",
       "importAnother": "Import another file"
+    },
+    "upgradeGuest": {
+      "label": "Create your account",
+      "description": "You're using a guest account. Add an email and password to keep your data past the {days} days, to log in again, and to use it on other devices. Everything stays as it is.",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": "Create account",
+      "submitPending": "Creating account..."
+    },
+    "deleteAccount": {
+      "label": "Delete account",
+      "description": "Permanently delete your account and all of its data: transactions, recurring transactions and categories. This can't be undone.",
+      "openButton": "Delete account",
+      "modalTitle": "Delete account",
+      "modalWarning": "This permanently deletes your account and everything in it, and signs you out. This can't be undone.",
+      "confirmCheckbox": "I understand this permanently deletes my account and all of my data.",
+      "typeToConfirmLabel": "Type DELETE to confirm",
+      "passwordLabel": "Your password",
+      "confirmButton": "Delete my account",
+      "deleting": "Deleting...",
+      "passwordIncorrect": "Password is incorrect",
+      "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again."
     }
   },
   "email": {

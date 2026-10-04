@@ -2,7 +2,7 @@ import { AuthBrand } from "@/components/auth-brand";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
-import { getVerificationStatus, isVerificationGracePeriodExpired } from "@/lib/verification";
+import { getVerificationStatus, isVerificationGracePeriodExpired, needsVerification } from "@/lib/verification";
 import { logout } from "@/app/dashboard/actions";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { ResendButton } from "./resend-button";
@@ -14,7 +14,7 @@ export default async function VerifyEmailRequiredPage() {
   }
 
   const verification = await getVerificationStatus(session.user.id);
-  const stillBlocked = verification && !verification.emailVerifiedAt && isVerificationGracePeriodExpired(verification.createdAt);
+  const stillBlocked = verification && needsVerification(verification) && isVerificationGracePeriodExpired(verification.createdAt);
   if (!stillBlocked) {
     redirect("/dashboard");
   }
@@ -28,9 +28,9 @@ export default async function VerifyEmailRequiredPage() {
         <AuthBrand centered />
         <div>
           <h1 className="mb-2 text-lg font-semibold text-fg">{t("title")}</h1>
-          <p className="text-sm text-fg-muted">{t("description", { email: verification.email })}</p>
+          <p className="text-sm text-fg-muted">{t("description", { email: verification.email ?? "" })}</p>
         </div>
-        <ResendButton email={verification.email} />
+        <ResendButton email={verification.email ?? ""} />
         <form action={logout}>
           <button type="submit" className="text-sm text-accent-text hover:text-accent-hover">
             {t("logOut")}

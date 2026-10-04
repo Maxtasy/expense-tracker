@@ -6,6 +6,7 @@ import { getUserCurrency } from "@/lib/currency-server";
 import { getUserLocale } from "@/lib/locale-server";
 import { ImportForm } from "./import-form";
 import { StartFreshForm } from "./start-fresh-form";
+import { DeleteAccountForm } from "./delete-account-form";
 import { CurrencyForm } from "./currency-form";
 import { LocaleForm } from "./locale-form";
 import { SelectSettingForm } from "./select-setting-form";
@@ -14,6 +15,9 @@ import { getUserDateFormat, getUserTheme } from "@/lib/preferences-server";
 import { DATE_FORMATS } from "@/lib/date-format";
 import { THEMES } from "@/lib/theme";
 import { ChangePasswordForm } from "./change-password-form";
+import { UpgradeGuestForm } from "./upgrade-guest-form";
+import { getVerificationStatus } from "@/lib/verification";
+import { GUEST_TTL_DAYS } from "@/lib/guest";
 import { ExportLinks } from "./export-links";
 import { OnboardingTour } from "../onboarding-tour";
 import { version } from "../../../../package.json";
@@ -21,13 +25,15 @@ import { version } from "../../../../package.json";
 export default async function SettingsPage() {
   const session = await auth();
   if (!session?.user) return null;
-  const [currency, locale, dateFormat, theme, t] = await Promise.all([
+  const [currency, locale, dateFormat, theme, t, account] = await Promise.all([
     getUserCurrency(session.user.id),
     getUserLocale(session.user.id),
     getUserDateFormat(session.user.id),
     getUserTheme(session.user.id),
     getTranslations("settings"),
+    getVerificationStatus(session.user.id),
   ]);
+  const isGuest = account?.isGuest ?? false;
 
   const exportLinks = [
     { href: "/dashboard/settings/export/categories", label: t("csvImport.categoriesFileLabel") },
@@ -38,6 +44,18 @@ export default async function SettingsPage() {
   return (
     <div>
       <h1 className="mb-3 text-sm font-semibold text-fg">{t("title")}</h1>
+
+      {isGuest && (
+        <>
+          <h2 id="create-account" className="mb-1.5 scroll-mt-20 text-xs font-medium text-fg-muted">
+            {t("upgradeGuest.label")}
+          </h2>
+          <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+            <p className="mb-3 text-xs text-fg-muted">{t("upgradeGuest.description", { days: GUEST_TTL_DAYS })}</p>
+            <UpgradeGuestForm />
+          </div>
+        </>
+      )}
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("currency")}</h2>
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
@@ -77,10 +95,14 @@ export default async function SettingsPage() {
         <OnboardingTour trigger />
       </div>
 
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("changePassword.label")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <ChangePasswordForm />
-      </div>
+      {!isGuest && (
+        <>
+          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("changePassword.label")}</h2>
+          <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+            <ChangePasswordForm />
+          </div>
+        </>
+      )}
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("export")}</h2>
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
@@ -109,6 +131,12 @@ export default async function SettingsPage() {
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
         <p className="mb-3 text-xs text-fg-muted">{t("startFresh.description")}</p>
         <StartFreshForm />
+      </div>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("deleteAccount.label")}</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <p className="mb-3 text-xs text-fg-muted">{t("deleteAccount.description")}</p>
+        <DeleteAccountForm isGuest={isGuest} />
       </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("support")}</h2>

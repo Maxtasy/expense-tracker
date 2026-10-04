@@ -3,12 +3,17 @@ import { redirect } from "next/navigation";
 import { Tags, Repeat, PieChart, Settings } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
-import { getVerificationStatus, isVerificationGracePeriodExpired } from "@/lib/verification";
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { getVerificationStatus, isVerificationGracePeriodExpired, needsVerification } from "@/lib/verification";
+import { guestDaysLeft, isGuestExpired } from "@/lib/guest";
 import { Logo } from "@/components/logo";
 import { hasCompletedOnboarding } from "@/lib/preferences-server";
 import { OnboardingTour } from "./onboarding-tour";
 import { LogoutButton } from "./logout-button";
 import { VerifyEmailBanner } from "./verify-email-banner";
+import { GuestBanner } from "./guest-banner";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -21,7 +26,17 @@ export default async function DashboardLayout({ children }: { children: React.Re
   // 7-day grace period expired stays valid past it (Auth.js doesn't re-check the DB per request),
   // so this is the backstop that actually enforces the deadline for an already-open session.
   const verification = await getVerificationStatus(session.user.id);
-  const isUnverified = verification && !verification.emailVerifiedAt;
+  // The row is gone -- in practice an expired guest that was purged. The JWT outlives it.
+  if (!verification) {
+    redirect("/login");
+  }
+  // Same backstop idea for guests: a guest session that predates the deadline must not keep
+  // working past it, so delete the account here (if it isn't purged already) and send them away.
+  if (verification.isGuest && isGuestExpired(verification.createdAt)) {
+    await db.delete(users).where(eq(users.id, session.user.id));
+    redirect("/login?guest=expired");
+  }
+  const isUnverified = needsVerification(verification);
   if (isUnverified && isVerificationGracePeriodExpired(verification.createdAt)) {
     redirect("/verify-email-required");
   }
@@ -48,7 +63,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Link href="/dashboard/settings" aria-label={t("settings")} className="rounded-lg p-1.5 hover:text-fg">
             <Settings size={18} />
           </Link>
-          <LogoutButton label={t("logOut")} />
+          <LogoutButton label={t("logOut")} confirmMessage={verification.isGuest ? t("guestLogOutConfirm") : undefined} />
         </nav>
       </header>
       {/* Raw CSS, not Tailwind's `md:`/`lg:` responsive utilities: this project's Turbopack dev
@@ -68,7 +83,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
         }
       `}</style>
       <main className="md-wide mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-4">
-        {isUnverified && <VerifyEmailBanner email={verification.email} />}
+        {verification.isGuest && <GuestBanner daysLeft={guestDaysLeft(verification.createdAt)} />}
+        {isUnverified && verification.email && <VerifyEmailBanner email={verification.email} />}
         {children}
       </main>
       {!onboarded && <OnboardingTour autoOpen />}

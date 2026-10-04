@@ -30,7 +30,9 @@
       "resetSuccess": "Dein Passwort wurde zurückgesetzt. Melde dich mit deinem neuen Passwort an.",
       "emailNotVerified": "Bitte bestätige deine E-Mail-Adresse, bevor du dich anmeldest.",
       "resendVerification": "Bestätigungs-E-Mail erneut senden",
-      "resendSuccessMessage": "Falls dein Konto noch nicht bestätigt ist, haben wir dir einen neuen Link geschickt. Sieh in deinem Postfach nach."
+      "resendSuccessMessage": "Falls dein Konto noch nicht bestätigt ist, haben wir dir einen neuen Link geschickt. Sieh in deinem Postfach nach.",
+      "guestExpired": "Dein Gastkonto ist abgelaufen und die Daten wurden gelöscht. Erstelle beim nächsten Mal ein Konto, um deine Daten zu behalten.",
+      "accountDeleted": "Dein Konto und alle zugehörigen Daten wurden gelöscht."
     },
     "signup": {
       "title": "Registrieren",
@@ -83,6 +85,41 @@
       "resend": "Bestätigungs-E-Mail erneut senden",
       "resendSuccessMessage": "Wir haben einen neuen Link geschickt. Sieh in deinem Postfach nach.",
       "logOut": "Abmelden"
+    },
+    "guest": {
+      "linkLabel": "Ohne Konto ausprobieren",
+      "or": "oder",
+      "title": "Ohne Konto ausprobieren",
+      "intro": "Starte sofort, ganz ohne E-Mail und Passwort. Vorher solltest du Folgendes wissen:",
+      "points": {
+        "full": {
+          "title": "Alles funktioniert",
+          "body": "Gastkonten haben keine Einschränkungen. Jede Funktion arbeitet genau wie in einem normalen Konto."
+        },
+        "expiry": {
+          "title": "{days} Tage gespeichert",
+          "body": "Deine Daten werden ab heute {days} Tage gespeichert. Danach werden das Gastkonto und alles darin endgültig gelöscht. Erstelle vorher ein Konto, um sie zu behalten."
+        },
+        "device": {
+          "title": "An diesen Browser gebunden",
+          "body": "Deine Gast-Sitzung liegt in einem Cookie auf diesem Gerät. Wenn du Cookies oder Websitedaten löschst, die App neu installierst oder Browser oder Gerät wechselst, verlierst du den Zugriff auf deine Daten und wir können sie nicht wiederherstellen."
+        },
+        "logout": {
+          "title": "Abmelden ist endgültig",
+          "body": "Ein Gastkonto hat weder E-Mail noch Passwort zum erneuten Anmelden. Melde dich also nur ab, wenn du fertig bist."
+        },
+        "keep": {
+          "title": "Daten jederzeit behalten",
+          "body": "Erstelle jederzeit in den Einstellungen ein Konto. Alles, was du eingetragen hast, bleibt erhalten, nichts muss neu eingegeben werden. Wie bei jedem neuen Konto musst du deine E-Mail-Adresse bestätigen."
+        }
+      },
+      "privacyNote": "Gastdaten werden ohne E-Mail-Adresse oder andere persönliche Angaben auf unseren Servern gespeichert.",
+      "privacyLink": "Datenschutzerklärung",
+      "start": "Als Gast starten",
+      "starting": "Wird gestartet...",
+      "createAccountInstead": "Stattdessen ein Konto erstellen",
+      "tooManyAttempts": "Zu viele Versuche. Bitte warte einige Minuten und versuche es erneut.",
+      "genericError": "Etwas ist schiefgelaufen, bitte versuche es erneut"
     }
   },
   "landing": {
@@ -171,7 +208,8 @@
     "insights": "Einblicke",
     "categories": "Kategorien",
     "settings": "Einstellungen",
-    "logOut": "Abmelden"
+    "logOut": "Abmelden",
+    "guestLogOutConfirm": "Du nutzt ein Gastkonto. Wenn du dich abmeldest, kannst du dich nicht wieder anmelden und deine Daten gehen verloren. Trotzdem abmelden?"
   },
   "onboarding": {
     "ariaLabel": "Kurze Einführung",
@@ -246,6 +284,10 @@
       "message": "Bestätige deine E-Mail, um den Zugriff zu behalten · gesendet an {email}",
       "resend": "Erneut senden",
       "sent": "Gesendet — sieh in deinem Postfach nach"
+    },
+    "guestBanner": {
+      "message": "Gastkonto: Deine Daten werden in {days, plural, one {# Tag} other {# Tagen}} gelöscht, sofern du kein Konto erstellst.",
+      "createAccount": "Konto erstellen"
     }
   },
   "categories": {
@@ -405,6 +447,28 @@
       "doneDuplicatesSkipped": "{count, plural, one {# Duplikat übersprungen (bereits in deinen Daten)} other {# Duplikate übersprungen (bereits in deinen Daten)}}",
       "goToDashboard": "Zum Dashboard",
       "importAnother": "Weitere Datei importieren"
+    },
+    "upgradeGuest": {
+      "label": "Konto erstellen",
+      "description": "Du nutzt ein Gastkonto. Füge E-Mail und Passwort hinzu, um deine Daten über die {days} Tage hinaus zu behalten, dich wieder anzumelden und sie auf anderen Geräten zu nutzen. Alles bleibt unverändert.",
+      "emailLabel": "E-Mail",
+      "passwordLabel": "Passwort",
+      "submit": "Konto erstellen",
+      "submitPending": "Konto wird erstellt..."
+    },
+    "deleteAccount": {
+      "label": "Konto löschen",
+      "description": "Lösche dein Konto und alle zugehörigen Daten endgültig: Transaktionen, wiederkehrende Transaktionen und Kategorien. Das kann nicht rückgängig gemacht werden.",
+      "openButton": "Konto löschen",
+      "modalTitle": "Konto löschen",
+      "modalWarning": "Damit werden dein Konto und alles darin endgültig gelöscht und du wirst abgemeldet. Das kann nicht rückgängig gemacht werden.",
+      "confirmCheckbox": "Mir ist klar, dass mein Konto und alle meine Daten dadurch endgültig gelöscht werden.",
+      "typeToConfirmLabel": "Gib zur Bestätigung DELETE ein",
+      "passwordLabel": "Dein Passwort",
+      "confirmButton": "Mein Konto löschen",
+      "deleting": "Wird gelöscht...",
+      "passwordIncorrect": "Das Passwort ist falsch",
+      "tooManyAttempts": "Zu viele Versuche. Bitte warte einige Minuten und versuche es erneut."
     }
   },
   "email": {
