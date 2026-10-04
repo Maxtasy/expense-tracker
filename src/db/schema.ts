@@ -1,9 +1,14 @@
-import { pgTable, uuid, text, numeric, date, timestamp, integer, unique, index } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, numeric, date, timestamp, integer, boolean, unique, index } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
-  email: text("email").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
+  // email and passwordHash are null only for guest accounts (is_guest = true) -- see src/lib/guest.ts.
+  // Postgres treats NULLs as distinct, so the unique constraint still allows any number of guests.
+  email: text("email").unique(),
+  passwordHash: text("password_hash"),
+  // a "Try without an account" user: a real row (so all ownership scoping just works) that's
+  // purged after GUEST_TTL_DAYS unless the person adds an email + password first
+  isGuest: boolean("is_guest").notNull().default(false),
   name: text("name"),
   currency: text("currency").notNull().default("EUR"),
   locale: text("locale").notNull().default("en"),
@@ -51,7 +56,7 @@ export const authAttempts = pgTable(
   "auth_attempts",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    kind: text("kind", { enum: ["login", "signup", "resend_verification"] }).notNull(),
+    kind: text("kind", { enum: ["login", "signup", "resend_verification", "guest"] }).notNull(),
     email: text("email"),
     ip: text("ip").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),

@@ -14,6 +14,7 @@ const inputClass =
 
 export default function SignupPage() {
   const t = useTranslations("auth.signup");
+  const tGuest = useTranslations("auth.guest");
   const [state, formAction, pending] = useActionState(signup, undefined);
 
   return (
@@ -53,6 +54,17 @@ export default function SignupPage() {
             {pending ? t("submitPending") : t("submit")}
           </button>
         </form>
+        <div className="my-4 flex items-center gap-3 text-xs text-fg-muted">
+          <span className="h-px flex-1 bg-border" />
+          {tGuest("or")}
+          <span className="h-px flex-1 bg-border" />
+        </div>
+        <Link
+          href="/guest"
+          className="inline-flex w-full items-center justify-center rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-fg hover:bg-surface-hover"
+        >
+          {tGuest("linkLabel")}
+        </Link>
         <p className="mt-4 text-sm text-fg-muted">
           {t("haveAccount")}{" "}
           <Link href="/login" className="text-accent-text hover:text-accent-hover">

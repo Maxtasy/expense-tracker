@@ -32,9 +32,11 @@ If a release doesn't touch any of those, it's reasonable to stop after step 3 an
 
 `main` always reflects what's actually live (web app *and* whatever's published on Play Store) — it should never be ahead of what users are running. Day-to-day work happens on a long-lived **`develop`** branch instead of `main` directly:
 
-- Feature/fix branches → PR into `develop`, not `main`. Each PR still gets its own Vercel preview deployment.
+- **One branch per feature, cut from `develop`:** `feature/<name>` (or `fix/<name>`, `chore/<name>` for smaller things), e.g. `feature/guest-mode`. There are no per-release branches — `develop` *is* the release branch, collecting everything planned for the next version.
+- When a feature is done → PR into `develop`, not `main`, and merge it (squashed, so each feature is one commit on `develop`). Each PR still gets its own Vercel preview deployment. Merge features **one at a time**: if two feature branches each added a Drizzle migration, they'll both have claimed the same number (and both edited `drizzle/meta/_journal.json`) — after the first merges, rebase the second onto `develop`, delete its migration files and re-run `npm run db:generate` so it gets the next number.
+- **Don't bump `package.json`'s version or touch the changelog on feature branches** — that's the very last step before a release (steps 3–4 below), so it never conflicts between features.
 - `develop` itself also gets a standing Vercel preview (Vercel deploys every pushed branch, not just PRs) — use its URL as a staging environment to see the accumulated batch of features together before releasing.
-- When everything planned for a release is merged into `develop` and looks right on its preview: open a PR from `develop` → `main`, merge it, then follow the release steps below starting from the version bump.
+- When every feature planned for the release is merged into `develop` and looks right on its preview, follow the release steps below: changelog and version bump on `develop`, then merge `develop` → `main` and tag the result.
 
 **Database split (as of 2026-09):** dev and prod are separate Supabase projects — `develop` and every PR preview run against a dedicated dev database (Vercel's Preview environment), only `main`'s Production deployment touches the real one. A schema change tried out on `develop` is no longer live for real users. It does mean a migration needs to be applied **twice**: once locally against the dev DB while building the feature, and once against the prod DB as part of shipping the release (step 2 below) — via `.env.prod` (see below), not by swapping `.env.local`.
 
@@ -43,7 +45,7 @@ If a release doesn't touch any of those, it's reasonable to stop after step 3 an
 ## Steps
 
 1. Confirm everything intended for this release is merged into `develop` and its Vercel preview looks right.
-2. If this release added any Drizzle migrations, apply them to the **prod** database now — they've only ever run against the dev DB so far. Run `npm run db:migrate:prod` (reads `.env.prod` — see above).
+2. If this release added any Drizzle migrations, apply them to the **prod** database now — they've only ever run against the dev DB so far. Run `npm run db:migrate:prod` (reads `.env.prod` — see above). Likewise, if it introduced any **new environment variables** (see `.env.local.example`), add them to Vercel → Settings → Environment Variables for the **Production** environment before the merge in step 5, or the new code deploys without them. (`CRON_SECRET`, used by the daily guest-account cleanup in `vercel.json`, is one such variable.)
 3. Add an entry to `src/content/changelog.ts` (newest first) describing what shipped, in plain user-facing language — this is what renders on the public `/changelog` page. Skip internal refactors/chores; only list things a user would actually notice. **This must happen before step 5 (the `develop`→`main` merge)** — do it as part of the same release PR/commits, not a follow-up.
 4. Bump `package.json`'s `version` (as the last commit on `develop` before releasing).
 5. Open a PR from `develop` → `main` and merge it (a regular merge commit, not squash, so `main`'s history keeps each feature's commit individually visible — the feature branches were already squashed going into `develop`) — **this is what actually deploys to Vercel production**, updating the live web app immediately; this alone is enough for anyone not using the Android app. Then tag the resulting commit on `main` so there's a durable pointer to what shipped, independent of the table below:
