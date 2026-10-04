@@ -31,7 +31,8 @@
       "emailNotVerified": "Verifica tu correo electrónico antes de iniciar sesión.",
       "resendVerification": "Reenviar correo de verificación",
       "resendSuccessMessage": "Si tu cuenta aún no está verificada, te hemos enviado un nuevo enlace. Revisa tu bandeja de entrada.",
-      "guestExpired": "Tu cuenta de invitado ha caducado y sus datos se han eliminado. La próxima vez crea una cuenta para conservar tus datos."
+      "guestExpired": "Tu cuenta de invitado ha caducado y sus datos se han eliminado. La próxima vez crea una cuenta para conservar tus datos.",
+      "accountDeleted": "Tu cuenta y todos sus datos se han eliminado."
     },
     "signup": {
       "title": "Registrarse",
@@ -454,6 +455,20 @@
       "passwordLabel": "Contraseña",
       "submit": "Crear cuenta",
       "submitPending": "Creando cuenta..."
+    },
+    "deleteAccount": {
+      "label": "Eliminar cuenta",
+      "description": "Elimina de forma permanente tu cuenta y todos sus datos: transacciones, transacciones recurrentes y categorías. No se puede deshacer.",
+      "openButton": "Eliminar cuenta",
+      "modalTitle": "Eliminar cuenta",
+      "modalWarning": "Esto elimina de forma permanente tu cuenta y todo lo que contiene, y cierra tu sesión. No se puede deshacer.",
+      "confirmCheckbox": "Entiendo que esto elimina de forma permanente mi cuenta y todos mis datos.",
+      "typeToConfirmLabel": "Escribe DELETE para confirmar",
+      "passwordLabel": "Tu contraseña",
+      "confirmButton": "Eliminar mi cuenta",
+      "deleting": "Eliminando...",
+      "passwordIncorrect": "La contraseña es incorrecta",
+      "tooManyAttempts": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo."
     }
   },
   "email": {

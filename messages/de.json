@@ -31,7 +31,8 @@
       "emailNotVerified": "Bitte bestätige deine E-Mail-Adresse, bevor du dich anmeldest.",
       "resendVerification": "Bestätigungs-E-Mail erneut senden",
       "resendSuccessMessage": "Falls dein Konto noch nicht bestätigt ist, haben wir dir einen neuen Link geschickt. Sieh in deinem Postfach nach.",
-      "guestExpired": "Dein Gastkonto ist abgelaufen und die Daten wurden gelöscht. Erstelle beim nächsten Mal ein Konto, um deine Daten zu behalten."
+      "guestExpired": "Dein Gastkonto ist abgelaufen und die Daten wurden gelöscht. Erstelle beim nächsten Mal ein Konto, um deine Daten zu behalten.",
+      "accountDeleted": "Dein Konto und alle zugehörigen Daten wurden gelöscht."
     },
     "signup": {
       "title": "Registrieren",
@@ -454,6 +455,20 @@
       "passwordLabel": "Passwort",
       "submit": "Konto erstellen",
       "submitPending": "Konto wird erstellt..."
+    },
+    "deleteAccount": {
+      "label": "Konto löschen",
+      "description": "Lösche dein Konto und alle zugehörigen Daten endgültig: Transaktionen, wiederkehrende Transaktionen und Kategorien. Das kann nicht rückgängig gemacht werden.",
+      "openButton": "Konto löschen",
+      "modalTitle": "Konto löschen",
+      "modalWarning": "Damit werden dein Konto und alles darin endgültig gelöscht und du wirst abgemeldet. Das kann nicht rückgängig gemacht werden.",
+      "confirmCheckbox": "Mir ist klar, dass mein Konto und alle meine Daten dadurch endgültig gelöscht werden.",
+      "typeToConfirmLabel": "Gib zur Bestätigung DELETE ein",
+      "passwordLabel": "Dein Passwort",
+      "confirmButton": "Mein Konto löschen",
+      "deleting": "Wird gelöscht...",
+      "passwordIncorrect": "Das Passwort ist falsch",
+      "tooManyAttempts": "Zu viele Versuche. Bitte warte einige Minuten und versuche es erneut."
     }
   },
   "email": {

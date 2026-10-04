@@ -6,7 +6,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import { parse } from "csv-parse/sync";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { db } from "@/db";
 import { categories, recurringTransactions, transactions, users } from "@/db/schema";
 import { CURRENCIES } from "@/lib/currency";
@@ -418,4 +418,39 @@ export async function upgradeGuestAccount(formData: FormData) {
   // the guest banner (layout) and this page's own sections both depend on is_guest
   revalidatePath("/dashboard", "layout");
   return { success: true };
+}
+
+// Permanently deletes the signed-in account. Every table that holds user data references users.id
+// with ON DELETE CASCADE, so removing the one row removes everything. Regular accounts must
+// re-enter their password (so an unattended open session can't wipe an account); guests have none.
+export async function deleteAccount(formData: FormData) {
+  const session = await auth();
+  const tSettings = await getTranslations("settings");
+  if (!session?.user) return { error: tSettings("notSignedIn") };
+  const userId = session.user.id;
+  const t = await getTranslations("settings.deleteAccount");
+
+  const [user] = await db
+    .select({ email: users.email, passwordHash: users.passwordHash, isGuest: users.isGuest })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  if (!user) return { error: tSettings("notSignedIn") };
+
+  if (!user.isGuest) {
+    const password = formData.get("password");
+    const ip = await getClientIp();
+    // same budget as logging in -- this is also a place to guess the password
+    if (await isRateLimited("login", { email: user.email ?? undefined, ip })) {
+      return { error: t("tooManyAttempts") };
+    }
+    if (typeof password !== "string" || !user.passwordHash || !(await compare(password, user.passwordHash))) {
+      await recordAttempt("login", { email: user.email ?? undefined, ip });
+      return { error: t("passwordIncorrect") };
+    }
+  }
+
+  await db.delete(users).where(eq(users.id, userId));
+  // clears the session cookie; throws a redirect, so nothing after this runs
+  await signOut({ redirectTo: "/login?deleted=1" });
 }

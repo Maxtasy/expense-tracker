@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 const CONTACT_EMAIL = 'contact@maxtasy.me';
-const LAST_UPDATED = 'October 4, 2026';
+const LAST_UPDATED = 'October 5, 2026';
 
 const sectionClass = 'space-y-2';
 const headingClass = 'text-base font-semibold text-fg';
@@ -146,7 +146,12 @@ export default function PrivacyPage() {
               transactions and recurring rules. Deletions are permanent, not archived.
             </p>
             <p className={bodyClass}>
-              To request deletion of your account and all associated data, email us at{' '}
+              You can delete your account and all associated data yourself at any time in the app
+              under Settings &rarr; Delete account (see{' '}
+              <Link href="/delete-account" className="text-accent-text hover:text-accent-hover">
+                how to delete your account
+              </Link>
+              ). If you can&rsquo;t log in, email us at{' '}
               <a href={`mailto:${CONTACT_EMAIL}`} className="text-accent-text hover:text-accent-hover">
                 {CONTACT_EMAIL}
               </a>
