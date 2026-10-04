@@ -12,6 +12,14 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.14.0",
+    date: "2026-10-04",
+    items: [
+      "Insights has a new \"All\" tab: see your income, expenses and net total for the month or year at a glance, with both category breakdowns below.",
+      "Updated the contact email address shown on the landing page, privacy policy and account deletion page.",
+    ],
+  },
+  {
     version: "1.13.0",
     date: "2026-10-04",
     items: [
