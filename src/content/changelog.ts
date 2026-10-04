@@ -12,6 +12,17 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.15.0",
+    date: "2026-10-04",
+    items: [
+      "The Add transaction form now sits at the top of the screen and scrolls, so the keyboard no longer hides the Add button.",
+      "Chrome no longer offers saved passwords, cards and addresses above the keyboard while you type an amount or description.",
+      "The app now starts in your phone's language, so dates look the same in the form and the list.",
+      "New setting: remember the last category you used and preselect it when adding a transaction (off by default).",
+      "Log out moved from the top bar to Settings. Guests now get a clear warning with the option to create an account instead.",
+    ],
+  },
+  {
     version: "1.14.0",
     date: "2026-10-04",
     items: [
