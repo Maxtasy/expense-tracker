@@ -3,11 +3,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getTranslations, getLocale } from "next-intl/server";
 import { monthKey, monthLabel, shiftMonth, type YearMonth } from "@/lib/month";
 
-function hrefFor(target: YearMonth, type: "expense" | "income") {
+function hrefFor(target: YearMonth, type: "expense" | "income" | "all") {
   return `/dashboard/insights?mode=month&month=${monthKey(target)}&type=${type}`;
 }
 
-export async function InsightsMonthPager({ current, type }: { current: YearMonth; type: "expense" | "income" }) {
+export async function InsightsMonthPager({ current, type }: { current: YearMonth; type: "expense" | "income" | "all" }) {
   const [t, locale] = await Promise.all([getTranslations("insights"), getLocale()]);
   const prev = shiftMonth(current, -1);
   const next = shiftMonth(current, 1);
