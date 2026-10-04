@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Privacy Policy — Expense Tracker',
 };
 
-const CONTACT_EMAIL = 'contact@maxtasy.me';
+const CONTACT_EMAIL = 'maxtasy888@gmail.com';
 const LAST_UPDATED = 'October 4, 2026';
 
 const sectionClass = 'space-y-2';

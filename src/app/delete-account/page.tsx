@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Delete your account — Expense Tracker',
 };
 
-const CONTACT_EMAIL = 'contact@maxtasy.me';
+const CONTACT_EMAIL = 'maxtasy888@gmail.com';
 
 const headingClass = 'text-base font-semibold text-fg';
 const bodyClass = 'text-sm text-fg-muted leading-relaxed';

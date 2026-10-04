@@ -123,8 +123,8 @@ export default async function Home() {
               <Mail size={18} className="lp-card-icon" />
               <h3>{t("feedbackHeading")}</h3>
               <p>{t("feedbackDescription")}</p>
-              <a href="mailto:contact@maxtasy.me" className="lp-btn lp-btn--secondary lp-mono">
-                contact@maxtasy.me
+              <a href="mailto:maxtasy888@gmail.com" className="lp-btn lp-btn--secondary lp-mono">
+                maxtasy888@gmail.com
               </a>
             </div>
             <div className="lp-card">
