@@ -88,7 +88,7 @@ export function EditRecurringForm({
           ))}
         </select>
       </div>
-      <input name="description" type="text" aria-label={tDashboardForm("descriptionLabel")} defaultValue={recurring.description ?? ""} className={inputClass} />
+      <input name="description" type="text" autoComplete="off" aria-label={tDashboardForm("descriptionLabel")} defaultValue={recurring.description ?? ""} className={inputClass} />
       <div className="grid grid-cols-2 gap-2">
         <label className="space-y-1">
           <span className="block text-[11px] text-fg-muted">{t("startsOn")}</span>

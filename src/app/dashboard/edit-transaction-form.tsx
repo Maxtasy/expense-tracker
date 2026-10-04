@@ -88,7 +88,7 @@ export function EditTransactionForm({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <input name="date" type="date" required aria-label={t("dateLabel")} defaultValue={transaction.date} className={inputClass} />
-        <input name="description" type="text" aria-label={t("descriptionLabel")} defaultValue={transaction.description ?? ""} className={inputClass} />
+        <input name="description" type="text" autoComplete="off" aria-label={t("descriptionLabel")} defaultValue={transaction.description ?? ""} className={inputClass} />
       </div>
       <button
         type="submit"

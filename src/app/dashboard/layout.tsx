@@ -11,7 +11,6 @@ import { guestDaysLeft, isGuestExpired } from "@/lib/guest";
 import { Logo } from "@/components/logo";
 import { hasCompletedOnboarding } from "@/lib/preferences-server";
 import { OnboardingTour } from "./onboarding-tour";
-import { LogoutButton } from "./logout-button";
 import { VerifyEmailBanner } from "./verify-email-banner";
 import { GuestBanner } from "./guest-banner";
 
@@ -63,7 +62,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Link href="/dashboard/settings" aria-label={t("settings")} className="rounded-lg p-1.5 hover:text-fg">
             <Settings size={18} />
           </Link>
-          <LogoutButton label={t("logOut")} confirmMessage={verification.isGuest ? t("guestLogOutConfirm") : undefined} />
         </nav>
       </header>
       {/* Raw CSS, not Tailwind's `md:`/`lg:` responsive utilities: this project's Turbopack dev

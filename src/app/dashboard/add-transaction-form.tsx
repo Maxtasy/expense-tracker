@@ -17,10 +17,12 @@ const inputClass =
 export function AddTransactionForm({
   categories,
   currency,
+  lastCategoryIds,
   onSuccess,
 }: {
   categories: Category[];
   currency: string;
+  lastCategoryIds?: { expense?: string; income?: string };
   onSuccess?: () => void;
 }) {
   const t = useTranslations("dashboard.form");
@@ -30,6 +32,8 @@ export function AddTransactionForm({
   const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
   const filteredCategories = categories.filter((c) => c.type === type);
+  const lastId = lastCategoryIds?.[type];
+  const defaultCategoryId = filteredCategories.some((c) => c.id === lastId) ? lastId! : "";
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
@@ -63,7 +67,7 @@ export function AddTransactionForm({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <AmountInput symbol={currencySymbol(currency)} required />
-        <select key={type} name="categoryId" defaultValue="" aria-label={t("categoryLabel")} className={inputClass}>
+        <select key={`${type}-${defaultCategoryId}`} name="categoryId" defaultValue={defaultCategoryId} aria-label={t("categoryLabel")} className={inputClass}>
           <option value="">{tCommon("uncategorized")}</option>
           {filteredCategories.map((c) => (
             <option key={c.id} value={c.id}>
@@ -74,7 +78,7 @@ export function AddTransactionForm({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <input name="date" type="date" required aria-label={t("dateLabel")} defaultValue={new Date().toISOString().slice(0, 10)} className={inputClass} />
-        <input name="description" type="text" placeholder={t("descriptionPlaceholder")} className={inputClass} />
+        <input name="description" type="text" autoComplete="off" placeholder={t("descriptionPlaceholder")} className={inputClass} />
       </div>
       <button
         type="submit"

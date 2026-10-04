@@ -102,7 +102,7 @@ export function CategoryRow({ category }: { category: Category }) {
             onChange={(e) => setColor(e.target.value)}
             className="h-8 w-8 shrink-0 cursor-pointer rounded-lg border border-border bg-surface p-0.5"
           />
-          <input name="name" type="text" required aria-label={t("categoryName")} defaultValue={category.name} maxLength={50} className={inputClass} />
+          <input name="name" type="text" autoComplete="off" required aria-label={t("categoryName")} defaultValue={category.name} maxLength={50} className={inputClass} />
         </div>
         <div className="flex items-center gap-2">
           <button

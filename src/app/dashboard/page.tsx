@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, isNull, lte, or, sql, SQL } from "drizzle-orm";
+import { and, asc, desc, eq, gte, isNotNull, isNull, lte, or, sql, SQL } from "drizzle-orm";
 import { getTranslations, getLocale } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
@@ -12,7 +12,7 @@ import { SwipeMonthNav } from "./swipe-month-nav";
 import { ensureRecurringGenerated } from "./generate-recurring";
 import { monthKey, monthLabel, monthRange, parseMonth } from "@/lib/month";
 import { getUserCurrency } from "@/lib/currency-server";
-import { getUserDateFormat } from "@/lib/preferences-server";
+import { getUserDateFormat, getUserRememberLastCategory } from "@/lib/preferences-server";
 
 type SearchParams = { category?: string; sort?: string; month?: string };
 
@@ -55,6 +55,17 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     getLocale(),
     getTranslations("dashboard"),
   ]);
+
+  // Opt-in setting: the category of the most recent categorized transaction of each type.
+  const lastCategoryIds: { expense?: string; income?: string } = {};
+  if (await getUserRememberLastCategory(userId)) {
+    const rows = await db
+      .selectDistinctOn([transactions.type], { type: transactions.type, categoryId: transactions.categoryId })
+      .from(transactions)
+      .where(and(eq(transactions.userId, userId), isNotNull(transactions.categoryId)))
+      .orderBy(transactions.type, desc(transactions.createdAt));
+    for (const r of rows) if (r.categoryId) lastCategoryIds[r.type] = r.categoryId;
+  }
 
   const hiddenIdSet = new Set(hiddenIds.map((h) => h.categoryId));
   // hidden default categories stay out of filters/new-entry pickers, but each transaction's own
@@ -113,7 +124,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         )}
       </div>
 
-      <AddTransactionModal categories={visibleCategories} currency={currency} />
+      <AddTransactionModal categories={visibleCategories} currency={currency} lastCategoryIds={lastCategoryIds} />
     </SwipeMonthNav>
   );
 }
