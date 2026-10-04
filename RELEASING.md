@@ -88,6 +88,7 @@ Play Console's app-signing page (currently at **Protected with Play → Play Sto
 | What it is | The keystore file on your machine, used to sign the `.aab` before uploading | Google's own key, used to re-sign the app before it reaches devices (mandatory since Google Play App Signing) |
 | Used for | Step 7 above — confirms you picked the right local keystore file before uploading | Step 9 above — `public/.well-known/assetlinks.json`'s `sha256_cert_fingerprints` must match this one, since it's what's actually installed on devices |
 | Fingerprint format needed | SHA-1 (step 7's `openssl` command outputs SHA-1) | SHA-256 (colon-separated hex, straight into the JSON array) |
+| Known SHA-1 (public fingerprint, verified at the 1.15.0 upload) | `2E:0D:2C:13:73:61:B8:C9:1E:61:62:26:72:00:85:77:8E:DD:F6:B0` | — (use Play Console's snippet, see above) |
 | Wrong one used → symptom | Play Console rejects the upload outright with a clear error | No error anywhere — the app just silently falls back to showing a browser URL bar instead of running full-screen, since Digital Asset Links verification fails quietly |
 
 **Rule of thumb:** anything about *uploading* → Upload key. Anything about *assetlinks.json / what's installed on a device* → App signing key. **Best of all: don't hand-copy a fingerprint into `assetlinks.json` at all** — Play Console's "Manage Play App signing" page provides a ready-made, already-correct Digital Asset Links JSON snippet; copy that whole snippet instead.
