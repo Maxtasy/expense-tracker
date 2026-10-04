@@ -13,7 +13,15 @@ import { Spinner } from "@/components/spinner";
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
 
-export function LoginForm({ resetSuccess, guestExpired }: { resetSuccess?: boolean; guestExpired?: boolean }) {
+export function LoginForm({
+  resetSuccess,
+  guestExpired,
+  accountDeleted,
+}: {
+  resetSuccess?: boolean;
+  guestExpired?: boolean;
+  accountDeleted?: boolean;
+}) {
   const t = useTranslations("auth.login");
   const tGuest = useTranslations("auth.guest");
   const [state, formAction, pending] = useActionState(login, undefined);
@@ -28,6 +36,7 @@ export function LoginForm({ resetSuccess, guestExpired }: { resetSuccess?: boole
         <h1 className="mb-4 text-lg font-semibold text-fg">{t("title")}</h1>
         {resetSuccess && <p className="mb-4 text-sm text-success">{t("resetSuccess")}</p>}
         {guestExpired && <p className="mb-4 text-sm text-fg-muted">{t("guestExpired")}</p>}
+        {accountDeleted && <p className="mb-4 text-sm text-success">{t("accountDeleted")}</p>}
         <form action={formAction} className="space-y-3">
           <div className="space-y-1">
             <label htmlFor="email" className="block text-xs text-fg-muted">

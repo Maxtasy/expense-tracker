@@ -31,7 +31,8 @@
       "emailNotVerified": "Verifique seu e-mail antes de entrar.",
       "resendVerification": "Reenviar e-mail de verificação",
       "resendSuccessMessage": "Se sua conta ainda não estiver verificada, enviamos um novo link. Confira sua caixa de entrada.",
-      "guestExpired": "A tua conta de convidado expirou e os dados foram eliminados. Da próxima vez, cria uma conta para manteres os teus dados."
+      "guestExpired": "A tua conta de convidado expirou e os dados foram eliminados. Da próxima vez, cria uma conta para manteres os teus dados.",
+      "accountDeleted": "A tua conta e todos os seus dados foram eliminados."
     },
     "signup": {
       "title": "Cadastrar",
@@ -454,6 +455,20 @@
       "passwordLabel": "Palavra-passe",
       "submit": "Criar conta",
       "submitPending": "A criar conta..."
+    },
+    "deleteAccount": {
+      "label": "Eliminar conta",
+      "description": "Elimina permanentemente a tua conta e todos os seus dados: transações, transações recorrentes e categorias. Isto não pode ser anulado.",
+      "openButton": "Eliminar conta",
+      "modalTitle": "Eliminar conta",
+      "modalWarning": "Isto elimina permanentemente a tua conta e tudo o que ela contém, e termina a tua sessão. Isto não pode ser anulado.",
+      "confirmCheckbox": "Compreendo que isto elimina permanentemente a minha conta e todos os meus dados.",
+      "typeToConfirmLabel": "Escreve DELETE para confirmar",
+      "passwordLabel": "A tua palavra-passe",
+      "confirmButton": "Eliminar a minha conta",
+      "deleting": "A eliminar...",
+      "passwordIncorrect": "A palavra-passe está incorreta",
+      "tooManyAttempts": "Demasiadas tentativas. Aguarda alguns minutos e tenta novamente."
     }
   },
   "email": {

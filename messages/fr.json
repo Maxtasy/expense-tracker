@@ -31,7 +31,8 @@
       "emailNotVerified": "Veuillez vérifier votre e-mail avant de vous connecter.",
       "resendVerification": "Renvoyer l'e-mail de vérification",
       "resendSuccessMessage": "Si votre compte n'est pas encore vérifié, nous vous avons envoyé un nouveau lien. Consultez votre boîte de réception.",
-      "guestExpired": "Votre compte invité a expiré et ses données ont été supprimées. La prochaine fois, créez un compte pour conserver vos données."
+      "guestExpired": "Votre compte invité a expiré et ses données ont été supprimées. La prochaine fois, créez un compte pour conserver vos données.",
+      "accountDeleted": "Votre compte et toutes ses données ont été supprimés."
     },
     "signup": {
       "title": "Inscription",
@@ -454,6 +455,20 @@
       "passwordLabel": "Mot de passe",
       "submit": "Créer un compte",
       "submitPending": "Création du compte..."
+    },
+    "deleteAccount": {
+      "label": "Supprimer le compte",
+      "description": "Supprimez définitivement votre compte et toutes ses données : transactions, transactions récurrentes et catégories. Cette action est irréversible.",
+      "openButton": "Supprimer le compte",
+      "modalTitle": "Supprimer le compte",
+      "modalWarning": "Cela supprime définitivement votre compte et tout son contenu, et vous déconnecte. Cette action est irréversible.",
+      "confirmCheckbox": "Je comprends que cela supprime définitivement mon compte et toutes mes données.",
+      "typeToConfirmLabel": "Saisissez DELETE pour confirmer",
+      "passwordLabel": "Votre mot de passe",
+      "confirmButton": "Supprimer mon compte",
+      "deleting": "Suppression...",
+      "passwordIncorrect": "Le mot de passe est incorrect",
+      "tooManyAttempts": "Trop de tentatives. Patientez quelques minutes puis réessayez."
     }
   },
   "email": {

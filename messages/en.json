@@ -31,7 +31,8 @@
       "emailNotVerified": "Please verify your email before logging in.",
       "resendVerification": "Resend verification email",
       "resendSuccessMessage": "If your account isn't verified yet, we've sent a new link. Check your inbox.",
-      "guestExpired": "Your guest account has expired and its data was deleted. Create an account to keep your data next time."
+      "guestExpired": "Your guest account has expired and its data was deleted. Create an account to keep your data next time.",
+      "accountDeleted": "Your account and all of its data have been deleted."
     },
     "signup": {
       "title": "Sign up",
@@ -454,6 +455,20 @@
       "passwordLabel": "Password",
       "submit": "Create account",
       "submitPending": "Creating account..."
+    },
+    "deleteAccount": {
+      "label": "Delete account",
+      "description": "Permanently delete your account and all of its data: transactions, recurring transactions and categories. This can't be undone.",
+      "openButton": "Delete account",
+      "modalTitle": "Delete account",
+      "modalWarning": "This permanently deletes your account and everything in it, and signs you out. This can't be undone.",
+      "confirmCheckbox": "I understand this permanently deletes my account and all of my data.",
+      "typeToConfirmLabel": "Type DELETE to confirm",
+      "passwordLabel": "Your password",
+      "confirmButton": "Delete my account",
+      "deleting": "Deleting...",
+      "passwordIncorrect": "Password is incorrect",
+      "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again."
     }
   },
   "email": {
