@@ -9,9 +9,11 @@ import { StartFreshForm } from "./start-fresh-form";
 import { DeleteAccountForm } from "./delete-account-form";
 import { CurrencyForm } from "./currency-form";
 import { LocaleForm } from "./locale-form";
+import { ToggleSettingForm } from "./toggle-setting-form";
+import { LogoutSection } from "./logout-section";
 import { SelectSettingForm } from "./select-setting-form";
-import { updateDateFormat, updateTheme } from "./actions";
-import { getUserDateFormat, getUserTheme } from "@/lib/preferences-server";
+import { updateDateFormat, updateRememberLastCategory, updateTheme } from "./actions";
+import { getUserDateFormat, getUserRememberLastCategory, getUserTheme } from "@/lib/preferences-server";
 import { DATE_FORMATS } from "@/lib/date-format";
 import { THEMES } from "@/lib/theme";
 import { ChangePasswordForm } from "./change-password-form";
@@ -25,11 +27,12 @@ import { version } from "../../../../package.json";
 export default async function SettingsPage() {
   const session = await auth();
   if (!session?.user) return null;
-  const [currency, locale, dateFormat, theme, t, account] = await Promise.all([
+  const [currency, locale, dateFormat, theme, rememberLastCategory, t, account] = await Promise.all([
     getUserCurrency(session.user.id),
     getUserLocale(session.user.id),
     getUserDateFormat(session.user.id),
     getUserTheme(session.user.id),
+    getUserRememberLastCategory(session.user.id),
     getTranslations("settings"),
     getVerificationStatus(session.user.id),
   ]);
@@ -89,6 +92,17 @@ export default async function SettingsPage() {
         />
       </div>
 
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("rememberCategory.label")}</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <ToggleSettingForm
+          action={updateRememberLastCategory}
+          name="rememberLastCategory"
+          checked={rememberLastCategory}
+          label={t("rememberCategory.description")}
+          ariaLabel={t("rememberCategory.ariaLabel")}
+        />
+      </div>
+
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("tour.label")}</h2>
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
         <p className="mb-3 text-xs text-fg-muted">{t("tour.description")}</p>
@@ -131,6 +145,12 @@ export default async function SettingsPage() {
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
         <p className="mb-3 text-xs text-fg-muted">{t("startFresh.description")}</p>
         <StartFreshForm />
+      </div>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("logout.label")}</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <p className="mb-3 text-xs text-fg-muted">{t("logout.description")}</p>
+        <LogoutSection isGuest={isGuest} />
       </div>
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("deleteAccount.label")}</h2>

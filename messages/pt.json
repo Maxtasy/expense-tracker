@@ -207,9 +207,7 @@
     "recurring": "Transações recorrentes",
     "insights": "Estatísticas",
     "categories": "Categorias",
-    "settings": "Configurações",
-    "logOut": "Sair",
-    "guestLogOutConfirm": "Estás a usar uma conta de convidado. Se terminares a sessão, não poderás voltar a entrar e perderás os teus dados. Terminar sessão mesmo assim?"
+    "settings": "Configurações"
   },
   "onboarding": {
     "ariaLabel": "Tour rápido",
@@ -470,6 +468,20 @@
       "deleting": "A eliminar...",
       "passwordIncorrect": "A palavra-passe está incorreta",
       "tooManyAttempts": "Demasiadas tentativas. Aguarda alguns minutos e tenta novamente."
+    },
+    "rememberCategory": {
+      "label": "Lembrar a última categoria",
+      "description": "Ao adicionar uma transação, pré-seleciona a última categoria usada para esse tipo.",
+      "ariaLabel": "Lembrar a última categoria"
+    },
+    "logout": {
+      "label": "Sair",
+      "description": "Terminar sessão neste dispositivo.",
+      "button": "Sair",
+      "guestTitle": "Sair da conta de convidado?",
+      "guestWarning": "Estás a usar uma conta de convidado. Se terminares a sessão, não poderás voltar a entrar e perderás os teus dados.",
+      "guestCreateAccount": "Criar uma conta em vez disso",
+      "guestConfirm": "Sair mesmo assim"
     }
   },
   "email": {

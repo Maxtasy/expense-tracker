@@ -26,6 +26,7 @@ export function AmountInput({ symbol, name = "amount", defaultValue, placeholder
       <input
         name={name}
         type="number"
+        autoComplete="off"
         step="0.01"
         min="0.01"
         aria-label={t("amount")}

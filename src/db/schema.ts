@@ -16,6 +16,8 @@ export const users = pgTable("users", {
   dateFormat: text("date_format").notNull().default("auto"),
   // "dark" | "light" | "system" -- see src/lib/theme.ts
   theme: text("theme").notNull().default("dark"),
+  // opt-in: preselect the category last used (per type) in the add-transaction form
+  rememberLastCategory: boolean("remember_last_category").notNull().default(false),
   // null = hasn't seen the first-run tour yet (see src/app/dashboard/onboarding-tour.tsx)
   onboardedAt: timestamp("onboarded_at"),
   // null = not verified yet. Verification is a 7-day grace period, not an immediate hard block --

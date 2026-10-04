@@ -207,9 +207,7 @@
     "recurring": "Transacciones recurrentes",
     "insights": "Estadísticas",
     "categories": "Categorías",
-    "settings": "Ajustes",
-    "logOut": "Cerrar sesión",
-    "guestLogOutConfirm": "Estás usando una cuenta de invitado. Si cierras sesión no podrás volver a entrar y perderás tus datos. ¿Cerrar sesión de todos modos?"
+    "settings": "Ajustes"
   },
   "onboarding": {
     "ariaLabel": "Recorrido rápido",
@@ -470,6 +468,20 @@
       "deleting": "Eliminando...",
       "passwordIncorrect": "La contraseña es incorrecta",
       "tooManyAttempts": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo."
+    },
+    "rememberCategory": {
+      "label": "Recordar la última categoría",
+      "description": "Al añadir una transacción, preselecciona la última categoría que usaste para ese tipo.",
+      "ariaLabel": "Recordar la última categoría"
+    },
+    "logout": {
+      "label": "Cerrar sesión",
+      "description": "Cerrar sesión en este dispositivo.",
+      "button": "Cerrar sesión",
+      "guestTitle": "¿Cerrar sesión de la cuenta de invitado?",
+      "guestWarning": "Estás usando una cuenta de invitado. Si cierras sesión no podrás volver a entrar y perderás tus datos.",
+      "guestCreateAccount": "Crear una cuenta en su lugar",
+      "guestConfirm": "Cerrar sesión de todos modos"
     }
   },
   "email": {
