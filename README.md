@@ -1,6 +1,6 @@
 # Expense Tracker
 
-An expense tracker built with Next.js (App Router), TypeScript, Drizzle ORM, Supabase (Postgres), and Auth.js. Started as a personal single-user project; now published on Google Play (currently **Internal testing**, working toward **Closed testing** ahead of a future Production release — see [RELEASING.md](RELEASING.md)).
+An expense tracker built with Next.js (App Router), TypeScript, Drizzle ORM, Supabase (Postgres), and Auth.js. Started as a personal single-user project; now published on Google Play (currently **Closed testing**, ahead of a future Production release — see [RELEASING.md](RELEASING.md)).
 
 ## Screenshots
 
