@@ -13,8 +13,9 @@ import { Spinner } from "@/components/spinner";
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
 
-export function LoginForm({ resetSuccess }: { resetSuccess?: boolean }) {
+export function LoginForm({ resetSuccess, guestExpired }: { resetSuccess?: boolean; guestExpired?: boolean }) {
   const t = useTranslations("auth.login");
+  const tGuest = useTranslations("auth.guest");
   const [state, formAction, pending] = useActionState(login, undefined);
   const [resendSent, setResendSent] = useState(false);
   const [isResending, startResend] = useTransition();
@@ -26,6 +27,7 @@ export function LoginForm({ resetSuccess }: { resetSuccess?: boolean }) {
         <AuthBrand />
         <h1 className="mb-4 text-lg font-semibold text-fg">{t("title")}</h1>
         {resetSuccess && <p className="mb-4 text-sm text-success">{t("resetSuccess")}</p>}
+        {guestExpired && <p className="mb-4 text-sm text-fg-muted">{t("guestExpired")}</p>}
         <form action={formAction} className="space-y-3">
           <div className="space-y-1">
             <label htmlFor="email" className="block text-xs text-fg-muted">
@@ -75,6 +77,17 @@ export function LoginForm({ resetSuccess }: { resetSuccess?: boolean }) {
               {t("resendVerification")}
             </button>
           ))}
+        <div className="my-4 flex items-center gap-3 text-xs text-fg-muted">
+          <span className="h-px flex-1 bg-border" />
+          {tGuest("or")}
+          <span className="h-px flex-1 bg-border" />
+        </div>
+        <Link
+          href="/guest"
+          className="inline-flex w-full items-center justify-center rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-fg hover:bg-surface-hover"
+        >
+          {tGuest("linkLabel")}
+        </Link>
         <p className="mt-4 text-sm text-fg-muted">
           {t("noAccount")}{" "}
           <Link href="/signup" className="text-accent-text hover:text-accent-hover">

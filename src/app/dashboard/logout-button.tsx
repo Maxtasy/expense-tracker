@@ -5,10 +5,13 @@ import { LogOut } from "lucide-react";
 import { logout } from "./actions";
 import { Spinner } from "@/components/spinner";
 
-export function LogoutButton({ label }: { label: string }) {
+// confirmMessage is set for guest accounts: logging out of one can't be undone, since there's no
+// email/password to log back in with.
+export function LogoutButton({ label, confirmMessage }: { label: string; confirmMessage?: string }) {
   const [isPending, startTransition] = useTransition();
 
   function handleLogout() {
+    if (confirmMessage && !window.confirm(confirmMessage)) return;
     startTransition(async () => {
       await logout();
     });

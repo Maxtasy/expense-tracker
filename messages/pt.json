@@ -30,7 +30,8 @@
       "resetSuccess": "Sua senha foi redefinida. Entre com sua nova senha.",
       "emailNotVerified": "Verifique seu e-mail antes de entrar.",
       "resendVerification": "Reenviar e-mail de verificação",
-      "resendSuccessMessage": "Se sua conta ainda não estiver verificada, enviamos um novo link. Confira sua caixa de entrada."
+      "resendSuccessMessage": "Se sua conta ainda não estiver verificada, enviamos um novo link. Confira sua caixa de entrada.",
+      "guestExpired": "A tua conta de convidado expirou e os dados foram eliminados. Da próxima vez, cria uma conta para manteres os teus dados."
     },
     "signup": {
       "title": "Cadastrar",
@@ -83,6 +84,41 @@
       "resend": "Reenviar e-mail de verificação",
       "resendSuccessMessage": "Enviamos um novo link. Confira sua caixa de entrada.",
       "logOut": "Sair"
+    },
+    "guest": {
+      "linkLabel": "Experimentar sem conta",
+      "or": "ou",
+      "title": "Experimentar sem conta",
+      "intro": "Começa já, sem e-mail nem palavra-passe. Antes disso, é isto que deves saber:",
+      "points": {
+        "full": {
+          "title": "Tudo funciona",
+          "body": "As contas de convidado não têm limites. Todas as funcionalidades funcionam exatamente como numa conta normal."
+        },
+        "expiry": {
+          "title": "Guardado durante {days} dias",
+          "body": "Os teus dados ficam guardados durante {days} dias a partir de hoje. Depois, a conta de convidado e tudo o que contém são eliminados permanentemente. Cria uma conta antes disso para os manteres."
+        },
+        "device": {
+          "title": "Ligada a este navegador",
+          "body": "A tua sessão de convidado está num cookie neste dispositivo. Se limpares os cookies ou os dados do site, reinstalares a app ou mudares de navegador ou dispositivo, perdes o acesso aos teus dados e não os conseguimos recuperar."
+        },
+        "logout": {
+          "title": "Terminar sessão é definitivo",
+          "body": "Uma conta de convidado não tem e-mail nem palavra-passe para voltar a entrar, por isso só termines a sessão se já não precisares dela."
+        },
+        "keep": {
+          "title": "Guarda os teus dados quando quiseres",
+          "body": "Cria uma conta nas Definições quando quiseres. Tudo o que introduziste fica, sem teres de voltar a escrever nada. Será pedido que verifiques o teu e-mail, como em qualquer conta nova."
+        }
+      },
+      "privacyNote": "Os dados de convidado são guardados nos nossos servidores sem endereço de e-mail nem outros dados pessoais.",
+      "privacyLink": "Política de privacidade",
+      "start": "Começar como convidado",
+      "starting": "A iniciar...",
+      "createAccountInstead": "Criar uma conta em vez disso",
+      "tooManyAttempts": "Demasiadas tentativas. Aguarda alguns minutos e tenta novamente.",
+      "genericError": "Algo correu mal, tenta novamente"
     }
   },
   "landing": {
@@ -171,7 +207,8 @@
     "insights": "Estatísticas",
     "categories": "Categorias",
     "settings": "Configurações",
-    "logOut": "Sair"
+    "logOut": "Sair",
+    "guestLogOutConfirm": "Estás a usar uma conta de convidado. Se terminares a sessão, não poderás voltar a entrar e perderás os teus dados. Terminar sessão mesmo assim?"
   },
   "onboarding": {
     "ariaLabel": "Tour rápido",
@@ -246,6 +283,10 @@
       "message": "Verifique seu e-mail para manter o acesso · enviado para {email}",
       "resend": "Reenviar",
       "sent": "Enviado — confira sua caixa de entrada"
+    },
+    "guestBanner": {
+      "message": "Conta de convidado: os teus dados serão eliminados dentro de {days, plural, one {# dia} other {# dias}} se não criares uma conta.",
+      "createAccount": "Criar conta"
     }
   },
   "categories": {
@@ -405,6 +446,14 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicata ignorada (já está nos seus dados)} other {# duplicatas ignoradas (já estão nos seus dados)}}",
       "goToDashboard": "Ir para o painel",
       "importAnother": "Importar outro arquivo"
+    },
+    "upgradeGuest": {
+      "label": "Cria a tua conta",
+      "description": "Estás a usar uma conta de convidado. Adiciona um e-mail e uma palavra-passe para manteres os teus dados para além de {days} dias, voltares a iniciar sessão e usá-los noutros dispositivos. Tudo fica como está.",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Palavra-passe",
+      "submit": "Criar conta",
+      "submitPending": "A criar conta..."
     }
   },
   "email": {

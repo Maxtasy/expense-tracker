@@ -30,7 +30,8 @@
       "resetSuccess": "Votre mot de passe a été réinitialisé. Connectez-vous avec votre nouveau mot de passe.",
       "emailNotVerified": "Veuillez vérifier votre e-mail avant de vous connecter.",
       "resendVerification": "Renvoyer l'e-mail de vérification",
-      "resendSuccessMessage": "Si votre compte n'est pas encore vérifié, nous vous avons envoyé un nouveau lien. Consultez votre boîte de réception."
+      "resendSuccessMessage": "Si votre compte n'est pas encore vérifié, nous vous avons envoyé un nouveau lien. Consultez votre boîte de réception.",
+      "guestExpired": "Votre compte invité a expiré et ses données ont été supprimées. La prochaine fois, créez un compte pour conserver vos données."
     },
     "signup": {
       "title": "Inscription",
@@ -83,6 +84,41 @@
       "resend": "Renvoyer l'e-mail de vérification",
       "resendSuccessMessage": "Nous vous avons envoyé un nouveau lien. Consultez votre boîte de réception.",
       "logOut": "Se déconnecter"
+    },
+    "guest": {
+      "linkLabel": "Essayer sans compte",
+      "or": "ou",
+      "title": "Essayer sans compte",
+      "intro": "Commencez tout de suite, sans e-mail ni mot de passe. Avant cela, voici ce qu'il faut savoir :",
+      "points": {
+        "full": {
+          "title": "Tout fonctionne",
+          "body": "Les comptes invités n'ont aucune limite. Chaque fonctionnalité marche exactement comme dans un compte normal."
+        },
+        "expiry": {
+          "title": "Conservé {days} jours",
+          "body": "Vos données sont conservées {days} jours à partir d'aujourd'hui. Ensuite, le compte invité et tout son contenu sont supprimés définitivement. Créez un compte avant pour les garder."
+        },
+        "device": {
+          "title": "Lié à ce navigateur",
+          "body": "Votre session invité est stockée dans un cookie sur cet appareil. Si vous effacez les cookies ou les données du site, réinstallez l'application ou changez de navigateur ou d'appareil, vous perdez l'accès à vos données et nous ne pouvons pas les restaurer."
+        },
+        "logout": {
+          "title": "Se déconnecter est définitif",
+          "body": "Un compte invité n'a ni e-mail ni mot de passe pour se reconnecter : ne vous déconnectez donc que si vous avez terminé."
+        },
+        "keep": {
+          "title": "Gardez vos données à tout moment",
+          "body": "Créez un compte dans les Réglages quand vous voulez. Tout ce que vous avez saisi est conservé, rien à ressaisir. Vous devrez vérifier votre e-mail comme pour tout nouveau compte."
+        }
+      },
+      "privacyNote": "Les données des invités sont stockées sur nos serveurs sans adresse e-mail ni autre information personnelle.",
+      "privacyLink": "Politique de confidentialité",
+      "start": "Commencer en tant qu'invité",
+      "starting": "Démarrage...",
+      "createAccountInstead": "Créer un compte à la place",
+      "tooManyAttempts": "Trop de tentatives. Patientez quelques minutes puis réessayez.",
+      "genericError": "Une erreur s'est produite, veuillez réessayer"
     }
   },
   "landing": {
@@ -171,7 +207,8 @@
     "insights": "Statistiques",
     "categories": "Catégories",
     "settings": "Paramètres",
-    "logOut": "Se déconnecter"
+    "logOut": "Se déconnecter",
+    "guestLogOutConfirm": "Vous utilisez un compte invité. Si vous vous déconnectez, vous ne pourrez plus vous reconnecter et vos données seront perdues. Se déconnecter quand même ?"
   },
   "onboarding": {
     "ariaLabel": "Visite rapide",
@@ -246,6 +283,10 @@
       "message": "Vérifiez votre e-mail pour conserver l'accès · envoyé à {email}",
       "resend": "Renvoyer",
       "sent": "Envoyé — consultez votre boîte de réception"
+    },
+    "guestBanner": {
+      "message": "Compte invité : vos données seront supprimées dans {days, plural, one {# jour} other {# jours}} si vous ne créez pas de compte.",
+      "createAccount": "Créer un compte"
     }
   },
   "categories": {
@@ -405,6 +446,14 @@
       "doneDuplicatesSkipped": "{count, plural, one {# doublon ignoré (déjà présent dans vos données)} other {# doublons ignorés (déjà présents dans vos données)}}",
       "goToDashboard": "Aller au tableau de bord",
       "importAnother": "Importer un autre fichier"
+    },
+    "upgradeGuest": {
+      "label": "Créez votre compte",
+      "description": "Vous utilisez un compte invité. Ajoutez un e-mail et un mot de passe pour garder vos données au-delà de {days} jours, vous reconnecter et les utiliser sur d'autres appareils. Tout reste tel quel.",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Mot de passe",
+      "submit": "Créer un compte",
+      "submitPending": "Création du compte..."
     }
   },
   "email": {
