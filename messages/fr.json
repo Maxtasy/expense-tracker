@@ -207,9 +207,7 @@
     "recurring": "Transactions récurrentes",
     "insights": "Statistiques",
     "categories": "Catégories",
-    "settings": "Paramètres",
-    "logOut": "Se déconnecter",
-    "guestLogOutConfirm": "Vous utilisez un compte invité. Si vous vous déconnectez, vous ne pourrez plus vous reconnecter et vos données seront perdues. Se déconnecter quand même ?"
+    "settings": "Paramètres"
   },
   "onboarding": {
     "ariaLabel": "Visite rapide",
@@ -470,6 +468,20 @@
       "deleting": "Suppression...",
       "passwordIncorrect": "Le mot de passe est incorrect",
       "tooManyAttempts": "Trop de tentatives. Patientez quelques minutes puis réessayez."
+    },
+    "rememberCategory": {
+      "label": "Mémoriser la dernière catégorie",
+      "description": "Lors de l'ajout d'une transaction, présélectionne la dernière catégorie utilisée pour ce type.",
+      "ariaLabel": "Mémoriser la dernière catégorie"
+    },
+    "logout": {
+      "label": "Se déconnecter",
+      "description": "Se déconnecter de cet appareil.",
+      "button": "Se déconnecter",
+      "guestTitle": "Se déconnecter du compte invité ?",
+      "guestWarning": "Vous utilisez un compte invité. Si vous vous déconnectez, vous ne pourrez plus vous reconnecter et vos données seront perdues.",
+      "guestCreateAccount": "Créer un compte à la place",
+      "guestConfirm": "Se déconnecter quand même"
     }
   },
   "email": {

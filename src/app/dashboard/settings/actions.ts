@@ -309,6 +309,21 @@ export async function updateTheme(formData: FormData) {
   return { success: true };
 }
 
+export async function updateRememberLastCategory(formData: FormData) {
+  const session = await auth();
+  const t = await getTranslations("settings");
+  if (!session?.user) return { error: t("notSignedIn") };
+
+  await db
+    .update(users)
+    .set({ rememberLastCategory: formData.get("rememberLastCategory") === "on" })
+    .where(eq(users.id, session.user.id));
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/settings");
+  return { success: true };
+}
+
 export async function changePassword(formData: FormData) {
   const session = await auth();
   const tSettings = await getTranslations("settings");

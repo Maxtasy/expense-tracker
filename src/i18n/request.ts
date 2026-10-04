@@ -1,8 +1,6 @@
-import { cookies } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
 import { auth } from "@/auth";
-import { getUserLocale } from "@/lib/locale-server";
-import { DEFAULT_LOCALE, LOCALES, PRE_AUTH_LOCALE_COOKIE } from "@/lib/locale";
+import { getPreAuthLocale, getUserLocale } from "@/lib/locale-server";
 
 // No URL-based locale routing: the active locale is a per-user Settings choice (mirrors the
 // `currency` setting) once signed in. Signed-out routes (landing, login, signup) fall back to a
@@ -15,8 +13,7 @@ export default getRequestConfig(async () => {
   if (session?.user) {
     locale = await getUserLocale(session.user.id);
   } else {
-    const cookieLocale = (await cookies()).get(PRE_AUTH_LOCALE_COOKIE)?.value;
-    locale = LOCALES.some((l) => l.code === cookieLocale) ? cookieLocale! : DEFAULT_LOCALE;
+    locale = await getPreAuthLocale();
   }
 
   return {

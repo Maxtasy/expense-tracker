@@ -207,9 +207,7 @@
     "recurring": "Recurring transactions",
     "insights": "Insights",
     "categories": "Categories",
-    "settings": "Settings",
-    "logOut": "Log out",
-    "guestLogOutConfirm": "You are using a guest account. If you log out you can't log back in and your data will be lost. Log out anyway?"
+    "settings": "Settings"
   },
   "onboarding": {
     "ariaLabel": "Quick tour",
@@ -470,6 +468,20 @@
       "deleting": "Deleting...",
       "passwordIncorrect": "Password is incorrect",
       "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again."
+    },
+    "rememberCategory": {
+      "label": "Remember last category",
+      "description": "When adding a transaction, preselect the category you used last for that type.",
+      "ariaLabel": "Remember last category"
+    },
+    "logout": {
+      "label": "Log out",
+      "description": "Sign out of this device.",
+      "button": "Log out",
+      "guestTitle": "Log out of guest account?",
+      "guestWarning": "You are using a guest account. If you log out you can't log back in and your data will be lost.",
+      "guestCreateAccount": "Create an account instead",
+      "guestConfirm": "Log out anyway"
     }
   },
   "email": {

@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { db } from "@/db";
 import { users } from "@/db/schema";
-import { DEFAULT_LOCALE, LOCALES, PRE_AUTH_LOCALE_COOKIE } from "@/lib/locale";
+import { DEFAULT_LOCALE, LOCALES, PRE_AUTH_LOCALE_COOKIE, matchAcceptLanguage } from "@/lib/locale";
 
 export async function getUserLocale(userId: string): Promise<string> {
   const [row] = await db.select({ locale: users.locale }).from(users).where(eq(users.id, userId)).limit(1);
@@ -11,7 +11,9 @@ export async function getUserLocale(userId: string): Promise<string> {
 
 // For pages/actions that run before a users row (and its own `locale` column) exists yet -- same
 // cookie the pre-auth locale switcher on landing/login/signup sets, see src/i18n/request.ts.
+// With no cookie yet (first visit) it falls back to the browser's Accept-Language.
 export async function getPreAuthLocale(): Promise<string> {
   const cookieLocale = (await cookies()).get(PRE_AUTH_LOCALE_COOKIE)?.value;
-  return LOCALES.some((l) => l.code === cookieLocale) ? cookieLocale! : DEFAULT_LOCALE;
+  if (LOCALES.some((l) => l.code === cookieLocale)) return cookieLocale!;
+  return matchAcceptLanguage((await headers()).get("accept-language"));
 }

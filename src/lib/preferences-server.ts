@@ -9,6 +9,11 @@ export async function getUserDateFormat(userId: string): Promise<string> {
   return row?.dateFormat ?? DEFAULT_DATE_FORMAT;
 }
 
+export async function getUserRememberLastCategory(userId: string): Promise<boolean> {
+  const [row] = await db.select({ v: users.rememberLastCategory }).from(users).where(eq(users.id, userId)).limit(1);
+  return row?.v ?? false;
+}
+
 export async function hasCompletedOnboarding(userId: string): Promise<boolean> {
   const [row] = await db.select({ onboardedAt: users.onboardedAt }).from(users).where(eq(users.id, userId)).limit(1);
   return row?.onboardedAt != null;

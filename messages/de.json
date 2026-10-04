@@ -207,9 +207,7 @@
     "recurring": "Wiederkehrende Transaktionen",
     "insights": "Einblicke",
     "categories": "Kategorien",
-    "settings": "Einstellungen",
-    "logOut": "Abmelden",
-    "guestLogOutConfirm": "Du nutzt ein Gastkonto. Wenn du dich abmeldest, kannst du dich nicht wieder anmelden und deine Daten gehen verloren. Trotzdem abmelden?"
+    "settings": "Einstellungen"
   },
   "onboarding": {
     "ariaLabel": "Kurze Einführung",
@@ -470,6 +468,20 @@
       "deleting": "Wird gelöscht...",
       "passwordIncorrect": "Das Passwort ist falsch",
       "tooManyAttempts": "Zu viele Versuche. Bitte warte einige Minuten und versuche es erneut."
+    },
+    "rememberCategory": {
+      "label": "Letzte Kategorie merken",
+      "description": "Wählt beim Hinzufügen einer Buchung die zuletzt für diesen Typ verwendete Kategorie vor.",
+      "ariaLabel": "Letzte Kategorie merken"
+    },
+    "logout": {
+      "label": "Abmelden",
+      "description": "Auf diesem Gerät abmelden.",
+      "button": "Abmelden",
+      "guestTitle": "Vom Gastkonto abmelden?",
+      "guestWarning": "Du nutzt ein Gastkonto. Wenn du dich abmeldest, kannst du dich nicht wieder anmelden und deine Daten gehen verloren.",
+      "guestCreateAccount": "Stattdessen ein Konto erstellen",
+      "guestConfirm": "Trotzdem abmelden"
     }
   },
   "email": {

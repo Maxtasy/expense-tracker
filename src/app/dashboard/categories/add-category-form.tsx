@@ -36,6 +36,7 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
         <input
           name="name"
           type="text"
+          autoComplete="off"
           placeholder={t("namePlaceholder")}
           required
           maxLength={50}
