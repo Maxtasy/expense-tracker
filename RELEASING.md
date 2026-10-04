@@ -58,6 +58,8 @@ If a release doesn't touch any of those, it's reasonable to stop after step 3 an
 7. Go to [pwabuilder.com](https://www.pwabuilder.com) → enter the production URL (`https://expense-tracker-rose-ten-25.vercel.app`) → "Package for Stores" → Android → set `versionName` to `"{semver}.0"` and `versionCode` to the incremented value → **upload the existing signing keystore rather than letting it generate a new one** (a new key breaks Play Console's signature match on an update — Play Console will reject the upload).
 
    **If the production URL itself ever changes (e.g. a future custom domain):** PWABuilder derives its suggested Android package name (`applicationId`) from the URL you enter — currently `app.vercel.expense_tracker_rose_ten_25.twa`, derived from today's `expense-tracker-rose-ten-25.vercel.app`. Pointing PWABuilder at a new domain will suggest a *different* package name by default. You must explicitly override it back to the existing `app.vercel.expense_tracker_rose_ten_25.twa` — a different package name makes Play Console treat it as a brand-new app, not an update to the existing one, forcing every current user to manually find and reinstall it rather than getting a normal in-place update. Also keep the old domain permanently redirecting to the new one once it changes: installs that haven't picked up the update yet still launch with the old domain baked into their manifest, and Play Store's default auto-update can take a few days to reach everyone.
+   **Name fields in the PWABuilder dialog:** PWABuilder seeds the app name from the manifest's `short_name` ("Expenses"), and nothing is remembered between packagings, so set **App name** to `Expense Tracker` by hand every time (the manifest's `name` is "Expense Tracker"; `short_name` stays short for the home-screen label of Chrome installs). Set **Launcher name** to whatever should appear under the icon.
+
    **Color fields in the PWABuilder dialog:** PWABuilder seeds them all from the manifest's single `theme_color` (`#07080b`), and the web manifest has no light/dark variants, so set them by hand. Android picks the variant from the phone's system light/dark setting, not the in-app theme. Values match `THEME_COLOR` in `src/lib/theme.ts`:
 
    | Field | Value |
@@ -66,9 +68,9 @@ If a release doesn't touch any of those, it's reasonable to stop after step 3 an
    | Theme dark color, Nav dark color, Nav divider dark color | `#07080b` |
 
 8. Download the package zip and extract the `.aab`.
-9. **Before uploading, verify the signing certificate matches what Play Console expects** — this caught a real mistake during the 1.2.0 release (the wrong keystore file was picked in PWABuilder's file dialog, silently, since the dialog only shows a filename). Extract the cert fingerprint locally with no password needed:
+9. **Before uploading, verify the signing certificate matches what Play Console expects** — this caught a real mistake during the 1.2.0 release (the wrong keystore file was picked in PWABuilder's file dialog, silently, since the dialog only shows a filename). Extract the cert fingerprint locally with no password needed (run `ls` in the extracted zip first and use the real `.apk` file name for `<package>`, since it varies with the app name; the `.aab` is a zip too and contains the same `META-INF/*.RSA`):
    ```bash
-   unzip -o Expenses.apk "META-INF/*.RSA" -d extracted
+   unzip -o <package>.apk "META-INF/*.RSA" -d extracted
    openssl pkcs7 -in extracted/META-INF/*.RSA -inform DER -print_certs | openssl x509 -noout -fingerprint -sha1
    ```
    Compare against Play Console's **Protected with Play → Play Store protection → Manage Play App signing → Upload key certificate** (the *upload* one, not the app signing one — see the glossary below; this is what Play Console actually checks against on upload, and is also the SHA1 shown in the "wrong key" error message if you've already tried uploading once). If they don't match, you grabbed the wrong keystore file — go back to step 7 and re-check which file you selected.
