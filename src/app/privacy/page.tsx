@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 const CONTACT_EMAIL = 'contact@maxtasy.me';
-const LAST_UPDATED = 'October 5, 2026';
+const LAST_UPDATED = 'October 4, 2026';
 
 const sectionClass = 'space-y-2';
 const headingClass = 'text-base font-semibold text-fg';
@@ -169,10 +169,18 @@ export default function PrivacyPage() {
           </section>
 
           <section className={sectionClass}>
-            <h2 className={headingClass}>Children&rsquo;s privacy</h2>
+            <h2 className={headingClass}>Children and teens</h2>
             <p className={bodyClass}>
-              The app is not directed at children, and we do not knowingly collect data from
-              children under 13.
+              The app is intended for people aged 13 and over, including teenagers. It is not
+              directed at children under 13, and we do not knowingly collect personal data from
+              children under 13. If you believe a child under 13 has given us personal data, email
+              us and we will delete it.
+            </p>
+            <p className={bodyClass}>
+              Depending on where you live, you may need a parent&rsquo;s or guardian&rsquo;s
+              permission to create an account, since the minimum age for this differs between
+              countries. Teens can delete their account and data at any time, the same way as
+              everyone else (see above).
             </p>
           </section>
 
