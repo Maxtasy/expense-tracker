@@ -13,7 +13,7 @@ Play Console additionally needs its own:
 
 ## Which track
 
-Releases up to `versionCode` 3 (1.3.0) went to the **Internal testing** track; from `versionCode` 4 (1.11.0) on, every release has gone to **Closed testing**, which is where releases go now. Google requires 12 testers active on Closed testing for 14 continuous days before Production can be enabled, so testers should stay opted in and keep the app installed. Play Console's Production track is still inactive. Keep releasing to Closed testing until there's a deliberate decision to promote to Production (a bigger, separate step — don't do it as a side effect of a routine release).
+Releases up to `versionCode` 3 (1.3.0) went to the **Internal testing** track; from `versionCode` 4 (1.11.0) on, every release has gone to **Closed testing**, which is where releases go now. Google requires 12 testers active on Closed testing for 14 continuous days before Production can be enabled, so testers should stay opted in and keep the app installed. 12 testers were collected on 2026-10-03 and Play Console showed day 1 of 14 on 2026-10-04, so the 14 continuous days should complete around 2026-10-17 (confirm the exact date in Play Console's Production access page before relying on it). Play Console's Production track is still inactive. Keep releasing to Closed testing until there's a deliberate decision to promote to Production (a bigger, separate step — don't do it as a side effect of a routine release).
 
 ## Do you even need to repackage for Android?
 
