@@ -17,9 +17,13 @@ export function guestDaysLeft(createdAt: Date): number {
   return Math.max(1, Math.ceil((createdAt.getTime() + GUEST_TTL_MS - Date.now()) / (24 * 60 * 60 * 1000)));
 }
 
-// Opportunistic housekeeping, run whenever a new guest is created (same approach as the
-// auth_attempts cleanup in rate-limit.ts -- no cron needed). The dashboard layout also deletes an
+// Purges guests past their deadline. Runs whenever a new guest is created, and daily from the
+// Vercel cron in vercel.json (/api/cron/purge-guests). The dashboard layout also deletes an
 // expired guest the moment they next open the app, so nobody can keep using one past its deadline.
-export async function deleteExpiredGuests() {
-  await db.delete(users).where(and(eq(users.isGuest, true), lt(users.createdAt, new Date(Date.now() - GUEST_TTL_MS))));
+export async function deleteExpiredGuests(): Promise<number> {
+  const deleted = await db
+    .delete(users)
+    .where(and(eq(users.isGuest, true), lt(users.createdAt, new Date(Date.now() - GUEST_TTL_MS))))
+    .returning({ id: users.id });
+  return deleted.length;
 }
