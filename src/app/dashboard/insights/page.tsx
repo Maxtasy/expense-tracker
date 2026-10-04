@@ -12,6 +12,7 @@ import { InsightsMonthPager } from "./month-pager";
 import { YearPager } from "./year-pager";
 import { CategoryPieChart } from "./category-pie-chart";
 import { CategoryBarList } from "./category-bar-list";
+import { PeriodTotals } from "./period-totals";
 
 type SearchParams = { mode?: string; month?: string; type?: string };
 
@@ -22,7 +23,7 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
 
   const params = await searchParams;
   const mode = params.mode === "year" ? "year" : "month";
-  const type = params.type === "income" ? "income" : "expense";
+  const type = params.type === "income" ? "income" : params.type === "all" ? "all" : "expense";
   const current = parseMonth(params.month);
   const { from, to } = mode === "year" ? yearRange(current.year) : monthRange(current);
 
@@ -71,8 +72,9 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
     });
   }
 
-  const slices = toSlices(type);
-  const title = type === "income" ? t("incomeByCategory") : t("expensesByCategory");
+  const expenseSlices = toSlices("expense");
+  const incomeSlices = toSlices("income");
+  const sum = (slices: { value: number }[]) => slices.reduce((total, slice) => total + slice.value, 0);
 
   return (
     <div>
@@ -84,8 +86,28 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
         <YearPager current={current} type={type} />
       )}
 
-      <CategoryBarList title={title} data={slices} currency={currency} />
-      <CategoryPieChart title={title} data={slices} currency={currency} />
+      {type === "all" ? (
+        <>
+          <PeriodTotals income={sum(incomeSlices)} expenses={sum(expenseSlices)} currency={currency} />
+          <CategoryBarList title={t("expensesByCategory")} data={expenseSlices} currency={currency} />
+          <CategoryBarList title={t("incomeByCategory")} data={incomeSlices} currency={currency} />
+          <CategoryPieChart title={t("expensesByCategory")} data={expenseSlices} currency={currency} />
+          <CategoryPieChart title={t("incomeByCategory")} data={incomeSlices} currency={currency} />
+        </>
+      ) : (
+        <>
+          <CategoryBarList
+            title={type === "income" ? t("incomeByCategory") : t("expensesByCategory")}
+            data={type === "income" ? incomeSlices : expenseSlices}
+            currency={currency}
+          />
+          <CategoryPieChart
+            title={type === "income" ? t("incomeByCategory") : t("expensesByCategory")}
+            data={type === "income" ? incomeSlices : expenseSlices}
+            currency={currency}
+          />
+        </>
+      )}
     </div>
   );
 }

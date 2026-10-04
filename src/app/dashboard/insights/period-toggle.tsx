@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-export async function PeriodToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" }) {
+export async function PeriodToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" | "all" }) {
   const t = await getTranslations("insights");
   const tabs: { key: "month" | "year"; label: string }[] = [
     { key: "month", label: t("month") },
