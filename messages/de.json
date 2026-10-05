@@ -12,7 +12,9 @@
     "cancel": "Abbrechen",
     "close": "Schließen",
     "add": "Hinzufügen",
-    "adding": "Wird hinzugefügt..."
+    "adding": "Wird hinzugefügt...",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen"
   },
   "auth": {
     "login": {
@@ -194,7 +196,8 @@
     "invalidCategory": "Ungültige Kategorie",
     "startDateRequired": "Startdatum ist erforderlich",
     "endDateAfterStart": "Das Enddatum muss am oder nach dem Startdatum liegen",
-    "invalidCategoryType": "Ungültiger Kategorietyp"
+    "invalidCategoryType": "Ungültiger Kategorietyp",
+    "pickDate": "Datum auswählen"
   },
   "entities": {
     "categoryNotFound": "Kategorie nicht gefunden",
@@ -366,7 +369,8 @@
       "success": "Passwort geändert.",
       "currentPasswordIncorrect": "Aktuelles Passwort ist falsch",
       "passwordTooShort": "Das neue Passwort muss mindestens 8 Zeichen lang sein",
-      "passwordsDoNotMatch": "Die neuen Passwörter stimmen nicht überein"
+      "passwordsDoNotMatch": "Die neuen Passwörter stimmen nicht überein",
+      "tooManyAttempts": "Zu viele Versuche. Bitte warte einige Minuten und versuche es erneut."
     },
     "export": "Export",
     "importMoneyManagerLabel": "Aus Money Manager importieren",
@@ -412,7 +416,8 @@
       "globalCategoryNotFoundDuringImport": "Globale Kategorie \"{name}\" ({type}) nicht gefunden",
       "unknownCategoryIdDuringImport": "Unbekannte category_id \"{id}\"",
       "unknownRecurringIdDuringImport": "Unbekannte recurring_transaction_id \"{id}\"",
-      "importFailed": "Import fehlgeschlagen"
+      "importFailed": "Import fehlgeschlagen",
+      "fileTooLarge": "{label} ist zu groß (max. {maxMb} MB)"
     },
     "moneyManager": {
       "backToSettings": "Einstellungen",
@@ -448,7 +453,8 @@
       "doneCategoriesCreated": "{count, plural, one {# neue Kategorie erstellt} other {# neue Kategorien erstellt}}",
       "doneDuplicatesSkipped": "{count, plural, one {# Duplikat übersprungen (bereits in deinen Daten)} other {# Duplikate übersprungen (bereits in deinen Daten)}}",
       "goToDashboard": "Zum Dashboard",
-      "importAnother": "Weitere Datei importieren"
+      "importAnother": "Weitere Datei importieren",
+      "fileTooLarge": "Die Datei ist zu groß (max. {maxMb} MB)"
     },
     "upgradeGuest": {
       "label": "Konto erstellen",

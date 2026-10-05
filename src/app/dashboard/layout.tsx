@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Tags, Repeat, PieChart, Settings } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -10,7 +11,11 @@ import { getVerificationStatus, isVerificationGracePeriodExpired, needsVerificat
 import { guestDaysLeft, isGuestExpired } from "@/lib/guest";
 import { Logo } from "@/components/logo";
 import { hasCompletedOnboarding } from "@/lib/preferences-server";
+import { TIMEZONE_COOKIE } from "@/lib/timezone";
 import { OnboardingTour } from "./onboarding-tour";
+import { TimezoneSync } from "./timezone-sync";
+import { DateFormatProvider } from "./date-format-context";
+import { getUserDateFormat } from "@/lib/preferences-server";
 import { VerifyEmailBanner } from "./verify-email-banner";
 import { GuestBanner } from "./guest-banner";
 
@@ -41,8 +46,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   const onboarded = await hasCompletedOnboarding(session.user.id);
+  const dateFormat = await getUserDateFormat(session.user.id);
+  const tzCookie = (await cookies()).get(TIMEZONE_COOKIE)?.value;
 
   return (
+    <DateFormatProvider dateFormat={dateFormat}>
     <div className="flex min-h-dvh flex-col">
       <header className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
         <Link href="/dashboard" className="flex items-center gap-2 text-sm font-semibold">
@@ -85,7 +93,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {isUnverified && verification.email && <VerifyEmailBanner email={verification.email} />}
         {children}
       </main>
+      <TimezoneSync current={tzCookie} />
       {!onboarded && <OnboardingTour autoOpen />}
     </div>
+    </DateFormatProvider>
   );
 }

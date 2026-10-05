@@ -6,7 +6,9 @@ import { createTransaction } from "./actions";
 import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
+import { useLocalToday } from "@/lib/use-local-today";
 import { Spinner } from "@/components/spinner";
+import { DateInput } from "@/components/date-input";
 
 type Category = { id: string; name: string; type: "expense" | "income" };
 type TxType = "expense" | "income";
@@ -27,6 +29,7 @@ export function AddTransactionForm({
 }) {
   const t = useTranslations("dashboard.form");
   const tCommon = useTranslations("common");
+  const today = useLocalToday();
   const formRef = useRef<HTMLFormElement>(null);
   const [type, setType] = useState<TxType>("expense");
   const [error, setError] = useState<string | undefined>();
@@ -50,7 +53,11 @@ export function AddTransactionForm({
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="space-y-2">
+    <form ref={formRef} onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-2">
       <div className="grid grid-cols-2 gap-2">
         <label
           className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${typeChipClass("expense", type === "expense")}`}
@@ -77,7 +84,7 @@ export function AddTransactionForm({
         </select>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <input name="date" type="date" required aria-label={t("dateLabel")} defaultValue={new Date().toISOString().slice(0, 10)} className={inputClass} />
+        <DateInput name="date" required ariaLabel={t("dateLabel")} defaultValue={today} className={inputClass} />
         <input name="description" type="text" autoComplete="off" placeholder={t("descriptionPlaceholder")} className={inputClass} />
       </div>
       <button

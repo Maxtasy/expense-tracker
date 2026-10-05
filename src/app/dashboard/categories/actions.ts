@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { and, eq, ilike, isNull, or } from "drizzle-orm";
+import { and, eq, isNull, or, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
@@ -44,14 +44,19 @@ export async function createCategory(_prevState: CategoryState, formData: FormDa
   const [existing] = await db
     .select({ id: categories.id })
     .from(categories)
-    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), ilike(categories.name, name)))
+    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), sql`lower(${categories.name}) = lower(${name})`))
     .limit(1);
 
   if (existing) {
     return { error: tEntities("categoryExists") };
   }
 
-  await db.insert(categories).values({ name, type, userId });
+  try {
+    await db.insert(categories).values({ name, type, userId });
+  } catch {
+    // lost a race with a concurrent create of the same name (categories_user_name_unique)
+    return { error: tEntities("categoryExists") };
+  }
 
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard");
@@ -87,18 +92,23 @@ export async function updateCategory(_prevState: CategoryState, formData: FormDa
   const [existing] = await db
     .select({ id: categories.id })
     .from(categories)
-    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), ilike(categories.name, name)))
+    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), sql`lower(${categories.name}) = lower(${name})`))
     .limit(1);
 
   if (existing && existing.id !== id) {
     return { error: tEntities("categoryExists") };
   }
 
-  const updated = await db
-    .update(categories)
-    .set({ name, color })
-    .where(and(eq(categories.id, id), eq(categories.userId, userId)))
-    .returning({ id: categories.id });
+  let updated: { id: string }[];
+  try {
+    updated = await db
+      .update(categories)
+      .set({ name, color })
+      .where(and(eq(categories.id, id), eq(categories.userId, userId)))
+      .returning({ id: categories.id });
+  } catch {
+    return { error: tEntities("categoryExists") };
+  }
 
   if (updated.length === 0) {
     return { error: tEntities("categoryNotFound") };

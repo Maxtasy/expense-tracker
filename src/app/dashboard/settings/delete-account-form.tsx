@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { deleteAccount } from "./actions";
 import { Dialog } from "../dialog";
 import { Spinner } from "@/components/spinner";
+import { PasswordInput } from "@/components/password-input";
 
 export function DeleteAccountForm({ isGuest }: { isGuest: boolean }) {
   const t = useTranslations("settings.deleteAccount");
@@ -49,7 +50,11 @@ export function DeleteAccountForm({ isGuest }: { isGuest: boolean }) {
       </button>
 
       <Dialog dialogRef={dialogRef} title={t("modalTitle")}>
-        <form action={handleSubmit} className="space-y-3">
+        <form onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-3">
           <p className="text-sm text-fg-muted">{t("modalWarning")}</p>
           <label className="flex items-start gap-2 text-xs text-fg-muted">
             <input type="checkbox" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} className="mt-0.5" />
@@ -74,10 +79,9 @@ export function DeleteAccountForm({ isGuest }: { isGuest: boolean }) {
               <label htmlFor="deleteAccountPassword" className="block text-xs text-fg-muted">
                 {t("passwordLabel")}
               </label>
-              <input
+              <PasswordInput
                 id="deleteAccountPassword"
                 name="password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"

@@ -16,11 +16,16 @@ import { THEMES } from "@/lib/theme";
 import { getClientIp } from "@/lib/client-ip";
 import { isRateLimited, recordAttempt } from "@/lib/rate-limit";
 import { getUserLocale } from "@/lib/locale-server";
+import { emailField } from "@/lib/email-address";
+import { ImportError, MAX_IMPORT_FILE_BYTES, MAX_IMPORT_FILE_MB } from "@/lib/import-error";
+import { isValidDateString } from "@/lib/validation";
 import { issueAndSendVerificationEmail } from "@/lib/verification";
 
 const typeSchema = z.enum(["expense", "income"]);
 
-function buildCsvSchemas(amountMustBePositiveNumberMessage: string) {
+function buildCsvSchemas(amountMustBePositiveNumberMessage: string, invalidDateMessage: string) {
+  const dateSchema = z.string().refine(isValidDateString, invalidDateMessage);
+  const optionalDateSchema = z.string().refine((v) => v === "" || isValidDateString(v), invalidDateMessage);
   const amountSchema = z.string().refine((v) => v.trim() !== "" && Number.isFinite(Number(v)) && Number(v) > 0, {
     message: amountMustBePositiveNumberMessage,
   });
@@ -38,8 +43,8 @@ function buildCsvSchemas(amountMustBePositiveNumberMessage: string) {
     category_id: z.string(),
     amount: amountSchema,
     description: z.string(),
-    start_date: z.string().min(1),
-    end_date: z.string(),
+    start_date: dateSchema,
+    end_date: optionalDateSchema,
   });
 
   const transactionRowSchema = z.object({
@@ -49,7 +54,7 @@ function buildCsvSchemas(amountMustBePositiveNumberMessage: string) {
     recurring_transaction_id: z.string(),
     amount: amountSchema,
     description: z.string(),
-    date: z.string().min(1),
+    date: dateSchema,
   });
 
   return { categoryRowSchema, recurringRowSchema, transactionRowSchema };
@@ -61,14 +66,14 @@ function parseCsv(text: string, label: string, t: CsvImportTranslator): Record<s
   try {
     return parse(text, { columns: true, skip_empty_lines: true, trim: true }) as Record<string, string>[];
   } catch {
-    throw new Error(t("csvParseError", { label }));
+    throw new ImportError(t("csvParseError", { label }));
   }
 }
 
 function checkDuplicateIds(rows: { id: string }[], label: string, t: CsvImportTranslator) {
   const seen = new Set<string>();
   for (const row of rows) {
-    if (seen.has(row.id)) throw new Error(t("duplicateId", { label, id: row.id }));
+    if (seen.has(row.id)) throw new ImportError(t("duplicateId", { label, id: row.id }));
     seen.add(row.id);
   }
 }
@@ -85,6 +90,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
   const t = await getTranslations("settings.csvImport");
   const { categoryRowSchema, recurringRowSchema, transactionRowSchema } = buildCsvSchemas(
     tValidation("amountMustBePositiveNumber"),
+    tValidation("dateInvalid"),
   );
 
   const categoriesFile = formData.get("categoriesFile");
@@ -96,6 +102,13 @@ export async function importData(_prevState: ImportState, formData: FormData): P
   if (categoriesFile.size === 0 || recurringFile.size === 0 || transactionsFile.size === 0) {
     return { error: t("allFilesRequired") };
   }
+  for (const [file, label] of [
+    [categoriesFile, t("categoriesFileLabel")],
+    [recurringFile, t("recurringFileLabel")],
+    [transactionsFile, t("transactionsFileLabel")],
+  ] as const) {
+    if (file.size > MAX_IMPORT_FILE_BYTES) return { error: t("fileTooLarge", { label, maxMb: MAX_IMPORT_FILE_MB }) };
+  }
 
   let categoryRows: z.infer<typeof categoryRowSchema>[];
   let recurringRows: z.infer<typeof recurringRowSchema>[];
@@ -105,7 +118,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
     const rawCategories = parseCsv(await categoriesFile.text(), t("categoriesFileLabel"), t);
     categoryRows = rawCategories.map((row, i) => {
       const parsed = categoryRowSchema.safeParse(row);
-      if (!parsed.success) throw new Error(`${t("categoriesFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new ImportError(`${t("categoriesFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
       return parsed.data;
     });
     checkDuplicateIds(categoryRows, t("categoriesFileLabel"), t);
@@ -113,7 +126,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
     const rawRecurring = parseCsv(await recurringFile.text(), t("recurringFileLabel"), t);
     recurringRows = rawRecurring.map((row, i) => {
       const parsed = recurringRowSchema.safeParse(row);
-      if (!parsed.success) throw new Error(`${t("recurringFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new ImportError(`${t("recurringFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
       return parsed.data;
     });
     checkDuplicateIds(recurringRows, t("recurringFileLabel"), t);
@@ -121,12 +134,14 @@ export async function importData(_prevState: ImportState, formData: FormData): P
     const rawTransactions = parseCsv(await transactionsFile.text(), t("transactionsFileLabel"), t);
     transactionRows = rawTransactions.map((row, i) => {
       const parsed = transactionRowSchema.safeParse(row);
-      if (!parsed.success) throw new Error(`${t("transactionsFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new ImportError(`${t("transactionsFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
       return parsed.data;
     });
     checkDuplicateIds(transactionRows, t("transactionsFileLabel"), t);
   } catch (err) {
-    return { error: err instanceof Error ? err.message : t("importFailed") };
+    if (err instanceof ImportError) return { error: err.message };
+    console.error("CSV import failed:", err);
+    return { error: t("importFailed") };
   }
 
   const categoryIds = new Set(categoryRows.map((r) => r.id));
@@ -173,7 +188,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
           const match = existingGlobalCategories.find(
             (c) => c.type === row.type && c.name.toLowerCase() === row.name.toLowerCase(),
           );
-          if (!match) throw new Error(t("globalCategoryNotFoundDuringImport", { name: row.name, type: row.type }));
+          if (!match) throw new ImportError(t("globalCategoryNotFoundDuringImport", { name: row.name, type: row.type }));
           categoryIdMap.set(row.id, match.id);
         } else {
           const [inserted] = await tx
@@ -187,7 +202,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
       const recurringIdMap = new Map<string, string>();
       for (const row of recurringRows) {
         const categoryId = row.category_id ? categoryIdMap.get(row.category_id) : undefined;
-        if (row.category_id && !categoryId) throw new Error(t("unknownCategoryIdDuringImport", { id: row.category_id }));
+        if (row.category_id && !categoryId) throw new ImportError(t("unknownCategoryIdDuringImport", { id: row.category_id }));
         const [inserted] = await tx
           .insert(recurringTransactions)
           .values({
@@ -205,12 +220,12 @@ export async function importData(_prevState: ImportState, formData: FormData): P
 
       for (const row of transactionRows) {
         const categoryId = row.category_id ? categoryIdMap.get(row.category_id) : undefined;
-        if (row.category_id && !categoryId) throw new Error(t("unknownCategoryIdDuringImport", { id: row.category_id }));
+        if (row.category_id && !categoryId) throw new ImportError(t("unknownCategoryIdDuringImport", { id: row.category_id }));
         const recurringTransactionId = row.recurring_transaction_id
           ? recurringIdMap.get(row.recurring_transaction_id)
           : undefined;
         if (row.recurring_transaction_id && !recurringTransactionId) {
-          throw new Error(t("unknownRecurringIdDuringImport", { id: row.recurring_transaction_id }));
+          throw new ImportError(t("unknownRecurringIdDuringImport", { id: row.recurring_transaction_id }));
         }
         await tx.insert(transactions).values({
           userId,
@@ -224,7 +239,9 @@ export async function importData(_prevState: ImportState, formData: FormData): P
       }
     });
   } catch (err) {
-    return { error: err instanceof Error ? err.message : t("importFailed") };
+    if (err instanceof ImportError) return { error: err.message };
+    console.error("CSV import failed:", err);
+    return { error: t("importFailed") };
   }
 
   revalidatePath("/dashboard");
@@ -351,11 +368,22 @@ export async function changePassword(formData: FormData) {
     return { error: parsed.error.issues[0].message };
   }
 
-  const [user] = await db.select({ passwordHash: users.passwordHash }).from(users).where(eq(users.id, userId)).limit(1);
+  const [user] = await db
+    .select({ email: users.email, passwordHash: users.passwordHash })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
   if (!user?.passwordHash) return { error: tSettings("notSignedIn") };
+
+  // same budget as logging in -- this is also a place to guess the password
+  const ip = await getClientIp();
+  if (await isRateLimited("login", { email: user.email ?? undefined, ip })) {
+    return { error: t("tooManyAttempts") };
+  }
 
   const currentPasswordMatches = await compare(parsed.data.currentPassword, user.passwordHash);
   if (!currentPasswordMatches) {
+    await recordAttempt("login", { email: user.email ?? undefined, ip });
     return { error: t("currentPasswordIncorrect") };
   }
 
@@ -393,7 +421,7 @@ export async function upgradeGuestAccount(formData: FormData) {
   const t = await getTranslations("auth.signup");
 
   const schema = z.object({
-    email: z.string().trim().email(t("invalidEmail")),
+    email: emailField(t("invalidEmail")),
     password: z.string().min(8, t("passwordTooShort")),
   });
   const parsed = schema.safeParse({ email: formData.get("email"), password: formData.get("password") });

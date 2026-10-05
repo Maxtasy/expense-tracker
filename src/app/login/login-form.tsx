@@ -9,6 +9,7 @@ import { login } from "./actions";
 import { resendVerificationEmail } from "@/app/verify-email/actions";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Spinner } from "@/components/spinner";
+import { PasswordInput } from "@/components/password-input";
 
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
@@ -25,6 +26,9 @@ export function LoginForm({
   const t = useTranslations("auth.login");
   const tGuest = useTranslations("auth.guest");
   const [state, formAction, pending] = useActionState(login, undefined);
+  // controlled so a failed attempt doesn't wipe the fields (React resets uncontrolled forms after an action)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [resendSent, setResendSent] = useState(false);
   const [isResending, startResend] = useTransition();
 
@@ -42,7 +46,7 @@ export function LoginForm({
             <label htmlFor="email" className="block text-xs text-fg-muted">
               {t("emailLabel")}
             </label>
-            <input id="email" name="email" type="email" required autoComplete="email" className={inputClass} />
+            <input id="email" name="email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
           </div>
           <div className="space-y-1">
             <div className="flex items-center justify-between">
@@ -53,7 +57,7 @@ export function LoginForm({
                 {t("forgotPasswordLink")}
               </Link>
             </div>
-            <input id="password" name="password" type="password" required autoComplete="current-password" className={inputClass} />
+            <PasswordInput id="password" name="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className={inputClass} />
           </div>
           {state?.error && <p className="text-sm text-danger">{state.error}</p>}
           <button

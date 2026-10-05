@@ -7,6 +7,7 @@ import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 import { Spinner } from "@/components/spinner";
+import { DateInput } from "@/components/date-input";
 
 type TxType = "expense" | "income";
 type Category = { id: string; name: string; type: TxType };
@@ -53,7 +54,11 @@ export function EditTransactionForm({
   }
 
   return (
-    <form action={handleSubmit} className="space-y-2">
+    <form onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-2">
       <input type="hidden" name="id" value={transaction.id} />
       <div className="grid grid-cols-2 gap-2">
         <label
@@ -87,7 +92,7 @@ export function EditTransactionForm({
         </select>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <input name="date" type="date" required aria-label={t("dateLabel")} defaultValue={transaction.date} className={inputClass} />
+        <DateInput name="date" required ariaLabel={t("dateLabel")} defaultValue={transaction.date} className={inputClass} />
         <input name="description" type="text" autoComplete="off" aria-label={t("descriptionLabel")} defaultValue={transaction.description ?? ""} className={inputClass} />
       </div>
       <button

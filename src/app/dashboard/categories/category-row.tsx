@@ -91,7 +91,11 @@ export function CategoryRow({ category }: { category: Category }) {
 
   return (
     <div className="border-b border-border/60 py-2.5 last:border-b-0">
-      <form action={handleSubmit} className="space-y-2">
+      <form onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-2">
         <input type="hidden" name="id" value={category.id} />
         <input type="hidden" name="color" value={color ?? ""} />
         <div className="flex items-center gap-2">

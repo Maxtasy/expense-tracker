@@ -12,7 +12,9 @@
     "cancel": "Cancel",
     "close": "Close",
     "add": "Add",
-    "adding": "Adding..."
+    "adding": "Adding...",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "auth": {
     "login": {
@@ -194,7 +196,8 @@
     "invalidCategory": "Invalid category",
     "startDateRequired": "Start date is required",
     "endDateAfterStart": "End date must be on or after the start date",
-    "invalidCategoryType": "Invalid category type"
+    "invalidCategoryType": "Invalid category type",
+    "pickDate": "Pick a date"
   },
   "entities": {
     "categoryNotFound": "Category not found",
@@ -366,7 +369,8 @@
       "success": "Password changed.",
       "currentPasswordIncorrect": "Current password is incorrect",
       "passwordTooShort": "New password must be at least 8 characters",
-      "passwordsDoNotMatch": "New passwords do not match"
+      "passwordsDoNotMatch": "New passwords do not match",
+      "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again."
     },
     "export": "Export",
     "importMoneyManagerLabel": "Import from Money Manager",
@@ -412,7 +416,8 @@
       "globalCategoryNotFoundDuringImport": "Global category \"{name}\" ({type}) not found",
       "unknownCategoryIdDuringImport": "Unknown category_id \"{id}\"",
       "unknownRecurringIdDuringImport": "Unknown recurring_transaction_id \"{id}\"",
-      "importFailed": "Import failed"
+      "importFailed": "Import failed",
+      "fileTooLarge": "{label} is too large (max {maxMb} MB)"
     },
     "moneyManager": {
       "backToSettings": "Settings",
@@ -448,7 +453,8 @@
       "doneCategoriesCreated": "{count, plural, one {# new category created} other {# new categories created}}",
       "doneDuplicatesSkipped": "{count, plural, one {# duplicate skipped (already in your data)} other {# duplicates skipped (already in your data)}}",
       "goToDashboard": "Go to dashboard",
-      "importAnother": "Import another file"
+      "importAnother": "Import another file",
+      "fileTooLarge": "The file is too large (max {maxMb} MB)"
     },
     "upgradeGuest": {
       "label": "Create your account",

@@ -10,6 +10,7 @@ import { signIn } from "@/auth";
 import { getClientIp } from "@/lib/client-ip";
 import { isRateLimited, recordAttempt } from "@/lib/rate-limit";
 import { issueAndSendVerificationEmail } from "@/lib/verification";
+import { emailField } from "@/lib/email-address";
 import { getPreAuthLocale } from "@/lib/locale-server";
 
 export type SignupState = { error: string } | undefined;
@@ -18,7 +19,7 @@ export async function signup(_prevState: SignupState, formData: FormData): Promi
   const t = await getTranslations("auth.signup");
 
   const signupSchema = z.object({
-    email: z.string().trim().email(t("invalidEmail")),
+    email: emailField(t("invalidEmail")),
     password: z.string().min(8, t("passwordTooShort")),
   });
 
