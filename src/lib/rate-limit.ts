@@ -2,13 +2,14 @@ import { and, eq, gt, lt, or } from "drizzle-orm";
 import { db } from "@/db";
 import { authAttempts } from "@/db/schema";
 
-type AttemptKind = "login" | "signup" | "resend_verification" | "guest";
+type AttemptKind = "login" | "signup" | "resend_verification" | "guest" | "forgot_password";
 
 const WINDOW_MS: Record<AttemptKind, number> = {
   login: 15 * 60 * 1000,
   signup: 60 * 60 * 1000,
   resend_verification: 60 * 60 * 1000,
   guest: 60 * 60 * 1000,
+  forgot_password: 60 * 60 * 1000,
 };
 
 const MAX_ATTEMPTS: Record<AttemptKind, number> = {
@@ -16,6 +17,7 @@ const MAX_ATTEMPTS: Record<AttemptKind, number> = {
   signup: 5,
   resend_verification: 3,
   guest: 10,
+  forgot_password: 5,
 };
 
 // login is limited by email OR ip (either maxing out blocks it); signup/resend are ip-only,
