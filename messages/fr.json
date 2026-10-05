@@ -189,6 +189,9 @@
     "nameTooLong": "Le nom est trop long",
     "invalidColor": "Couleur invalide",
     "dateRequired": "La date est requise",
+    "dateInvalid": "Saisissez une date valide",
+    "amountTooLarge": "Le montant est trop élevé",
+    "invalidCategory": "Catégorie invalide",
     "startDateRequired": "La date de début est requise",
     "endDateAfterStart": "La date de fin doit être égale ou postérieure à la date de début",
     "invalidCategoryType": "Type de catégorie invalide"
