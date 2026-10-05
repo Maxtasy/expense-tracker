@@ -62,6 +62,6 @@ export async function ensureRecurringGenerated(userId: string, current: YearMont
   }
 
   if (toInsert.length > 0) {
-    await db.insert(transactions).values(toInsert);
+    await db.insert(transactions).values(toInsert).onConflictDoNothing();
   }
 }

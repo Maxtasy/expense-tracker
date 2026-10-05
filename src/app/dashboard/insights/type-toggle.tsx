@@ -1,3 +1,4 @@
+import { InsightsLink } from "./insights-nav";
 import { getTranslations } from "next-intl/server";
 import { typeButtonClass } from "@/lib/type-theme";
 
@@ -12,7 +13,7 @@ export async function TypeToggle({ mode, month, type }: { mode: "month" | "year"
   return (
     <div className="mb-3 grid grid-cols-3 gap-1 rounded-xl border border-border bg-surface/30 p-1">
       {tabs.map((tab) => (
-        <a
+        <InsightsLink
           key={tab.key}
           href={`/dashboard/insights?mode=${mode}&month=${month}&type=${tab.key}`}
           className={`rounded-lg py-1.5 text-center text-sm font-medium transition ${
@@ -24,7 +25,7 @@ export async function TypeToggle({ mode, month, type }: { mode: "month" | "year"
           }`}
         >
           {tab.label}
-        </a>
+        </InsightsLink>
       ))}
     </div>
   );
