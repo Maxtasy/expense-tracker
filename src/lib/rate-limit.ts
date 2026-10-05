@@ -1,4 +1,4 @@
-import { and, eq, gt, lt, or } from "drizzle-orm";
+import { and, eq, gt, lt, type SQL } from "drizzle-orm";
 import { db } from "@/db";
 import { authAttempts } from "@/db/schema";
 
@@ -20,19 +20,33 @@ const MAX_ATTEMPTS: Record<AttemptKind, number> = {
   forgot_password: 5,
 };
 
-// login is limited by email OR ip (either maxing out blocks it); signup/resend are ip-only,
-// since the email side of those doesn't identify an existing account the same way login's does.
-export async function isRateLimited(kind: AttemptKind, params: { email?: string; ip: string }) {
-  const windowStart = new Date(Date.now() - WINDOW_MS[kind]);
-  const scope = params.email ? or(eq(authAttempts.email, params.email), eq(authAttempts.ip, params.ip)) : eq(authAttempts.ip, params.ip);
+// Everything is limited per IP. Keying the main budget on the submitted email would let anyone lock
+// a victim out by guessing wrong against their address, so email only gets a much higher ceiling
+// (EMAIL_MAX_ATTEMPTS) that still stops a brute force spread across many IPs but can't be tripped
+// with a handful of requests.
+const EMAIL_MAX_ATTEMPTS: Partial<Record<AttemptKind, number>> = {
+  login: 30,
+};
 
+async function countAttempts(kind: AttemptKind, scope: SQL | undefined, limit: number) {
+  const windowStart = new Date(Date.now() - WINDOW_MS[kind]);
   const rows = await db
     .select({ id: authAttempts.id })
     .from(authAttempts)
     .where(and(eq(authAttempts.kind, kind), gt(authAttempts.createdAt, windowStart), scope))
-    .limit(MAX_ATTEMPTS[kind]);
+    .limit(limit);
+  return rows.length;
+}
 
-  return rows.length >= MAX_ATTEMPTS[kind];
+export async function isRateLimited(kind: AttemptKind, params: { email?: string; ip: string }) {
+  if ((await countAttempts(kind, eq(authAttempts.ip, params.ip), MAX_ATTEMPTS[kind])) >= MAX_ATTEMPTS[kind]) {
+    return true;
+  }
+  const emailMax = EMAIL_MAX_ATTEMPTS[kind];
+  if (params.email && emailMax) {
+    return (await countAttempts(kind, eq(authAttempts.email, params.email), emailMax)) >= emailMax;
+  }
+  return false;
 }
 
 export async function recordAttempt(kind: AttemptKind, params: { email?: string; ip: string }) {

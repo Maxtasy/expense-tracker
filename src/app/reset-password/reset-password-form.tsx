@@ -2,12 +2,13 @@
 
 import { AuthBrand } from "@/components/auth-brand";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { resetPassword } from "./actions";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Spinner } from "@/components/spinner";
+import { PasswordInput } from "@/components/password-input";
 
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
@@ -15,6 +16,9 @@ const inputClass =
 export function ResetPasswordForm({ token }: { token?: string }) {
   const t = useTranslations("auth.resetPassword");
   const [state, formAction, pending] = useActionState(resetPassword, undefined);
+  // controlled so a failed attempt doesn't wipe the fields (React resets uncontrolled forms after an action)
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   if (!token) {
     return (
@@ -44,10 +48,11 @@ export function ResetPasswordForm({ token }: { token?: string }) {
             <label htmlFor="newPassword" className="block text-xs text-fg-muted">
               {t("newPasswordLabel")}
             </label>
-            <input
+            <PasswordInput
               id="newPassword"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
               name="newPassword"
-              type="password"
               required
               minLength={8}
               autoComplete="new-password"
@@ -58,10 +63,11 @@ export function ResetPasswordForm({ token }: { token?: string }) {
             <label htmlFor="confirmPassword" className="block text-xs text-fg-muted">
               {t("confirmPasswordLabel")}
             </label>
-            <input
+            <PasswordInput
               id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               name="confirmPassword"
-              type="password"
               required
               minLength={8}
               autoComplete="new-password"

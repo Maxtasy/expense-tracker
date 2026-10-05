@@ -7,7 +7,7 @@ import { categories, recurringTransactions, transactions, users } from "./schema
 // browser-testing and screenshots don't require creating and deleting a throwaway account each
 // time. Safe to re-run: wipes and rebuilds only this one account's data.
 
-const email = process.env.DEMO_ACCOUNT_EMAIL;
+const email = process.env.DEMO_ACCOUNT_EMAIL?.trim().toLowerCase();
 const password = process.env.DEMO_ACCOUNT_PASSWORD;
 
 function isoDate(year: number, month: number, day: number): string {

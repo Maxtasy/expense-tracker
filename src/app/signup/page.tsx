@@ -2,12 +2,13 @@
 
 import { AuthBrand } from "@/components/auth-brand";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { signup } from "./actions";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Spinner } from "@/components/spinner";
+import { PasswordInput } from "@/components/password-input";
 
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:border-accent focus:outline-none";
@@ -16,6 +17,9 @@ export default function SignupPage() {
   const t = useTranslations("auth.signup");
   const tGuest = useTranslations("auth.guest");
   const [state, formAction, pending] = useActionState(signup, undefined);
+  // controlled so a failed attempt doesn't wipe the fields (React resets uncontrolled forms after an action)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <main className="relative flex min-h-dvh flex-col items-center justify-center px-4">
@@ -28,19 +32,20 @@ export default function SignupPage() {
             <label htmlFor="email" className="block text-xs text-fg-muted">
               {t("emailLabel")}
             </label>
-            <input id="email" name="email" type="email" required autoComplete="email" className={inputClass} />
+            <input id="email" name="email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
           </div>
           <div className="space-y-1">
             <label htmlFor="password" className="block text-xs text-fg-muted">
               {t("passwordLabel")}
             </label>
-            <input
+            <PasswordInput
               id="password"
               name="password"
-              type="password"
               required
               minLength={8}
               autoComplete="new-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className={inputClass}
             />
           </div>

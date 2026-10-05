@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
+import { ImportError, MAX_IMPORT_FILE_BYTES, MAX_IMPORT_FILE_MB } from "@/lib/import-error";
 import { parseMoneyManagerFile, type CategorySummaryEntry } from "@/lib/importers/money-manager";
 
 export type CategorySuggestion = CategorySummaryEntry & {
@@ -24,10 +25,13 @@ export type PreviewState = {
   };
 } | null;
 
-async function readFile(formData: FormData, chooseFileMessage: string): Promise<ArrayBuffer> {
+async function readFile(formData: FormData, chooseFileMessage: string, tooLargeMessage: string): Promise<ArrayBuffer> {
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
     throw new Error(chooseFileMessage);
+  }
+  if (file.size > MAX_IMPORT_FILE_BYTES) {
+    throw new Error(tooLargeMessage);
   }
   return file.arrayBuffer();
 }
@@ -41,7 +45,7 @@ export async function previewMoneyManagerImport(_prevState: PreviewState, formDa
 
   let buffer: ArrayBuffer;
   try {
-    buffer = await readFile(formData, t("chooseFile"));
+    buffer = await readFile(formData, t("chooseFile"), t("fileTooLarge", { maxMb: MAX_IMPORT_FILE_MB }));
   } catch (err) {
     return { error: err instanceof Error ? err.message : t("couldNotReadFile") };
   }
@@ -104,7 +108,7 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
 
   let buffer: ArrayBuffer;
   try {
-    buffer = await readFile(formData, t("chooseFile"));
+    buffer = await readFile(formData, t("chooseFile"), t("fileTooLarge", { maxMb: MAX_IMPORT_FILE_MB }));
   } catch (err) {
     return { error: err instanceof Error ? err.message : t("couldNotReadFile") };
   }
@@ -169,7 +173,7 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
         }
         if (entry.action === "map") {
           const target = existingCategories.find((c) => c.id === entry.targetCategoryId && c.type === entry.type);
-          if (!target) throw new Error(t("categoryMapTargetNotFound", { name: entry.name }));
+          if (!target) throw new ImportError(t("categoryMapTargetNotFound", { name: entry.name }));
           categoryIdByKey.set(key, target.id);
           continue;
         }
@@ -225,6 +229,8 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
     revalidatePath("/dashboard/insights");
     return { success: true, imported, skippedDuplicates, categoriesCreated };
   } catch (err) {
-    return { error: err instanceof Error ? err.message : t("importFailed") };
+    if (err instanceof ImportError) return { error: err.message };
+    console.error("Money Manager import failed:", err);
+    return { error: t("importFailed") };
   }
 }

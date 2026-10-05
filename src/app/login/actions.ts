@@ -19,7 +19,7 @@ export async function login(_prevState: LoginState, formData: FormData): Promise
     // Blocked-for-verification is a distinct case from a bad password guess -- don't count it
     // against the rate limit, and show a message with a resend affordance instead.
     if (error instanceof CredentialsSignin && error.code === "email_not_verified") {
-      return { error: t("emailNotVerified"), needsVerification: true, email: typeof email === "string" ? email : undefined };
+      return { error: t("emailNotVerified"), needsVerification: true, email: typeof email === "string" ? email.trim().toLowerCase() : undefined };
     }
     if (error instanceof CredentialsSignin && error.code === "too_many_attempts") {
       return { error: t("tooManyAttempts") };

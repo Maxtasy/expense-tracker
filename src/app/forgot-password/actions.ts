@@ -10,6 +10,7 @@ import { generateToken, hashToken, PASSWORD_RESET_TOKEN_TTL_MS } from "@/lib/tok
 import { getBaseUrl } from "@/lib/base-url";
 import { getClientIp } from "@/lib/client-ip";
 import { isRateLimited, recordAttempt } from "@/lib/rate-limit";
+import { emailField } from "@/lib/email-address";
 import { sendPasswordResetEmail } from "@/lib/email";
 
 export type ForgotPasswordState = { error?: string; success?: boolean } | undefined;
@@ -20,7 +21,7 @@ export async function requestPasswordReset(
 ): Promise<ForgotPasswordState> {
   const t = await getTranslations("auth.signup");
 
-  const schema = z.object({ email: z.string().trim().email(t("invalidEmail")) });
+  const schema = z.object({ email: emailField(t("invalidEmail")) });
   const parsed = schema.safeParse({ email: formData.get("email") });
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message };

@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
 import { categoryColor, PALETTE } from "@/lib/category-color";
 import { monthKey, monthRange, parseMonth, yearRange } from "@/lib/month";
+import { getUserToday } from "@/lib/timezone-server";
 import { getUserCurrency } from "@/lib/currency-server";
 import { InsightsNav } from "./insights-nav";
 import { PeriodToggle } from "./period-toggle";
@@ -25,7 +26,7 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
   const params = await searchParams;
   const mode = params.mode === "year" ? "year" : "month";
   const type = params.type === "income" ? "income" : params.type === "all" ? "all" : "expense";
-  const current = parseMonth(params.month);
+  const current = parseMonth(params.month, await getUserToday());
   const { from, to } = mode === "year" ? yearRange(current.year) : monthRange(current);
 
   const [breakdown, currency, t] = await Promise.all([

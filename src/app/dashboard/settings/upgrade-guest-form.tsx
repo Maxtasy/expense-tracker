@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { upgradeGuestAccount } from "./actions";
 import { Spinner } from "@/components/spinner";
+import { PasswordInput } from "@/components/password-input";
 
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg focus:border-accent focus:outline-none";
@@ -24,7 +25,11 @@ export function UpgradeGuestForm() {
   }
 
   return (
-    <form action={handleSubmit} className="space-y-2">
+    <form onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-2">
       <div className="space-y-1">
         <label htmlFor="guestEmail" className="block text-xs text-fg-muted">
           {t("emailLabel")}
@@ -35,10 +40,9 @@ export function UpgradeGuestForm() {
         <label htmlFor="guestPassword" className="block text-xs text-fg-muted">
           {t("passwordLabel")}
         </label>
-        <input
+        <PasswordInput
           id="guestPassword"
           name="password"
-          type="password"
           required
           minLength={8}
           autoComplete="new-password"

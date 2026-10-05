@@ -2,13 +2,14 @@ import { DEFAULT_DATE_FORMAT, formatWithPattern } from "@/lib/date-format";
 
 export type YearMonth ={ year: number; month: number };
 
-export function parseMonth(value: string | undefined): YearMonth {
+// `today` ("YYYY-MM-DD", the user's local date -- see getUserToday) supplies the default month.
+export function parseMonth(value: string | undefined, today: string): YearMonth {
   if (value && /^\d{4}-\d{2}$/.test(value)) {
     const [year, month] = value.split("-").map(Number);
     if (month >= 1 && month <= 12) return { year, month };
   }
-  const now = new Date();
-  return { year: now.getFullYear(), month: now.getMonth() + 1 };
+  const [year, month] = today.split("-").map(Number);
+  return { year, month };
 }
 
 export function monthKey({ year, month }: YearMonth): string {
