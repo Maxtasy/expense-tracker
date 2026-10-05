@@ -7,6 +7,7 @@ import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 import { Spinner } from "@/components/spinner";
+import { DateInput } from "@/components/date-input";
 
 type TxType = "expense" | "income";
 type Category = { id: string; name: string; type: TxType };
@@ -91,7 +92,7 @@ export function EditTransactionForm({
         </select>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <input name="date" type="date" required aria-label={t("dateLabel")} defaultValue={transaction.date} className={inputClass} />
+        <DateInput name="date" required ariaLabel={t("dateLabel")} defaultValue={transaction.date} className={inputClass} />
         <input name="description" type="text" autoComplete="off" aria-label={t("descriptionLabel")} defaultValue={transaction.description ?? ""} className={inputClass} />
       </div>
       <button

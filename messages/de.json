@@ -196,7 +196,8 @@
     "invalidCategory": "Ungültige Kategorie",
     "startDateRequired": "Startdatum ist erforderlich",
     "endDateAfterStart": "Das Enddatum muss am oder nach dem Startdatum liegen",
-    "invalidCategoryType": "Ungültiger Kategorietyp"
+    "invalidCategoryType": "Ungültiger Kategorietyp",
+    "pickDate": "Datum auswählen"
   },
   "entities": {
     "categoryNotFound": "Kategorie nicht gefunden",

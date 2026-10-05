@@ -196,7 +196,8 @@
     "invalidCategory": "Catégorie invalide",
     "startDateRequired": "La date de début est requise",
     "endDateAfterStart": "La date de fin doit être égale ou postérieure à la date de début",
-    "invalidCategoryType": "Type de catégorie invalide"
+    "invalidCategoryType": "Type de catégorie invalide",
+    "pickDate": "Choisir une date"
   },
   "entities": {
     "categoryNotFound": "Catégorie introuvable",

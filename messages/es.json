@@ -196,7 +196,8 @@
     "invalidCategory": "Categoría no válida",
     "startDateRequired": "La fecha de inicio es obligatoria",
     "endDateAfterStart": "La fecha de fin debe ser igual o posterior a la fecha de inicio",
-    "invalidCategoryType": "Tipo de categoría no válido"
+    "invalidCategoryType": "Tipo de categoría no válido",
+    "pickDate": "Elegir una fecha"
   },
   "entities": {
     "categoryNotFound": "Categoría no encontrada",

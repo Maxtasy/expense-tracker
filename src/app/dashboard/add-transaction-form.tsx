@@ -8,6 +8,7 @@ import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 import { useLocalToday } from "@/lib/use-local-today";
 import { Spinner } from "@/components/spinner";
+import { DateInput } from "@/components/date-input";
 
 type Category = { id: string; name: string; type: "expense" | "income" };
 type TxType = "expense" | "income";
@@ -83,7 +84,7 @@ export function AddTransactionForm({
         </select>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <input name="date" type="date" required aria-label={t("dateLabel")} defaultValue={today} className={inputClass} />
+        <DateInput name="date" required ariaLabel={t("dateLabel")} defaultValue={today} className={inputClass} />
         <input name="description" type="text" autoComplete="off" placeholder={t("descriptionPlaceholder")} className={inputClass} />
       </div>
       <button

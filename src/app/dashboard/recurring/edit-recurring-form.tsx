@@ -7,6 +7,7 @@ import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 import { Spinner } from "@/components/spinner";
+import { DateInput } from "@/components/date-input";
 
 type TxType = "expense" | "income";
 type Category = { id: string; name: string; type: TxType };
@@ -96,11 +97,11 @@ export function EditRecurringForm({
       <div className="grid grid-cols-2 gap-2">
         <label className="space-y-1">
           <span className="block text-[11px] text-fg-muted">{t("startsOn")}</span>
-          <input name="startDate" type="date" required defaultValue={recurring.startDate} className={inputClass} />
+          <DateInput name="startDate" required defaultValue={recurring.startDate} className={inputClass} />
         </label>
         <label className="space-y-1">
           <span className="block text-[11px] text-fg-muted">{t("endsOnOptional")}</span>
-          <input name="endDate" type="date" defaultValue={recurring.endDate ?? ""} className={inputClass} />
+          <DateInput name="endDate" defaultValue={recurring.endDate ?? ""} className={inputClass} />
         </label>
       </div>
       <button

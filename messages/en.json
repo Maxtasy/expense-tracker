@@ -196,7 +196,8 @@
     "invalidCategory": "Invalid category",
     "startDateRequired": "Start date is required",
     "endDateAfterStart": "End date must be on or after the start date",
-    "invalidCategoryType": "Invalid category type"
+    "invalidCategoryType": "Invalid category type",
+    "pickDate": "Pick a date"
   },
   "entities": {
     "categoryNotFound": "Category not found",
