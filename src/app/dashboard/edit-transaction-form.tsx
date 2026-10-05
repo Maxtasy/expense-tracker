@@ -53,7 +53,11 @@ export function EditTransactionForm({
   }
 
   return (
-    <form action={handleSubmit} className="space-y-2">
+    <form onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-2">
       <input type="hidden" name="id" value={transaction.id} />
       <div className="grid grid-cols-2 gap-2">
         <label

@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { changePassword } from "./actions";
 import { Spinner } from "@/components/spinner";
+import { PasswordInput } from "@/components/password-input";
 
 export function ChangePasswordForm() {
   const t = useTranslations("settings.changePassword");
@@ -27,15 +28,18 @@ export function ChangePasswordForm() {
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="space-y-2">
+    <form ref={formRef} onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-2">
       <div className="space-y-1">
         <label htmlFor="currentPassword" className="block text-xs text-fg-muted">
           {t("currentPasswordLabel")}
         </label>
-        <input
+        <PasswordInput
           id="currentPassword"
           name="currentPassword"
-          type="password"
           autoComplete="current-password"
           required
           className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg focus:border-accent focus:outline-none"
@@ -45,10 +49,9 @@ export function ChangePasswordForm() {
         <label htmlFor="newPassword" className="block text-xs text-fg-muted">
           {t("newPasswordLabel")}
         </label>
-        <input
+        <PasswordInput
           id="newPassword"
           name="newPassword"
-          type="password"
           autoComplete="new-password"
           minLength={8}
           required
@@ -59,10 +62,9 @@ export function ChangePasswordForm() {
         <label htmlFor="confirmPassword" className="block text-xs text-fg-muted">
           {t("confirmPasswordLabel")}
         </label>
-        <input
+        <PasswordInput
           id="confirmPassword"
           name="confirmPassword"
-          type="password"
           autoComplete="new-password"
           minLength={8}
           required

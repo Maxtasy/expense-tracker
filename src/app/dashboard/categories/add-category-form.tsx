@@ -31,7 +31,11 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="space-y-2">
+    <form ref={formRef} onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-2">
       <div className="flex items-center gap-2">
         <input
           name="name"

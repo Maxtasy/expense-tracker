@@ -32,7 +32,11 @@ export function ImportForm() {
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="space-y-2">
+    <form ref={formRef} onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-2">
       <div>
         <label htmlFor="categoriesFile" className="mb-1 block text-xs text-fg-muted">
           {t("categoriesFileLabel")}

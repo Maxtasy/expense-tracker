@@ -12,7 +12,9 @@
     "cancel": "Cancelar",
     "close": "Cerrar",
     "add": "Añadir",
-    "adding": "Añadiendo..."
+    "adding": "Añadiendo...",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña"
   },
   "auth": {
     "login": {
@@ -366,7 +368,8 @@
       "success": "Contraseña cambiada.",
       "currentPasswordIncorrect": "La contraseña actual es incorrecta",
       "passwordTooShort": "La nueva contraseña debe tener al menos 8 caracteres",
-      "passwordsDoNotMatch": "Las nuevas contraseñas no coinciden"
+      "passwordsDoNotMatch": "Las nuevas contraseñas no coinciden",
+      "tooManyAttempts": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo."
     },
     "export": "Exportar",
     "importMoneyManagerLabel": "Importar desde Money Manager",
@@ -412,7 +415,8 @@
       "globalCategoryNotFoundDuringImport": "No se encontró la categoría global \"{name}\" ({type})",
       "unknownCategoryIdDuringImport": "category_id desconocido \"{id}\"",
       "unknownRecurringIdDuringImport": "recurring_transaction_id desconocido \"{id}\"",
-      "importFailed": "Error en la importación"
+      "importFailed": "Error en la importación",
+      "fileTooLarge": "{label} es demasiado grande (máx. {maxMb} MB)"
     },
     "moneyManager": {
       "backToSettings": "Ajustes",
@@ -448,7 +452,8 @@
       "doneCategoriesCreated": "{count, plural, one {# categoría nueva creada} other {# categorías nuevas creadas}}",
       "doneDuplicatesSkipped": "{count, plural, one {# duplicado omitido (ya está en tus datos)} other {# duplicados omitidos (ya están en tus datos)}}",
       "goToDashboard": "Ir al panel",
-      "importAnother": "Importar otro archivo"
+      "importAnother": "Importar otro archivo",
+      "fileTooLarge": "El archivo es demasiado grande (máx. {maxMb} MB)"
     },
     "upgradeGuest": {
       "label": "Crea tu cuenta",
