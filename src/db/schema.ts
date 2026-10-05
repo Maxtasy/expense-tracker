@@ -1,4 +1,5 @@
-import { pgTable, uuid, text, numeric, date, timestamp, integer, boolean, unique, index } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { pgTable, uuid, text, numeric, date, timestamp, integer, boolean, unique, uniqueIndex, index } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -58,7 +59,7 @@ export const authAttempts = pgTable(
   "auth_attempts",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    kind: text("kind", { enum: ["login", "signup", "resend_verification", "guest"] }).notNull(),
+    kind: text("kind", { enum: ["login", "signup", "resend_verification", "guest", "forgot_password"] }).notNull(),
     email: text("email"),
     ip: text("ip").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -130,16 +131,25 @@ export const recurringTransactionSkips = pgTable(
   (table) => [unique().on(table.recurringTransactionId, table.year, table.month)],
 );
 
-export const transactions = pgTable("transactions", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  type: text("type", { enum: ["expense", "income"] }).notNull().default("expense"),
-  categoryId: uuid("category_id").references(() => categories.id, { onDelete: "set null" }),
-  recurringTransactionId: uuid("recurring_transaction_id").references(() => recurringTransactions.id, { onDelete: "set null" }),
-  amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
-  description: text("description"),
-  date: date("date").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+export const transactions = pgTable(
+  "transactions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type", { enum: ["expense", "income"] }).notNull().default("expense"),
+    categoryId: uuid("category_id").references(() => categories.id, { onDelete: "set null" }),
+    recurringTransactionId: uuid("recurring_transaction_id").references(() => recurringTransactions.id, { onDelete: "set null" }),
+    amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
+    description: text("description"),
+    date: date("date").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  // one materialized occurrence per rule per month (guards against concurrent ensureRecurringGenerated runs)
+  (table) => [
+    uniqueIndex("transactions_recurring_month_unique")
+      .on(table.recurringTransactionId, sql`(date_trunc('month', ${table.date}::timestamp)::date)`)
+      .where(sql`${table.recurringTransactionId} is not null`),
+  ],
+);

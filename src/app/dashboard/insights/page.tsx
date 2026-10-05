@@ -6,6 +6,7 @@ import { categories, transactions } from "@/db/schema";
 import { categoryColor, PALETTE } from "@/lib/category-color";
 import { monthKey, monthRange, parseMonth, yearRange } from "@/lib/month";
 import { getUserCurrency } from "@/lib/currency-server";
+import { InsightsNav } from "./insights-nav";
 import { PeriodToggle } from "./period-toggle";
 import { TypeToggle } from "./type-toggle";
 import { InsightsMonthPager } from "./month-pager";
@@ -77,7 +78,7 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
   const sum = (slices: { value: number }[]) => slices.reduce((total, slice) => total + slice.value, 0);
 
   return (
-    <div>
+    <InsightsNav mode={mode} current={current} type={type}>
       <TypeToggle mode={mode} month={monthKey(current)} type={type} />
       <PeriodToggle mode={mode} month={monthKey(current)} type={type} />
       {mode === "month" ? (
@@ -108,6 +109,6 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
           />
         </>
       )}
-    </div>
+    </InsightsNav>
   );
 }

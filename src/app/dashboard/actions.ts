@@ -1,12 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { auth, signOut } from "@/auth";
 import { db } from "@/db";
 import { recurringTransactionSkips, transactions, users } from "@/db/schema";
+import { amountField, dateField, isUsableCategory } from "@/lib/validation";
 
 export async function logout() {
   await signOut({ redirectTo: "/login" });
@@ -25,8 +26,8 @@ async function buildTransactionSchema() {
   const t = await getTranslations("validation");
   return z.object({
     type: z.enum(["expense", "income"]),
-    amount: z.coerce.number().positive(t("amountPositive")),
-    date: z.string().min(1, t("dateRequired")),
+    amount: amountField(t("amountPositive"), t("amountTooLarge")),
+    date: dateField(t("dateRequired"), t("dateInvalid")),
     description: z.string().trim().optional(),
     categoryId: z.union([z.string().uuid(), z.literal("")]),
   });
@@ -55,6 +56,10 @@ export async function createTransaction(_prevState: TransactionState, formData: 
   }
 
   const { type, amount, date, description, categoryId } = parsed.data;
+
+  if (categoryId && !(await isUsableCategory(categoryId, session.user.id))) {
+    return { error: t("invalidCategory") };
+  }
 
   await db.insert(transactions).values({
     userId: session.user.id,
@@ -96,19 +101,59 @@ export async function updateTransaction(_prevState: TransactionState, formData: 
 
   const { type, amount, date, description, categoryId } = parsed.data;
 
-  const updated = await db
-    .update(transactions)
-    .set({
-      type,
-      amount: amount.toFixed(2),
-      date,
-      description: description || null,
-      categoryId: categoryId || null,
-    })
-    .where(and(eq(transactions.id, id), eq(transactions.userId, session.user.id)))
-    .returning({ id: transactions.id });
+  if (categoryId && !(await isUsableCategory(categoryId, session.user.id))) {
+    return { error: t("invalidCategory") };
+  }
 
-  if (updated.length === 0) {
+  const userId = session.user.id;
+  const found = await db.transaction(async (tx) => {
+    const [existing] = await tx
+      .select({ date: transactions.date, recurringTransactionId: transactions.recurringTransactionId })
+      .from(transactions)
+      .where(and(eq(transactions.id, id), eq(transactions.userId, userId)))
+      .limit(1);
+    if (!existing) return false;
+
+    let recurringTransactionId = existing.recurringTransactionId;
+    // Moving a materialized occurrence into another month must record a skip for the month it
+    // left, otherwise ensureRecurringGenerated() recreates it there.
+    if (recurringTransactionId && existing.date.slice(0, 7) !== date.slice(0, 7)) {
+      const [oldYear, oldMonth] = existing.date.split("-").map(Number);
+      await tx
+        .insert(recurringTransactionSkips)
+        .values({ recurringTransactionId, year: oldYear, month: oldMonth })
+        .onConflictDoNothing();
+
+      // If the target month already has this rule's occurrence, detach rather than duplicate it
+      // (there's a unique index on rule + month).
+      const [clash] = await tx
+        .select({ id: transactions.id })
+        .from(transactions)
+        .where(
+          and(
+            eq(transactions.recurringTransactionId, recurringTransactionId),
+            sql`to_char(${transactions.date}, 'YYYY-MM') = ${date.slice(0, 7)}`,
+          ),
+        )
+        .limit(1);
+      if (clash) recurringTransactionId = null;
+    }
+
+    await tx
+      .update(transactions)
+      .set({
+        type,
+        amount: amount.toFixed(2),
+        date,
+        description: description || null,
+        categoryId: categoryId || null,
+        recurringTransactionId,
+      })
+      .where(and(eq(transactions.id, id), eq(transactions.userId, userId)));
+    return true;
+  });
+
+  if (!found) {
     return { error: tEntities("transactionNotFound") };
   }
 

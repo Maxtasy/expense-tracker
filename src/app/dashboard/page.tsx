@@ -10,6 +10,7 @@ import { MonthPager } from "./month-pager";
 import { MonthSummary } from "./month-summary";
 import { SwipeMonthNav } from "./swipe-month-nav";
 import { ensureRecurringGenerated } from "./generate-recurring";
+import { isUuid } from "@/lib/validation";
 import { monthKey, monthLabel, monthRange, parseMonth } from "@/lib/month";
 import { getUserCurrency } from "@/lib/currency-server";
 import { getUserDateFormat, getUserRememberLastCategory } from "@/lib/preferences-server";
@@ -30,7 +31,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const userId = session.user.id;
 
   const params = await searchParams;
-  const category = params.category ?? "";
+  const category = params.category === "uncategorized" || (params.category && isUuid(params.category)) ? params.category : "";
   const sort = params.sort && SORT_OPTIONS[params.sort] ? params.sort : "date-desc";
   const current = parseMonth(params.month);
   const { from, to } = monthRange(current);

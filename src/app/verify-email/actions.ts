@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { users } from "@/db/schema";
@@ -18,17 +19,20 @@ export async function resendVerificationEmail(email: string): Promise<void> {
   }
   await recordAttempt("resend_verification", { ip });
 
-  const [user] = await db
-    .select({ id: users.id, locale: users.locale, emailVerifiedAt: users.emailVerifiedAt })
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
+  // Lookup and send happen after the response so timing doesn't reveal whether the account exists.
+  after(async () => {
+    const [user] = await db
+      .select({ id: users.id, locale: users.locale, emailVerifiedAt: users.emailVerifiedAt })
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
 
-  if (user && !user.emailVerifiedAt) {
-    try {
-      await issueAndSendVerificationEmail(user.id, email, user.locale);
-    } catch (err) {
-      console.error("Failed to resend verification email:", err);
+    if (user && !user.emailVerifiedAt) {
+      try {
+        await issueAndSendVerificationEmail(user.id, email, user.locale);
+      } catch (err) {
+        console.error("Failed to resend verification email:", err);
+      }
     }
-  }
+  });
 }

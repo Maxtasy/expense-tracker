@@ -3,17 +3,21 @@
 import { createContext, useContext, useEffect, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CoinLoader } from "@/components/coin-loader";
-import { monthHref, shiftMonth, type YearMonth } from "@/lib/month";
-// PrefetchKind isn't part of next/navigation's public API, but router.prefetch()'s default
-// "auto" kind only prefetches the shared shell for a fully dynamic route like this one (it
-// reads the session per request) — confirmed by checking the network tab, no request fired
-// for the adjacent month's data at all. Type-only import so nothing internal ships at runtime.
-import type { PrefetchKind } from "next/dist/client/components/router-reducer/router-reducer-types";
+import { shiftMonth, type YearMonth } from "@/lib/month";
+
+export type InsightsType = "expense" | "income" | "all";
 
 const SWIPE_THRESHOLD_PX = 60;
 
-// Falls back to setTimeout since requestIdleCallback isn't available in Safari/iOS,
-// which matters here since this is a PWA.
+export function insightsHref(mode: "month" | "year", month: string, type: InsightsType) {
+  return `/dashboard/insights?mode=${mode}&month=${month}&type=${type}`;
+}
+
+function monthString({ year, month }: YearMonth) {
+  return `${year}-${String(month).padStart(2, "0")}`;
+}
+
+// Falls back to setTimeout since requestIdleCallback isn't available in Safari/iOS.
 function onIdle(callback: () => void): () => void {
   if (typeof window.requestIdleCallback === "function") {
     const id = window.requestIdleCallback(callback);
@@ -23,45 +27,44 @@ function onIdle(callback: () => void): () => void {
   return () => window.clearTimeout(id);
 }
 
-const NavPendingContext = createContext<{ navigate: (href: string) => void } | null>(null);
+const NavContext = createContext<((href: string) => void) | null>(null);
 
-export function useNavigate() {
-  const ctx = useContext(NavPendingContext);
-  if (!ctx) throw new Error("useNavigate must be used within SwipeMonthNav");
-  return ctx.navigate;
-}
-
-export function SwipeMonthNav({
+// Every insights control (type/period toggles, pagers) navigates through here so they all share
+// the same pending overlay, and swiping left/right pages the period like the overview does.
+export function InsightsNav({
+  mode,
   current,
-  category,
-  sort,
+  type,
   children,
 }: {
+  mode: "month" | "year";
   current: YearMonth;
-  category: string;
-  sort: string;
+  type: InsightsType;
   children: React.ReactNode;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const start = useRef<{ x: number; y: number } | null>(null);
 
-  // Neither month-pager button nor the swipe gesture is a next/link, so unlike a normal
-  // route this pager gets no automatic prefetch — warm the adjacent months' route once the
-  // main thread is idle instead of waiting for the user to actually navigate.
+  const step = (delta: number) => {
+    const target = mode === "year" ? { year: current.year + delta, month: current.month } : shiftMonth(current, delta);
+    return insightsHref(mode, monthString(target), type);
+  };
+
   useEffect(() => {
     return onIdle(() => {
-      router.prefetch(monthHref(shiftMonth(current, -1), category, sort), { kind: "full" as PrefetchKind });
-      router.prefetch(monthHref(shiftMonth(current, 1), category, sort), { kind: "full" as PrefetchKind });
+      router.prefetch(step(-1));
+      router.prefetch(step(1));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- primitives so an equal-but-new `current` object doesn't reschedule
-  }, [router, current.year, current.month, category, sort]);
+  }, [router, mode, current.year, current.month, type]);
 
   function navigate(href: string) {
     startTransition(() => router.push(href));
   }
 
   function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
+    // ignore pinch gestures and anything inside a dialog
     if (e.touches.length > 1 || (e.target as Element).closest("dialog")) {
       start.current = null;
       return;
@@ -76,12 +79,12 @@ export function SwipeMonthNav({
     start.current = null;
 
     if (Math.abs(dx) > SWIPE_THRESHOLD_PX && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      navigate(monthHref(shiftMonth(current, dx < 0 ? 1 : -1), category, sort));
+      navigate(step(dx < 0 ? 1 : -1));
     }
   }
 
   return (
-    <NavPendingContext.Provider value={{ navigate }}>
+    <NavContext.Provider value={navigate}>
       <div className="relative flex flex-1 flex-col" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         {children}
         {isPending && (
@@ -93,6 +96,25 @@ export function SwipeMonthNav({
           </div>
         )}
       </div>
-    </NavPendingContext.Provider>
+    </NavContext.Provider>
+  );
+}
+
+// A plain <a> (so open-in-new-tab and middle click still work) whose normal click goes through the
+// shared pending transition instead of a full page load.
+export function InsightsLink({ href, children, ...rest }: Omit<React.ComponentProps<"a">, "href"> & { href: string }) {
+  const navigate = useContext(NavContext);
+  return (
+    <a
+      href={href}
+      {...rest}
+      onClick={(e) => {
+        if (!navigate || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        navigate(href);
+      }}
+    >
+      {children}
+    </a>
   );
 }

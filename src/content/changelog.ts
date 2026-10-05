@@ -12,6 +12,16 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.16.0",
+    date: "2026-10-05",
+    items: [
+      "Insights shows a loading animation while you switch between expenses, income, month and year, and you can now swipe left and right to move between months or years.",
+      "Stronger protection against repeated login and guest sign-up attempts, and the password reset form is now rate limited too.",
+      "Recurring transactions can no longer show up twice in a month, and moving one to another month no longer brings it back in the original month.",
+      "Invalid dates, oversized amounts and bad links no longer cause errors, and a transaction can only use your own or the default categories.",
+    ],
+  },
+  {
     version: "1.15.0",
     date: "2026-10-04",
     items: [

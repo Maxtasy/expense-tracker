@@ -7,17 +7,18 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { recurringTransactions, transactions } from "@/db/schema";
+import { amountField, dateField, isUsableCategory } from "@/lib/validation";
 
 async function buildRecurringSchema() {
   const t = await getTranslations("validation");
   return z
     .object({
       type: z.enum(["expense", "income"]),
-      amount: z.coerce.number().positive(t("amountPositive")),
+      amount: amountField(t("amountPositive"), t("amountTooLarge")),
       categoryId: z.union([z.string().uuid(), z.literal("")]),
       description: z.string().trim().optional(),
-      startDate: z.string().min(1, t("startDateRequired")),
-      endDate: z.union([z.string().min(1), z.literal("")]),
+      startDate: dateField(t("startDateRequired"), t("dateInvalid")),
+      endDate: z.union([dateField(t("dateInvalid"), t("dateInvalid")), z.literal("")]),
     })
     .refine((data) => !data.endDate || data.endDate >= data.startDate, {
       message: t("endDateAfterStart"),
@@ -53,6 +54,10 @@ export async function createRecurring(_prevState: RecurringState, formData: Form
 
   const { type, amount, categoryId, description, startDate, endDate } = parsed.data;
 
+  if (categoryId && !(await isUsableCategory(categoryId, session.user.id))) {
+    return { error: t("invalidCategory") };
+  }
+
   await db.insert(recurringTransactions).values({
     userId: session.user.id,
     type,
@@ -87,6 +92,10 @@ export async function updateRecurring(_prevState: RecurringState, formData: Form
   }
 
   const { type, amount, categoryId, description, startDate, endDate } = parsed.data;
+
+  if (categoryId && !(await isUsableCategory(categoryId, session.user.id))) {
+    return { error: t("invalidCategory") };
+  }
 
   const updated = await db
     .update(recurringTransactions)
