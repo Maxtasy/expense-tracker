@@ -12,6 +12,21 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.17.0",
+    date: "2026-10-05",
+    items: [
+      "Date fields now follow the date format you chose in Settings, for example DD.MM.YYYY, and still offer a calendar picker.",
+      "Password fields have an eye button to show or hide what you typed.",
+      "A failed login, signup, password reset or edit no longer clears what you typed.",
+      "Email addresses are no longer case sensitive, so signing in and resetting your password work with any capitalization.",
+      "Someone guessing wrong passwords for your email can no longer lock you out of logging in, and changing your password now limits wrong guesses too.",
+      "New transactions and recurring transactions default to today's date in your own time zone, and the current month follows it.",
+      "Category names are compared exactly, so characters like percent and underscore no longer cause false duplicates.",
+      "Importing data shows a clear message instead of technical errors, and rejects very large files and invalid dates.",
+      "The app no longer keeps a broken file in its offline cache after a temporary network problem.",
+    ],
+  },
+  {
     version: "1.16.0",
     date: "2026-10-05",
     items: [
