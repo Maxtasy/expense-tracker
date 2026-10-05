@@ -12,6 +12,7 @@ import { SwipeMonthNav } from "./swipe-month-nav";
 import { ensureRecurringGenerated } from "./generate-recurring";
 import { isUuid } from "@/lib/validation";
 import { monthKey, monthLabel, monthRange, parseMonth } from "@/lib/month";
+import { getUserToday } from "@/lib/timezone-server";
 import { getUserCurrency } from "@/lib/currency-server";
 import { getUserDateFormat, getUserRememberLastCategory } from "@/lib/preferences-server";
 
@@ -33,7 +34,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const params = await searchParams;
   const category = params.category === "uncategorized" || (params.category && isUuid(params.category)) ? params.category : "";
   const sort = params.sort && SORT_OPTIONS[params.sort] ? params.sort : "date-desc";
-  const current = parseMonth(params.month);
+  const current = parseMonth(params.month, await getUserToday());
   const { from, to } = monthRange(current);
 
   await ensureRecurringGenerated(userId, current);

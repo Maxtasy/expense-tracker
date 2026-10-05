@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { recurringTransactions, transactions } from "@/db/schema";
+import { getUserToday } from "@/lib/timezone-server";
 import { amountField, dateField, isUsableCategory } from "@/lib/validation";
 
 async function buildRecurringSchema() {
@@ -127,7 +128,7 @@ export async function deleteRecurring(formData: FormData) {
   const id = formData.get("id");
   if (typeof id !== "string" || !id) return;
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = await getUserToday();
 
   await db.transaction(async (tx) => {
     // future occurrences already materialized (e.g. by scrolling ahead) shouldn't outlive the

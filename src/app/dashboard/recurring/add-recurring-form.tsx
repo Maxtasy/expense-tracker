@@ -6,6 +6,7 @@ import { createRecurring } from "./actions";
 import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
+import { useLocalToday } from "@/lib/use-local-today";
 import { Spinner } from "@/components/spinner";
 
 type TxType = "expense" | "income";
@@ -26,6 +27,7 @@ export function AddRecurringForm({
   const t = useTranslations("recurring");
   const tDashboardForm = useTranslations("dashboard.form");
   const tCommon = useTranslations("common");
+  const today = useLocalToday();
   const formRef = useRef<HTMLFormElement>(null);
   const [type, setType] = useState<TxType>("expense");
   const [error, setError] = useState<string | undefined>();
@@ -47,7 +49,11 @@ export function AddRecurringForm({
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="space-y-2">
+    <form ref={formRef} onSubmit={(e) => {
+        // not `action`: React 19 would reset the fields after a failed attempt
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }} className="space-y-2">
       <div className="grid grid-cols-2 gap-2">
         <label
           className={`cursor-pointer rounded-lg border px-3 py-1.5 text-center text-sm font-medium transition ${typeChipClass("expense", type === "expense")}`}
@@ -77,7 +83,7 @@ export function AddRecurringForm({
       <div className="grid grid-cols-2 gap-2">
         <label className="space-y-1">
           <span className="block text-[11px] text-fg-muted">{t("startsOn")}</span>
-          <input name="startDate" type="date" required defaultValue={new Date().toISOString().slice(0, 10)} className={inputClass} />
+          <input name="startDate" type="date" required defaultValue={today} className={inputClass} />
         </label>
         <label className="space-y-1">
           <span className="block text-[11px] text-fg-muted">{t("endsOnOptional")}</span>

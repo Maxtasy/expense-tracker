@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Tags, Repeat, PieChart, Settings } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -10,7 +11,9 @@ import { getVerificationStatus, isVerificationGracePeriodExpired, needsVerificat
 import { guestDaysLeft, isGuestExpired } from "@/lib/guest";
 import { Logo } from "@/components/logo";
 import { hasCompletedOnboarding } from "@/lib/preferences-server";
+import { TIMEZONE_COOKIE } from "@/lib/timezone";
 import { OnboardingTour } from "./onboarding-tour";
+import { TimezoneSync } from "./timezone-sync";
 import { VerifyEmailBanner } from "./verify-email-banner";
 import { GuestBanner } from "./guest-banner";
 
@@ -41,6 +44,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   const onboarded = await hasCompletedOnboarding(session.user.id);
+  const tzCookie = (await cookies()).get(TIMEZONE_COOKIE)?.value;
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -85,6 +89,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {isUnverified && verification.email && <VerifyEmailBanner email={verification.email} />}
         {children}
       </main>
+      <TimezoneSync current={tzCookie} />
       {!onboarded && <OnboardingTour autoOpen />}
     </div>
   );
