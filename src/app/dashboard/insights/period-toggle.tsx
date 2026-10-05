@@ -1,3 +1,4 @@
+import { InsightsLink } from "./insights-nav";
 import { getTranslations } from "next-intl/server";
 
 export async function PeriodToggle({ mode, month, type }: { mode: "month" | "year"; month: string; type: "expense" | "income" | "all" }) {
@@ -10,7 +11,7 @@ export async function PeriodToggle({ mode, month, type }: { mode: "month" | "yea
   return (
     <div className="mb-3 grid grid-cols-2 gap-1 rounded-xl border border-border bg-surface/30 p-1">
       {tabs.map((tab) => (
-        <a
+        <InsightsLink
           key={tab.key}
           href={`/dashboard/insights?mode=${tab.key}&month=${month}&type=${type}`}
           className={`rounded-lg py-1.5 text-center text-sm font-medium transition ${
@@ -18,7 +19,7 @@ export async function PeriodToggle({ mode, month, type }: { mode: "month" | "yea
           }`}
         >
           {tab.label}
-        </a>
+        </InsightsLink>
       ))}
     </div>
   );

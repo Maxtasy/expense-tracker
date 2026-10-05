@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { InsightsLink } from "./insights-nav";
 import { getTranslations, getLocale } from "next-intl/server";
 import { monthKey, monthLabel, shiftMonth, type YearMonth } from "@/lib/month";
 
@@ -14,21 +14,21 @@ export async function InsightsMonthPager({ current, type }: { current: YearMonth
 
   return (
     <div className="mb-3 flex items-center justify-between rounded-xl border border-border bg-surface/30 px-1 py-1.5">
-      <Link href={hrefFor(prev, type)} aria-label={t("previousMonth")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
+      <InsightsLink href={hrefFor(prev, type)} aria-label={t("previousMonth")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
         <ChevronLeft size={16} />
-      </Link>
+      </InsightsLink>
       <div className="flex items-center gap-2 text-sm">
-        <Link href={hrefFor(prev, type)} className="px-1 text-xs text-fg-muted hover:text-fg">
+        <InsightsLink href={hrefFor(prev, type)} className="px-1 text-xs text-fg-muted hover:text-fg">
           {monthLabel(prev, locale, "short")}
-        </Link>
+        </InsightsLink>
         <span className="rounded-md bg-accent/15 px-3 py-1 text-center font-medium text-accent-text">{monthLabel(current, locale)}</span>
-        <Link href={hrefFor(next, type)} className="px-1 text-xs text-fg-muted hover:text-fg">
+        <InsightsLink href={hrefFor(next, type)} className="px-1 text-xs text-fg-muted hover:text-fg">
           {monthLabel(next, locale, "short")}
-        </Link>
+        </InsightsLink>
       </div>
-      <Link href={hrefFor(next, type)} aria-label={t("nextMonth")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
+      <InsightsLink href={hrefFor(next, type)} aria-label={t("nextMonth")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
         <ChevronRight size={16} />
-      </Link>
+      </InsightsLink>
     </div>
   );
 }
