@@ -7,6 +7,7 @@ import { users } from "@/db/schema";
 import { isVerificationGracePeriodExpired } from "@/lib/verification";
 import { deleteExpiredGuests } from "@/lib/guest";
 import { DEFAULT_LOCALE, LOCALES } from "@/lib/locale";
+import { normalizeEmail } from "@/lib/email-address";
 import { isRateLimited, recordAttempt } from "@/lib/rate-limit";
 
 // Thrown by authorize() below when a login is otherwise valid but the account's email verification
@@ -44,11 +45,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: {},
       },
       authorize: async (credentials, request) => {
-        const email = credentials?.email;
+        const rawEmail = credentials?.email;
         const password = credentials?.password;
-        if (typeof email !== "string" || typeof password !== "string") {
+        if (typeof rawEmail !== "string" || typeof password !== "string") {
           return null;
         }
+        const email = normalizeEmail(rawEmail);
 
         const ip = clientIpFromRequest(request);
         if (await isRateLimited("login", { email, ip })) {
