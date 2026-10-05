@@ -89,7 +89,7 @@ export function InsightsNav({
         {children}
         {isPending && (
           <div
-            style={{ position: "absolute", inset: 0, zIndex: 5 }}
+            style={{ position: "fixed", inset: 0, zIndex: 5 }}
             className="flex items-center justify-center bg-background/60 backdrop-blur-[1px]"
           >
             <CoinLoader size={48} />
