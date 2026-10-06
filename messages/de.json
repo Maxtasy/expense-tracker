@@ -301,7 +301,8 @@
     "guestBanner": {
       "message": "Gastkonto: Deine Daten werden in {days, plural, one {# Tag} other {# Tagen}} gelöscht, sofern du kein Konto erstellst.",
       "createAccount": "Konto erstellen"
-    }
+    },
+    "goToMonth": "Zu {month} wechseln"
   },
   "categories": {
     "title": "Kategorien",
@@ -345,7 +346,8 @@
     "previousMonth": "Vorheriger Monat",
     "nextMonth": "Nächster Monat",
     "previousYear": "Vorheriges Jahr",
-    "nextYear": "Nächstes Jahr"
+    "nextYear": "Nächstes Jahr",
+    "goToMonth": "Zu {month} wechseln"
   },
   "settings": {
     "title": "Einstellungen",

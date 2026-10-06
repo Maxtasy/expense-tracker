@@ -301,7 +301,8 @@
     "guestBanner": {
       "message": "Cuenta de invitado: tus datos se eliminarán en {days, plural, one {# día} other {# días}} si no creas una cuenta.",
       "createAccount": "Crear cuenta"
-    }
+    },
+    "goToMonth": "Ir a {month}"
   },
   "categories": {
     "title": "Categorías",
@@ -345,7 +346,8 @@
     "previousMonth": "Mes anterior",
     "nextMonth": "Mes siguiente",
     "previousYear": "Año anterior",
-    "nextYear": "Año siguiente"
+    "nextYear": "Año siguiente",
+    "goToMonth": "Ir a {month}"
   },
   "settings": {
     "title": "Ajustes",

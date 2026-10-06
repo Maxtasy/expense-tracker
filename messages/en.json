@@ -301,7 +301,8 @@
     "guestBanner": {
       "message": "Guest account: your data is deleted in {days, plural, one {# day} other {# days}} unless you create an account.",
       "createAccount": "Create account"
-    }
+    },
+    "goToMonth": "Go to {month}"
   },
   "categories": {
     "title": "Categories",
@@ -345,7 +346,8 @@
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
     "previousYear": "Previous year",
-    "nextYear": "Next year"
+    "nextYear": "Next year",
+    "goToMonth": "Go to {month}"
   },
   "settings": {
     "title": "Settings",

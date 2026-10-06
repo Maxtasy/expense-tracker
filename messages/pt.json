@@ -301,7 +301,8 @@
     "guestBanner": {
       "message": "Conta de convidado: os teus dados serão eliminados dentro de {days, plural, one {# dia} other {# dias}} se não criares uma conta.",
       "createAccount": "Criar conta"
-    }
+    },
+    "goToMonth": "Ir para {month}"
   },
   "categories": {
     "title": "Categorias",
@@ -345,7 +346,8 @@
     "previousMonth": "Mês anterior",
     "nextMonth": "Próximo mês",
     "previousYear": "Ano anterior",
-    "nextYear": "Próximo ano"
+    "nextYear": "Próximo ano",
+    "goToMonth": "Ir para {month}"
   },
   "settings": {
     "title": "Configurações",
