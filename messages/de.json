@@ -429,7 +429,8 @@
       "unknownCategoryIdDuringImport": "Unbekannte category_id \"{id}\"",
       "unknownRecurringIdDuringImport": "Unbekannte recurring_transaction_id \"{id}\"",
       "importFailed": "Import fehlgeschlagen",
-      "fileTooLarge": "{label} ist zu groß (max. {maxMb} MB)"
+      "fileTooLarge": "{label} ist zu groß (max. {maxMb} MB)",
+      "rowInvalid": "{label}, Zeile {row}: ungültiger Wert für „{field}“"
     },
     "moneyManager": {
       "backToSettings": "Einstellungen",
@@ -466,7 +467,10 @@
       "doneDuplicatesSkipped": "{count, plural, one {# Duplikat übersprungen (bereits in deinen Daten)} other {# Duplikate übersprungen (bereits in deinen Daten)}}",
       "goToDashboard": "Zum Dashboard",
       "importAnother": "Weitere Datei importieren",
-      "fileTooLarge": "Die Datei ist zu groß (max. {maxMb} MB)"
+      "fileTooLarge": "Die Datei ist zu groß (max. {maxMb} MB)",
+      "fileUnreadable": "Diese Datei konnte nicht als .xlsx-Export gelesen werden",
+      "fileNoSheets": "Die Datei enthält keine Tabellenblätter",
+      "fileMissingColumn": "Das sieht nicht nach einem Money-Manager-Export aus – die Spalte „{column}“ fehlt"
     },
     "upgradeGuest": {
       "label": "Konto erstellen",
@@ -521,6 +525,17 @@
       "button": "E-Mail bestätigen",
       "ignoreNote": "Falls du dieses Konto nicht erstellt hast, kannst du diese E-Mail ignorieren.",
       "footer": "Expense Tracker"
+    }
+  },
+  "meta": {
+    "description": "Erfasse und kategorisiere deine persönlichen Einnahmen und Ausgaben",
+    "shortName": "Ausgaben",
+    "screenshots": {
+      "dashboard": "Monatsübersicht mit Einnahmen, Ausgaben und Transaktionen",
+      "insights": "Aufschlüsselung von Einnahmen und Ausgaben nach Kategorie",
+      "categories": "Ausgaben- und Einnahmenkategorien verwalten",
+      "recurring": "Wiederkehrende Einnahmen und Ausgaben einrichten",
+      "settings": "Daten als CSV exportieren und importieren"
     }
   }
 }

@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { getUserTheme } from "@/lib/preferences-server";
 import { DEFAULT_THEME, THEME_COLOR, type Theme } from "@/lib/theme";
@@ -19,10 +19,13 @@ const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Expense Tracker",
-  description: "Track and categorize your personal income and expenses",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("meta");
+  return {
+    title: "Expense Tracker",
+    description: t("description"),
+  };
+}
 
 async function resolveTheme(): Promise<Theme> {
   const session = await auth();

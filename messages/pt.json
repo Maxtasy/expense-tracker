@@ -429,7 +429,8 @@
       "unknownCategoryIdDuringImport": "category_id desconhecido \"{id}\"",
       "unknownRecurringIdDuringImport": "recurring_transaction_id desconhecido \"{id}\"",
       "importFailed": "Falha na importação",
-      "fileTooLarge": "{label} é demasiado grande (máx. {maxMb} MB)"
+      "fileTooLarge": "{label} é demasiado grande (máx. {maxMb} MB)",
+      "rowInvalid": "{label}, linha {row}: valor inválido para «{field}»"
     },
     "moneyManager": {
       "backToSettings": "Configurações",
@@ -466,7 +467,10 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicata ignorada (já está nos seus dados)} other {# duplicatas ignoradas (já estão nos seus dados)}}",
       "goToDashboard": "Ir para o painel",
       "importAnother": "Importar outro arquivo",
-      "fileTooLarge": "O ficheiro é demasiado grande (máx. {maxMb} MB)"
+      "fileTooLarge": "O ficheiro é demasiado grande (máx. {maxMb} MB)",
+      "fileUnreadable": "Não foi possível ler este ficheiro como exportação .xlsx",
+      "fileNoSheets": "O ficheiro não tem folhas",
+      "fileMissingColumn": "Isto não parece uma exportação do Money Manager — falta a coluna «{column}»"
     },
     "upgradeGuest": {
       "label": "Cria a tua conta",
@@ -521,6 +525,17 @@
       "button": "Verificar e-mail",
       "ignoreNote": "Se você não criou esta conta, pode ignorar este e-mail com segurança.",
       "footer": "Expense Tracker"
+    }
+  },
+  "meta": {
+    "description": "Registe e categorize os seus rendimentos e despesas pessoais",
+    "shortName": "Despesas",
+    "screenshots": {
+      "dashboard": "Resumo mensal com rendimentos, despesas e transações",
+      "insights": "Repartição de rendimentos e despesas por categoria",
+      "categories": "Gira as categorias de despesas e rendimentos",
+      "recurring": "Configure rendimentos e despesas recorrentes",
+      "settings": "Exporte e importe os seus dados como CSV"
     }
   }
 }

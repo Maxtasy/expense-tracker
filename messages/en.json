@@ -429,7 +429,8 @@
       "unknownCategoryIdDuringImport": "Unknown category_id \"{id}\"",
       "unknownRecurringIdDuringImport": "Unknown recurring_transaction_id \"{id}\"",
       "importFailed": "Import failed",
-      "fileTooLarge": "{label} is too large (max {maxMb} MB)"
+      "fileTooLarge": "{label} is too large (max {maxMb} MB)",
+      "rowInvalid": "{label}, row {row}: invalid value for \"{field}\""
     },
     "moneyManager": {
       "backToSettings": "Settings",
@@ -466,7 +467,10 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicate skipped (already in your data)} other {# duplicates skipped (already in your data)}}",
       "goToDashboard": "Go to dashboard",
       "importAnother": "Import another file",
-      "fileTooLarge": "The file is too large (max {maxMb} MB)"
+      "fileTooLarge": "The file is too large (max {maxMb} MB)",
+      "fileUnreadable": "Could not read this file as an .xlsx export",
+      "fileNoSheets": "The file has no sheets",
+      "fileMissingColumn": "This doesn't look like a Money Manager export — missing column \"{column}\""
     },
     "upgradeGuest": {
       "label": "Create your account",
@@ -521,6 +525,17 @@
       "button": "Verify email",
       "ignoreNote": "If you didn't create this account, you can safely ignore this email.",
       "footer": "Expense Tracker"
+    }
+  },
+  "meta": {
+    "description": "Track and categorize your personal income and expenses",
+    "shortName": "Expenses",
+    "screenshots": {
+      "dashboard": "Monthly overview with income, expenses, and transactions",
+      "insights": "Income and expense breakdown by category",
+      "categories": "Manage expense and income categories",
+      "recurring": "Set up recurring income and expenses",
+      "settings": "Export and import your data as CSV"
     }
   }
 }

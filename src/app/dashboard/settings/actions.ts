@@ -119,7 +119,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
     const rawCategories = parseCsv(await categoriesFile.text(), t("categoriesFileLabel"), t);
     categoryRows = rawCategories.map((row, i) => {
       const parsed = categoryRowSchema.safeParse(row);
-      if (!parsed.success) throw new ImportError(`${t("categoriesFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new ImportError(t("rowInvalid", { label: t("categoriesFileLabel"), row: i + 2, field: String(parsed.error.issues[0].path[0] ?? "") }));
       return parsed.data;
     });
     checkDuplicateIds(categoryRows, t("categoriesFileLabel"), t);
@@ -127,7 +127,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
     const rawRecurring = parseCsv(await recurringFile.text(), t("recurringFileLabel"), t);
     recurringRows = rawRecurring.map((row, i) => {
       const parsed = recurringRowSchema.safeParse(row);
-      if (!parsed.success) throw new ImportError(`${t("recurringFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new ImportError(t("rowInvalid", { label: t("recurringFileLabel"), row: i + 2, field: String(parsed.error.issues[0].path[0] ?? "") }));
       return parsed.data;
     });
     checkDuplicateIds(recurringRows, t("recurringFileLabel"), t);
@@ -135,7 +135,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
     const rawTransactions = parseCsv(await transactionsFile.text(), t("transactionsFileLabel"), t);
     transactionRows = rawTransactions.map((row, i) => {
       const parsed = transactionRowSchema.safeParse(row);
-      if (!parsed.success) throw new ImportError(`${t("transactionsFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new ImportError(t("rowInvalid", { label: t("transactionsFileLabel"), row: i + 2, field: String(parsed.error.issues[0].path[0] ?? "") }));
       return parsed.data;
     });
     checkDuplicateIds(transactionRows, t("transactionsFileLabel"), t);

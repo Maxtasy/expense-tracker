@@ -429,7 +429,8 @@
       "unknownCategoryIdDuringImport": "category_id inconnu \"{id}\"",
       "unknownRecurringIdDuringImport": "recurring_transaction_id inconnu \"{id}\"",
       "importFailed": "Échec de l'importation",
-      "fileTooLarge": "{label} est trop volumineux (max. {maxMb} Mo)"
+      "fileTooLarge": "{label} est trop volumineux (max. {maxMb} Mo)",
+      "rowInvalid": "{label}, ligne {row} : valeur invalide pour « {field} »"
     },
     "moneyManager": {
       "backToSettings": "Paramètres",
@@ -466,7 +467,10 @@
       "doneDuplicatesSkipped": "{count, plural, one {# doublon ignoré (déjà présent dans vos données)} other {# doublons ignorés (déjà présents dans vos données)}}",
       "goToDashboard": "Aller au tableau de bord",
       "importAnother": "Importer un autre fichier",
-      "fileTooLarge": "Le fichier est trop volumineux (max. {maxMb} Mo)"
+      "fileTooLarge": "Le fichier est trop volumineux (max. {maxMb} Mo)",
+      "fileUnreadable": "Impossible de lire ce fichier comme un export .xlsx",
+      "fileNoSheets": "Le fichier ne contient aucune feuille",
+      "fileMissingColumn": "Ceci ne ressemble pas à un export de Money Manager — colonne « {column} » manquante"
     },
     "upgradeGuest": {
       "label": "Créez votre compte",
@@ -521,6 +525,17 @@
       "button": "Vérifier l'e-mail",
       "ignoreNote": "Si vous n'avez pas créé ce compte, vous pouvez ignorer cet e-mail en toute sécurité.",
       "footer": "Expense Tracker"
+    }
+  },
+  "meta": {
+    "description": "Suivez et catégorisez vos revenus et dépenses personnels",
+    "shortName": "Dépenses",
+    "screenshots": {
+      "dashboard": "Aperçu mensuel avec revenus, dépenses et transactions",
+      "insights": "Répartition des revenus et dépenses par catégorie",
+      "categories": "Gérez les catégories de dépenses et de revenus",
+      "recurring": "Configurez des revenus et dépenses récurrents",
+      "settings": "Exportez et importez vos données en CSV"
     }
   }
 }
