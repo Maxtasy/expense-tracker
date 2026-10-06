@@ -2,6 +2,7 @@ import { eq, isNull, or } from "drizzle-orm";
 import { stringify } from "csv-stringify/sync";
 import { auth } from "@/auth";
 import { db } from "@/db";
+import { guardCsvCell } from "@/lib/csv-safe";
 import { categories, recurringTransactions, transactions } from "@/db/schema";
 
 export async function GET(request: Request, { params }: { params: Promise<{ type: string }> }) {
@@ -21,7 +22,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ type
       .where(or(isNull(categories.userId), eq(categories.userId, userId)))
       .orderBy(categories.name);
     csv = stringify(
-      rows.map((r) => ({ id: r.id, name: r.name, type: r.type, is_global: r.userId === null ? "true" : "false" })),
+      rows.map((r) => ({ id: r.id, name: guardCsvCell(r.name), type: r.type, is_global: r.userId === null ? "true" : "false" })),
       { header: true, columns: ["id", "name", "type", "is_global"] },
     );
   } else if (type === "recurring-transactions") {
@@ -36,7 +37,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ type
         type: r.type,
         category_id: r.categoryId ?? "",
         amount: r.amount,
-        description: r.description ?? "",
+        description: guardCsvCell(r.description ?? ""),
         start_date: r.startDate,
         end_date: r.endDate ?? "",
       })),
@@ -51,7 +52,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ type
         category_id: r.categoryId ?? "",
         recurring_transaction_id: r.recurringTransactionId ?? "",
         amount: r.amount,
-        description: r.description ?? "",
+        description: guardCsvCell(r.description ?? ""),
         date: r.date,
       })),
       {
