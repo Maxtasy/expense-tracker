@@ -1,4 +1,4 @@
-import { eq, isNull, or } from "drizzle-orm";
+import { and, eq, isNull, or } from "drizzle-orm";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
@@ -17,7 +17,7 @@ export default async function CategoriesPage() {
     db
       .select({ id: categories.id, name: categories.name, type: categories.type, userId: categories.userId, color: categories.color })
       .from(categories)
-      .where(or(isNull(categories.userId), eq(categories.userId, userId)))
+      .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), isNull(categories.archivedAt)))
       .orderBy(categories.name),
     db.select({ categoryId: hiddenCategories.categoryId }).from(hiddenCategories).where(eq(hiddenCategories.userId, userId)),
   ]);

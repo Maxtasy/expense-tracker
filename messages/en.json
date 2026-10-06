@@ -319,7 +319,7 @@
     "categoryColor": "Category color",
     "categoryName": "Category name",
     "deleteTitle": "Delete category?",
-    "deleteMessage": "\"{name}\" will be deleted and its transactions become uncategorized. This can't be undone."
+    "deleteMessage": "\"{name}\" will be removed from your categories. Transactions and recurring rules that use it keep showing it."
   },
   "recurring": {
     "title": "Recurring transactions",

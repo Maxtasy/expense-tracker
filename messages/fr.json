@@ -319,7 +319,7 @@
     "categoryColor": "Couleur de la catégorie",
     "categoryName": "Nom de la catégorie",
     "deleteTitle": "Supprimer la catégorie ?",
-    "deleteMessage": "« {name} » sera supprimée et ses transactions deviendront non catégorisées. Cette action est irréversible."
+    "deleteMessage": "« {name} » sera retirée de vos catégories. Les transactions et règles récurrentes qui l’utilisent continueront de l’afficher."
   },
   "recurring": {
     "title": "Transactions récurrentes",

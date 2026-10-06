@@ -120,6 +120,13 @@
       "when": 1791282529317,
       "tag": "0016_fluffy_mad_thinker",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1791292213470,
+      "tag": "0017_spooky_bedlam",
+      "breakpoints": true
     }
   ]
 }

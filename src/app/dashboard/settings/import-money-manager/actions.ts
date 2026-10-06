@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { eq, isNull, or } from "drizzle-orm";
+import { and, eq, isNull, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
@@ -73,7 +73,7 @@ export async function previewMoneyManagerImport(_prevState: PreviewState, formDa
   const existing = await db
     .select({ id: categories.id, name: categories.name, type: categories.type })
     .from(categories)
-    .where(or(isNull(categories.userId), eq(categories.userId, userId)));
+    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), isNull(categories.archivedAt)));
 
   const categorySuggestions: CategorySuggestion[] = parsed.categorySummary.map((c) => {
     const match = existing.find((e) => e.type === c.type && e.name.toLowerCase() === c.name.toLowerCase());
@@ -151,7 +151,7 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
   const existingCategories = await db
     .select({ id: categories.id, name: categories.name, type: categories.type })
     .from(categories)
-    .where(or(isNull(categories.userId), eq(categories.userId, userId)));
+    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), isNull(categories.archivedAt)));
 
   const existingTransactionRows = await db
     .select({

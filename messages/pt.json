@@ -319,7 +319,7 @@
     "categoryColor": "Cor da categoria",
     "categoryName": "Nome da categoria",
     "deleteTitle": "Eliminar a categoria?",
-    "deleteMessage": "«{name}» será eliminada e as suas transações ficarão sem categoria. Não é possível anular."
+    "deleteMessage": "«{name}» será removida das suas categorias. As transações e regras recorrentes que a usam continuarão a mostrá-la."
   },
   "recurring": {
     "title": "Transações recorrentes",

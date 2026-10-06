@@ -88,13 +88,16 @@ export const categories = pgTable(
     userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
     // hex string (e.g. "#38bdf8"); null = fall back to the deterministic name-hash color
     color: text("color"),
+    // set when the user deletes a personal category: it stays on the transactions and recurring rules
+    // that already use it (so they keep showing it) but is hidden from lists/pickers and its name is free again
+    archivedAt: timestamp("archived_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
-  // case-insensitive name uniqueness among a user's own categories (global ones are checked in the actions)
+  // case-insensitive name uniqueness among a user's own active categories (global ones are checked in the actions)
   (table) => [
     uniqueIndex("categories_user_name_unique")
       .on(table.userId, sql`lower(${table.name})`)
-      .where(sql`${table.userId} is not null`),
+      .where(sql`${table.userId} is not null and ${table.archivedAt} is null`),
   ],
 );
 
