@@ -19,6 +19,7 @@ import { getUserLocale } from "@/lib/locale-server";
 import { emailField } from "@/lib/email-address";
 import { ImportError, MAX_IMPORT_FILE_BYTES, MAX_IMPORT_FILE_MB } from "@/lib/import-error";
 import { isValidDateString } from "@/lib/validation";
+import { unguardCsvCell } from "@/lib/csv-safe";
 import { issueAndSendVerificationEmail } from "@/lib/verification";
 
 const typeSchema = z.enum(["expense", "income"]);
@@ -32,7 +33,7 @@ function buildCsvSchemas(amountMustBePositiveNumberMessage: string, invalidDateM
 
   const categoryRowSchema = z.object({
     id: z.string().min(1),
-    name: z.string().trim().min(1).max(50),
+    name: z.string().transform(unguardCsvCell).pipe(z.string().trim().min(1).max(50)),
     type: typeSchema,
     is_global: z.enum(["true", "false"]),
   });
@@ -42,7 +43,7 @@ function buildCsvSchemas(amountMustBePositiveNumberMessage: string, invalidDateM
     type: typeSchema,
     category_id: z.string(),
     amount: amountSchema,
-    description: z.string(),
+    description: z.string().transform(unguardCsvCell),
     start_date: dateSchema,
     end_date: optionalDateSchema,
   });
@@ -53,7 +54,7 @@ function buildCsvSchemas(amountMustBePositiveNumberMessage: string, invalidDateM
     category_id: z.string(),
     recurring_transaction_id: z.string(),
     amount: amountSchema,
-    description: z.string(),
+    description: z.string().transform(unguardCsvCell),
     date: dateSchema,
   });
 

@@ -79,7 +79,11 @@
       "emailLabel": "Email",
       "requestNewLink": "Send new link",
       "resendPending": "Sending...",
-      "resendSuccessMessage": "If an account exists for that email and isn't verified yet, we've sent a new link. Check your inbox."
+      "resendSuccessMessage": "If an account exists for that email and isn't verified yet, we've sent a new link. Check your inbox.",
+      "confirmTitle": "Confirm your email",
+      "confirmDescription": "Press the button to verify your email address.",
+      "confirmButton": "Verify email",
+      "confirming": "Verifying..."
     },
     "verifyEmailRequired": {
       "title": "Verify your email to continue",
@@ -213,7 +217,9 @@
     "recurring": "Recurring transactions",
     "insights": "Insights",
     "categories": "Categories",
-    "settings": "Settings"
+    "settings": "Settings",
+    "ariaLabel": "Main",
+    "skipToContent": "Skip to content"
   },
   "onboarding": {
     "ariaLabel": "Quick tour",

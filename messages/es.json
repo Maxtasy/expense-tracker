@@ -79,7 +79,11 @@
       "emailLabel": "Correo electrónico",
       "requestNewLink": "Enviar nuevo enlace",
       "resendPending": "Enviando...",
-      "resendSuccessMessage": "Si existe una cuenta con ese correo y aún no está verificada, te hemos enviado un nuevo enlace. Revisa tu bandeja de entrada."
+      "resendSuccessMessage": "Si existe una cuenta con ese correo y aún no está verificada, te hemos enviado un nuevo enlace. Revisa tu bandeja de entrada.",
+      "confirmTitle": "Confirma tu correo",
+      "confirmDescription": "Pulsa el botón para verificar tu dirección de correo.",
+      "confirmButton": "Verificar correo",
+      "confirming": "Verificando..."
     },
     "verifyEmailRequired": {
       "title": "Verifica tu correo para continuar",
@@ -213,7 +217,9 @@
     "recurring": "Transacciones recurrentes",
     "insights": "Estadísticas",
     "categories": "Categorías",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "ariaLabel": "Principal",
+    "skipToContent": "Saltar al contenido"
   },
   "onboarding": {
     "ariaLabel": "Recorrido rápido",

@@ -126,3 +126,9 @@ button:not(:disabled) {
 button:disabled {
   cursor: not-allowed;
 }
+
+/* Expense/Income chips hide their radio (sr-only), so ring the label instead when it is keyboard-focused. */
+.type-chip:has(input:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

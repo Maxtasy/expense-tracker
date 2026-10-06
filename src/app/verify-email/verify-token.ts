@@ -3,9 +3,19 @@ import { db } from "@/db";
 import { users, emailVerificationTokens } from "@/db/schema";
 import { hashToken } from "@/lib/token";
 
-// Called directly from the /verify-email page's server component render, not a form submission --
-// kept out of actions.ts (which has a top-level "use server") so importing it never pulls
-// server-only DB code into a client bundle.
+// Read-only check used when /verify-email renders: opening the link (a GET, which mail scanners and
+// prefetchers also do) must not spend the token -- that only happens when the person confirms.
+export async function isVerificationTokenValid(token: string): Promise<boolean> {
+  const [row] = await db
+    .select({ expiresAt: emailVerificationTokens.expiresAt })
+    .from(emailVerificationTokens)
+    .where(and(eq(emailVerificationTokens.tokenHash, hashToken(token)), isNull(emailVerificationTokens.usedAt)))
+    .limit(1);
+  return !!row && row.expiresAt >= new Date();
+}
+
+// Called by the confirmVerification Server Action (the confirm button on /verify-email). Kept out of
+// actions.ts so the DB code isn't re-exported from a "use server" module.
 export async function consumeVerificationToken(token: string): Promise<boolean> {
   const tokenHash = hashToken(token);
   const [row] = await db

@@ -14,12 +14,11 @@ type Props = {
 export function AmountInput({ symbol, name = "amount", defaultValue, placeholder = "0.00", required, size = "md" }: Props) {
   const t = useTranslations("common");
   const padY = size === "sm" ? "py-1.5" : "py-2";
-  const textSize = size === "sm" ? "text-sm" : "text-sm";
 
   return (
     <div className="relative">
       <span
-        className={`pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-fg-muted ${textSize}`}
+        className={`pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-fg-muted`}
       >
         {symbol}
       </span>

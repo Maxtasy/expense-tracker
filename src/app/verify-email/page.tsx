@@ -1,7 +1,7 @@
 import { AuthBrand } from "@/components/auth-brand";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { consumeVerificationToken } from "./verify-token";
+import { isVerificationTokenValid } from "./verify-token";
+import { ConfirmVerificationForm } from "./confirm-verification-form";
 import { ResendVerificationForm } from "./resend-verification-form";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 
@@ -12,21 +12,15 @@ export default async function VerifyEmailPage({
 }) {
   const { token } = await searchParams;
   const t = await getTranslations("auth.verifyEmail");
-  const verified = token ? await consumeVerificationToken(token) : false;
+  const valid = token ? await isVerificationTokenValid(token) : false;
 
   return (
     <main className="relative flex min-h-dvh flex-col items-center justify-center px-4">
       <LocaleSwitcher className="absolute right-4 top-4" />
       <div className="w-full max-w-xs text-center">
         <AuthBrand centered />
-        {verified ? (
-          <>
-            <h1 className="mb-2 text-lg font-semibold text-fg">{t("successTitle")}</h1>
-            <p className="mb-4 text-sm text-fg-muted">{t("successDescription")}</p>
-            <Link href="/dashboard" className="text-sm text-accent-text hover:text-accent-hover">
-              {t("goToDashboard")}
-            </Link>
-          </>
+        {valid && token ? (
+          <ConfirmVerificationForm token={token} />
         ) : (
           <>
             <h1 className="mb-2 text-lg font-semibold text-fg">{t("invalidOrExpiredTitle")}</h1>
