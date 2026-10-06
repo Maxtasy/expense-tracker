@@ -280,7 +280,9 @@
     "row": {
       "fallbackName": "Transação",
       "recurringLabel": "Recorrente",
-      "editTitle": "Editar transação"
+      "editTitle": "Editar transação",
+      "deleteTitle": "Eliminar a transação?",
+      "deleteMessage": "Esta transação será eliminada. Não é possível anular."
     },
     "form": {
       "categoryLabel": "Categoria",
@@ -313,7 +315,9 @@
     "unhide": "Mostrar",
     "autoColor": "Cor automática",
     "categoryColor": "Cor da categoria",
-    "categoryName": "Nome da categoria"
+    "categoryName": "Nome da categoria",
+    "deleteTitle": "Eliminar a categoria?",
+    "deleteMessage": "«{name}» será eliminada e as suas transações ficarão sem categoria. Não é possível anular."
   },
   "recurring": {
     "title": "Transações recorrentes",
@@ -326,7 +330,9 @@
     "until": " · até {date}",
     "startsOn": "Começa em",
     "endsOnOptional": "Termina em (opcional)",
-    "addButton": "Adicionar recorrência"
+    "addButton": "Adicionar recorrência",
+    "deleteTitle": "Eliminar a transação recorrente?",
+    "deleteMessage": "A regra e todas as ocorrências futuras serão eliminadas. As transações passadas são mantidas. Não é possível anular."
   },
   "insights": {
     "incomeByCategory": "Receitas por categoria",

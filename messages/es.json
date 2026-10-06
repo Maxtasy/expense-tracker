@@ -280,7 +280,9 @@
     "row": {
       "fallbackName": "Transacción",
       "recurringLabel": "Recurrente",
-      "editTitle": "Editar transacción"
+      "editTitle": "Editar transacción",
+      "deleteTitle": "¿Eliminar la transacción?",
+      "deleteMessage": "Esta transacción se eliminará. No se puede deshacer."
     },
     "form": {
       "categoryLabel": "Categoría",
@@ -313,7 +315,9 @@
     "unhide": "Mostrar",
     "autoColor": "Color automático",
     "categoryColor": "Color de la categoría",
-    "categoryName": "Nombre de la categoría"
+    "categoryName": "Nombre de la categoría",
+    "deleteTitle": "¿Eliminar la categoría?",
+    "deleteMessage": "«{name}» se eliminará y sus transacciones quedarán sin categoría. No se puede deshacer."
   },
   "recurring": {
     "title": "Transacciones recurrentes",
@@ -326,7 +330,9 @@
     "until": " · hasta el {date}",
     "startsOn": "Empieza el",
     "endsOnOptional": "Termina el (opcional)",
-    "addButton": "Añadir recurrente"
+    "addButton": "Añadir recurrente",
+    "deleteTitle": "¿Eliminar la transacción recurrente?",
+    "deleteMessage": "Se eliminarán la regla y todas las repeticiones futuras. Las transacciones pasadas se conservan. No se puede deshacer."
   },
   "insights": {
     "incomeByCategory": "Ingresos por categoría",

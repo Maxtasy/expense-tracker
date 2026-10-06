@@ -280,7 +280,9 @@
     "row": {
       "fallbackName": "Transaction",
       "recurringLabel": "Récurrente",
-      "editTitle": "Modifier la transaction"
+      "editTitle": "Modifier la transaction",
+      "deleteTitle": "Supprimer la transaction ?",
+      "deleteMessage": "Cette transaction sera supprimée. Cette action est irréversible."
     },
     "form": {
       "categoryLabel": "Catégorie",
@@ -313,7 +315,9 @@
     "unhide": "Afficher",
     "autoColor": "Couleur automatique",
     "categoryColor": "Couleur de la catégorie",
-    "categoryName": "Nom de la catégorie"
+    "categoryName": "Nom de la catégorie",
+    "deleteTitle": "Supprimer la catégorie ?",
+    "deleteMessage": "« {name} » sera supprimée et ses transactions deviendront non catégorisées. Cette action est irréversible."
   },
   "recurring": {
     "title": "Transactions récurrentes",
@@ -326,7 +330,9 @@
     "until": " · jusqu'au {date}",
     "startsOn": "Commence le",
     "endsOnOptional": "Se termine le (facultatif)",
-    "addButton": "Ajouter la récurrence"
+    "addButton": "Ajouter la récurrence",
+    "deleteTitle": "Supprimer la transaction récurrente ?",
+    "deleteMessage": "La règle et toutes les occurrences futures seront supprimées. Les transactions passées sont conservées. Cette action est irréversible."
   },
   "insights": {
     "incomeByCategory": "Revenus par catégorie",

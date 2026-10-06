@@ -280,7 +280,9 @@
     "row": {
       "fallbackName": "Transaktion",
       "recurringLabel": "Wiederkehrend",
-      "editTitle": "Transaktion bearbeiten"
+      "editTitle": "Transaktion bearbeiten",
+      "deleteTitle": "Transaktion löschen?",
+      "deleteMessage": "Diese Transaktion wird gelöscht. Das kann nicht rückgängig gemacht werden."
     },
     "form": {
       "categoryLabel": "Kategorie",
@@ -313,7 +315,9 @@
     "unhide": "Einblenden",
     "autoColor": "Automatische Farbe",
     "categoryColor": "Kategoriefarbe",
-    "categoryName": "Kategoriename"
+    "categoryName": "Kategoriename",
+    "deleteTitle": "Kategorie löschen?",
+    "deleteMessage": "„{name}“ wird gelöscht und die zugehörigen Transaktionen werden unkategorisiert. Das kann nicht rückgängig gemacht werden."
   },
   "recurring": {
     "title": "Wiederkehrende Transaktionen",
@@ -326,7 +330,9 @@
     "until": " · bis {date}",
     "startsOn": "Beginnt am",
     "endsOnOptional": "Endet am (optional)",
-    "addButton": "Wiederkehrend hinzufügen"
+    "addButton": "Wiederkehrend hinzufügen",
+    "deleteTitle": "Wiederkehrende Transaktion löschen?",
+    "deleteMessage": "Die Regel und alle künftigen Buchungen werden gelöscht. Vergangene Transaktionen bleiben erhalten. Das kann nicht rückgängig gemacht werden."
   },
   "insights": {
     "incomeByCategory": "Einnahmen nach Kategorie",

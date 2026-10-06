@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { EyeOff, Pencil, Trash2 } from "lucide-react";
+import { EyeOff, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { updateCategory, deleteCategory, hideCategory } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 import { Spinner } from "@/components/spinner";
+import { ConfirmDelete } from "../confirm-delete";
 
 type Category = { id: string; name: string; type: "expense" | "income"; userId: string | null; color: string | null };
 
@@ -30,12 +31,6 @@ export function CategoryRow({ category }: { category: Category }) {
         setError(undefined);
         setIsEditing(false);
       }
-    });
-  }
-
-  function handleDelete(formData: FormData) {
-    startTransition(async () => {
-      await deleteCategory(formData);
     });
   }
 
@@ -78,12 +73,7 @@ export function CategoryRow({ category }: { category: Category }) {
           <button type="button" onClick={() => setIsEditing(true)} aria-label={tCommon("edit")} className="rounded-lg p-1.5 hover:text-fg">
             <Pencil size={15} />
           </button>
-          <form action={handleDelete} className="contents">
-            <input type="hidden" name="id" value={category.id} />
-            <button type="submit" disabled={isPending} aria-label={tCommon("delete")} className="rounded-lg p-1.5 hover:text-danger disabled:opacity-60">
-              {isPending ? <Spinner size={15} /> : <Trash2 size={15} />}
-            </button>
-          </form>
+          <ConfirmDelete action={deleteCategory} id={category.id} title={t("deleteTitle")} message={t("deleteMessage", { name: category.name })} />
         </div>
       </div>
     );

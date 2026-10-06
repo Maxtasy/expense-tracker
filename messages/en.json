@@ -280,7 +280,9 @@
     "row": {
       "fallbackName": "Transaction",
       "recurringLabel": "Recurring",
-      "editTitle": "Edit transaction"
+      "editTitle": "Edit transaction",
+      "deleteTitle": "Delete transaction?",
+      "deleteMessage": "This transaction will be deleted. This can't be undone."
     },
     "form": {
       "categoryLabel": "Category",
@@ -313,7 +315,9 @@
     "unhide": "Unhide",
     "autoColor": "Auto color",
     "categoryColor": "Category color",
-    "categoryName": "Category name"
+    "categoryName": "Category name",
+    "deleteTitle": "Delete category?",
+    "deleteMessage": "\"{name}\" will be deleted and its transactions become uncategorized. This can't be undone."
   },
   "recurring": {
     "title": "Recurring transactions",
@@ -326,7 +330,9 @@
     "until": " · until {date}",
     "startsOn": "Starts on",
     "endsOnOptional": "Ends on (optional)",
-    "addButton": "Add recurring"
+    "addButton": "Add recurring",
+    "deleteTitle": "Delete recurring transaction?",
+    "deleteMessage": "The rule and all future occurrences will be deleted. Past transactions are kept. This can't be undone."
   },
   "insights": {
     "incomeByCategory": "Income by category",
