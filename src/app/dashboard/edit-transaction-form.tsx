@@ -18,6 +18,7 @@ type Transaction = {
   date: string;
   description: string | null;
   categoryId: string | null;
+  categoryName?: string | null;
 };
 
 const inputClass =
@@ -39,7 +40,14 @@ export function EditTransactionForm({
   const [type, setType] = useState<TxType>(transaction.type);
   const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
-  const filteredCategories = categories.filter((c) => c.type === type);
+  const activeCategories = categories.filter((c) => c.type === type);
+  // a deleted (archived) category isn't in the list anymore but must stay selectable here, otherwise
+  // editing e.g. the description would silently move the entry to Uncategorized
+  const keepsArchivedCategory =
+    transaction.type === type && transaction.categoryId && transaction.categoryName && !activeCategories.some((c) => c.id === transaction.categoryId);
+  const filteredCategories: Category[] = keepsArchivedCategory
+    ? [...activeCategories, { id: transaction.categoryId!, name: transaction.categoryName!, type }]
+    : activeCategories;
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
@@ -103,7 +111,7 @@ export function EditTransactionForm({
         {isPending && <Spinner size={14} />}
         {isPending ? tCommon("saving") : tCommon("save")}
       </button>
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && <p role="alert" className="text-sm text-danger">{error}</p>}
     </form>
   );
 }

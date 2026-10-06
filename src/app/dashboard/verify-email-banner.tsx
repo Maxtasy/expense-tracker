@@ -14,7 +14,7 @@ export function VerifyEmailBanner({ email }: { email: string }) {
     <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg-muted">
       <span>{t("message", { email })}</span>
       {sent ? (
-        <span className="text-success">{t("sent")}</span>
+        <span role="status" className="text-success">{t("sent")}</span>
       ) : (
         <button
           type="button"

@@ -41,8 +41,8 @@ export function CurrencyForm({ currency, locale }: { currency: string; locale: s
           </option>
         ))}
       </select>
-      {saved && !isPending && <span className="shrink-0 text-xs text-success">{t("saved")}</span>}
-      {error && <span className="shrink-0 text-xs text-danger">{error}</span>}
+      {saved && !isPending && <span role="status" className="shrink-0 text-xs text-success">{t("saved")}</span>}
+      {error && <span role="alert" className="shrink-0 text-xs text-danger">{error}</span>}
     </form>
   );
 }

@@ -2,11 +2,11 @@
 
 import { z } from "zod";
 import { compare, hash } from "bcryptjs";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNotNull, isNull, sql } from "drizzle-orm";
 import { parse } from "csv-parse/sync";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
-import { auth, signOut } from "@/auth";
+import { auth, signOut, unstable_update } from "@/auth";
 import { db } from "@/db";
 import { categories, recurringTransactions, transactions, users } from "@/db/schema";
 import { CURRENCIES } from "@/lib/currency";
@@ -119,7 +119,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
     const rawCategories = parseCsv(await categoriesFile.text(), t("categoriesFileLabel"), t);
     categoryRows = rawCategories.map((row, i) => {
       const parsed = categoryRowSchema.safeParse(row);
-      if (!parsed.success) throw new ImportError(`${t("categoriesFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new ImportError(t("rowInvalid", { label: t("categoriesFileLabel"), row: i + 2, field: String(parsed.error.issues[0].path[0] ?? "") }));
       return parsed.data;
     });
     checkDuplicateIds(categoryRows, t("categoriesFileLabel"), t);
@@ -127,7 +127,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
     const rawRecurring = parseCsv(await recurringFile.text(), t("recurringFileLabel"), t);
     recurringRows = rawRecurring.map((row, i) => {
       const parsed = recurringRowSchema.safeParse(row);
-      if (!parsed.success) throw new ImportError(`${t("recurringFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new ImportError(t("rowInvalid", { label: t("recurringFileLabel"), row: i + 2, field: String(parsed.error.issues[0].path[0] ?? "") }));
       return parsed.data;
     });
     checkDuplicateIds(recurringRows, t("recurringFileLabel"), t);
@@ -135,7 +135,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
     const rawTransactions = parseCsv(await transactionsFile.text(), t("transactionsFileLabel"), t);
     transactionRows = rawTransactions.map((row, i) => {
       const parsed = transactionRowSchema.safeParse(row);
-      if (!parsed.success) throw new ImportError(`${t("transactionsFileLabel")} row ${i + 2}: ${parsed.error.issues[0].message}`);
+      if (!parsed.success) throw new ImportError(t("rowInvalid", { label: t("transactionsFileLabel"), row: i + 2, field: String(parsed.error.issues[0].path[0] ?? "") }));
       return parsed.data;
     });
     checkDuplicateIds(transactionRows, t("transactionsFileLabel"), t);
@@ -389,7 +389,13 @@ export async function changePassword(formData: FormData) {
   }
 
   const passwordHash = await hash(parsed.data.newPassword, 10);
-  await db.update(users).set({ passwordHash }).where(eq(users.id, userId));
+  const [updated] = await db
+    .update(users)
+    .set({ passwordHash, sessionVersion: sql`${users.sessionVersion} + 1` })
+    .where(eq(users.id, userId))
+    .returning({ sessionVersion: users.sessionVersion });
+  // every other signed-in device now carries a stale version and gets signed out; refresh this one's
+  await unstable_update({ user: { sessionVersion: updated.sessionVersion } });
 
   return { success: true };
 }
@@ -404,6 +410,8 @@ export async function startFresh() {
     await tx.delete(transactions).where(eq(transactions.userId, userId));
     // recurring_transaction_skips cascade-deletes with their rule -- no separate cleanup needed
     await tx.delete(recurringTransactions).where(eq(recurringTransactions.userId, userId));
+    // deleted categories were only kept for the entries that used them, and those are gone now
+    await tx.delete(categories).where(and(eq(categories.userId, userId), isNotNull(categories.archivedAt)));
   });
 
   revalidatePath("/dashboard");

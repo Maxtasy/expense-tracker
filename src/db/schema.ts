@@ -12,6 +12,8 @@ export const users = pgTable(
     // a "Try without an account" user: a real row (so all ownership scoping just works) that's
     // purged after GUEST_TTL_DAYS unless the person adds an email + password first
     isGuest: boolean("is_guest").notNull().default(false),
+    // bumped when the password changes/resets; a JWT carrying an older value is rejected (src/auth.ts)
+    sessionVersion: integer("session_version").notNull().default(0),
     name: text("name"),
     currency: text("currency").notNull().default("EUR"),
     locale: text("locale").notNull().default("en"),
@@ -86,13 +88,16 @@ export const categories = pgTable(
     userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
     // hex string (e.g. "#38bdf8"); null = fall back to the deterministic name-hash color
     color: text("color"),
+    // set when the user deletes a personal category: it stays on the transactions and recurring rules
+    // that already use it (so they keep showing it) but is hidden from lists/pickers and its name is free again
+    archivedAt: timestamp("archived_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
-  // case-insensitive name uniqueness among a user's own categories (global ones are checked in the actions)
+  // case-insensitive name uniqueness among a user's own active categories (global ones are checked in the actions)
   (table) => [
     uniqueIndex("categories_user_name_unique")
       .on(table.userId, sql`lower(${table.name})`)
-      .where(sql`${table.userId} is not null`),
+      .where(sql`${table.userId} is not null and ${table.archivedAt} is null`),
   ],
 );
 

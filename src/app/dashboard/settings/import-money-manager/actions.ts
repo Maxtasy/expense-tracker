@@ -1,14 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { eq, isNull, or } from "drizzle-orm";
+import { and, eq, isNull, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
 import { ImportError, MAX_IMPORT_FILE_BYTES, MAX_IMPORT_FILE_MB } from "@/lib/import-error";
-import { parseMoneyManagerFile, type CategorySummaryEntry } from "@/lib/importers/money-manager";
+import { MoneyManagerParseError, parseMoneyManagerFile, type CategorySummaryEntry } from "@/lib/importers/money-manager";
 
 export type CategorySuggestion = CategorySummaryEntry & {
   matchedCategoryId: string | null;
@@ -36,6 +36,15 @@ async function readFile(formData: FormData, chooseFileMessage: string, tooLargeM
   return file.arrayBuffer();
 }
 
+function parseErrorMessage(err: unknown, t: Awaited<ReturnType<typeof getTranslations>>) {
+  if (err instanceof MoneyManagerParseError) {
+    if (err.code === "unreadable") return t("fileUnreadable");
+    if (err.code === "noSheets") return t("fileNoSheets");
+    return t("fileMissingColumn", { column: err.column ?? "" });
+  }
+  return t("couldNotParseFile");
+}
+
 export async function previewMoneyManagerImport(_prevState: PreviewState, formData: FormData): Promise<PreviewState> {
   const session = await auth();
   const tValidation = await getTranslations("validation");
@@ -54,7 +63,7 @@ export async function previewMoneyManagerImport(_prevState: PreviewState, formDa
   try {
     parsed = await parseMoneyManagerFile(buffer);
   } catch (err) {
-    return { error: err instanceof Error ? err.message : t("couldNotParseFile") };
+    return { error: parseErrorMessage(err, t) };
   }
 
   if (parsed.rows.length === 0) {
@@ -64,7 +73,7 @@ export async function previewMoneyManagerImport(_prevState: PreviewState, formDa
   const existing = await db
     .select({ id: categories.id, name: categories.name, type: categories.type })
     .from(categories)
-    .where(or(isNull(categories.userId), eq(categories.userId, userId)));
+    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), isNull(categories.archivedAt)));
 
   const categorySuggestions: CategorySuggestion[] = parsed.categorySummary.map((c) => {
     const match = existing.find((e) => e.type === c.type && e.name.toLowerCase() === c.name.toLowerCase());
@@ -126,7 +135,7 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
   try {
     parsed = await parseMoneyManagerFile(buffer);
   } catch (err) {
-    return { error: err instanceof Error ? err.message : t("couldNotParseFile") };
+    return { error: parseErrorMessage(err, t) };
   }
   if (parsed.rows.length === 0) {
     return { error: t("noImportableTransactions") };
@@ -142,7 +151,7 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
   const existingCategories = await db
     .select({ id: categories.id, name: categories.name, type: categories.type })
     .from(categories)
-    .where(or(isNull(categories.userId), eq(categories.userId, userId)));
+    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), isNull(categories.archivedAt)));
 
   const existingTransactionRows = await db
     .select({

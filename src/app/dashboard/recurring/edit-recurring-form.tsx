@@ -17,6 +17,7 @@ type Recurring = {
   amount: string;
   description: string | null;
   categoryId: string | null;
+  categoryName?: string | null;
   startDate: string;
   endDate: string | null;
 };
@@ -41,7 +42,14 @@ export function EditRecurringForm({
   const [type, setType] = useState<TxType>(recurring.type);
   const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
-  const filteredCategories = categories.filter((c) => c.type === type);
+  const activeCategories = categories.filter((c) => c.type === type);
+  // a deleted (archived) category isn't in the list anymore but must stay selectable here, otherwise
+  // editing e.g. the description would silently move the entry to Uncategorized
+  const keepsArchivedCategory =
+    recurring.type === type && recurring.categoryId && recurring.categoryName && !activeCategories.some((c) => c.id === recurring.categoryId);
+  const filteredCategories: Category[] = keepsArchivedCategory
+    ? [...activeCategories, { id: recurring.categoryId!, name: recurring.categoryName!, type }]
+    : activeCategories;
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
@@ -112,7 +120,7 @@ export function EditRecurringForm({
         {isPending && <Spinner size={14} />}
         {isPending ? tCommon("saving") : tCommon("save")}
       </button>
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && <p role="alert" className="text-sm text-danger">{error}</p>}
     </form>
   );
 }

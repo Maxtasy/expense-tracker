@@ -32,7 +32,7 @@ function clientIpFromRequest(request: Request) {
 // bcrypt hash of a random string, compared against when no real hash exists (timing equalisation).
 const DUMMY_HASH = "$2b$10$i3FgPqHz0QODuO/RGHERfO9VTmpH8T6aHap9C6Iv.Z0dj67RrNhwi";
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   session: { strategy: "jwt" },
   trustHost: true,
   pages: {
@@ -71,7 +71,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new EmailNotVerifiedError();
         }
 
-        return { id: user.id, email: user.email, name: user.name };
+        return { id: user.id, email: user.email, name: user.name, sessionVersion: user.sessionVersion };
       },
     }),
     // "Try without an account": creates the guest user right here, so there's no credential that
@@ -96,10 +96,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt: ({ token, user }) => {
+    jwt: async ({ token, user, trigger, session }) => {
       if (user) {
         token.id = user.id;
+        token.sessionVersion = (user as { sessionVersion?: number }).sessionVersion ?? 0;
+        return token;
       }
+      if (trigger === "update" && typeof session?.user?.sessionVersion === "number") {
+        token.sessionVersion = session.user.sessionVersion;
+      }
+      // Reject sessions issued before the last password change (returning null signs them out).
+      // A missing row (deleted account) is rejected too.
+      const [row] = await db
+        .select({ sessionVersion: users.sessionVersion })
+        .from(users)
+        .where(eq(users.id, token.id as string))
+        .limit(1);
+      if (!row || row.sessionVersion !== (token.sessionVersion ?? 0)) return null;
       return token;
     },
     session: ({ session, token }) => {

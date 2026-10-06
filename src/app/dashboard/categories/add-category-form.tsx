@@ -69,7 +69,7 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
           {tCommon("income")}
         </label>
       </div>
-      {error && <span className="text-xs text-danger">{error}</span>}
+      {error && <span role="alert" className="text-xs text-danger">{error}</span>}
     </form>
   );
 }

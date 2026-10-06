@@ -11,7 +11,7 @@ export function GuestStartForm() {
 
   return (
     <form action={formAction} className="space-y-3">
-      {state?.error && <p className="text-sm text-danger">{state.error}</p>}
+      {state?.error && <p role="alert" className="text-sm text-danger">{state.error}</p>}
       <button
         type="submit"
         disabled={pending}

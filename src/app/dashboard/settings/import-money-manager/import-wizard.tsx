@@ -132,7 +132,7 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
   if (step === "done" && result) {
     return (
       <div className="rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-1 text-sm text-success">{t("doneComplete")}</p>
+        <p role="status" className="mb-1 text-sm text-success">{t("doneComplete")}</p>
         <ul className="mb-4 space-y-0.5 text-xs text-fg-muted">
           <li>{t("doneImported", { count: result.imported })}</li>
           {result.categoriesCreated > 0 && <li>{t("doneCategoriesCreated", { count: result.categoriesCreated })}</li>}
@@ -221,7 +221,7 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
           </div>
         </div>
 
-        {commitError && <p className="text-sm text-danger">{commitError}</p>}
+        {commitError && <p role="alert" className="text-sm text-danger">{commitError}</p>}
 
         <div className="flex gap-2">
           <button
@@ -262,7 +262,7 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
         {isPending && <Spinner size={14} />}
         {isPending ? t("readingFile") : t("previewImport")}
       </button>
-      {previewError && <p className="mt-2 text-sm text-danger">{previewError}</p>}
+      {previewError && <p role="alert" className="mt-2 text-sm text-danger">{previewError}</p>}
     </form>
   );
 }
