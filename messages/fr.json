@@ -14,7 +14,8 @@
     "add": "Ajouter",
     "adding": "Ajout en cours...",
     "showPassword": "Afficher le mot de passe",
-    "hidePassword": "Masquer le mot de passe"
+    "hidePassword": "Masquer le mot de passe",
+    "loading": "Chargement..."
   },
   "auth": {
     "login": {
@@ -280,7 +281,9 @@
     "row": {
       "fallbackName": "Transaction",
       "recurringLabel": "Récurrente",
-      "editTitle": "Modifier la transaction"
+      "editTitle": "Modifier la transaction",
+      "deleteTitle": "Supprimer la transaction ?",
+      "deleteMessage": "Cette transaction sera supprimée. Cette action est irréversible."
     },
     "form": {
       "categoryLabel": "Catégorie",
@@ -298,7 +301,8 @@
     "guestBanner": {
       "message": "Compte invité : vos données seront supprimées dans {days, plural, one {# jour} other {# jours}} si vous ne créez pas de compte.",
       "createAccount": "Créer un compte"
-    }
+    },
+    "goToMonth": "Aller à {month}"
   },
   "categories": {
     "title": "Catégories",
@@ -313,7 +317,9 @@
     "unhide": "Afficher",
     "autoColor": "Couleur automatique",
     "categoryColor": "Couleur de la catégorie",
-    "categoryName": "Nom de la catégorie"
+    "categoryName": "Nom de la catégorie",
+    "deleteTitle": "Supprimer la catégorie ?",
+    "deleteMessage": "« {name} » sera retirée de vos catégories. Les transactions et règles récurrentes qui l’utilisent continueront de l’afficher."
   },
   "recurring": {
     "title": "Transactions récurrentes",
@@ -326,7 +332,9 @@
     "until": " · jusqu'au {date}",
     "startsOn": "Commence le",
     "endsOnOptional": "Se termine le (facultatif)",
-    "addButton": "Ajouter la récurrence"
+    "addButton": "Ajouter la récurrence",
+    "deleteTitle": "Supprimer la transaction récurrente ?",
+    "deleteMessage": "La règle et toutes les occurrences futures seront supprimées. Les transactions passées sont conservées. Cette action est irréversible."
   },
   "insights": {
     "incomeByCategory": "Revenus par catégorie",
@@ -338,7 +346,8 @@
     "previousMonth": "Mois précédent",
     "nextMonth": "Mois suivant",
     "previousYear": "Année précédente",
-    "nextYear": "Année suivante"
+    "nextYear": "Année suivante",
+    "goToMonth": "Aller à {month}"
   },
   "settings": {
     "title": "Paramètres",
@@ -423,7 +432,8 @@
       "unknownCategoryIdDuringImport": "category_id inconnu \"{id}\"",
       "unknownRecurringIdDuringImport": "recurring_transaction_id inconnu \"{id}\"",
       "importFailed": "Échec de l'importation",
-      "fileTooLarge": "{label} est trop volumineux (max. {maxMb} Mo)"
+      "fileTooLarge": "{label} est trop volumineux (max. {maxMb} Mo)",
+      "rowInvalid": "{label}, ligne {row} : valeur invalide pour « {field} »"
     },
     "moneyManager": {
       "backToSettings": "Paramètres",
@@ -460,7 +470,10 @@
       "doneDuplicatesSkipped": "{count, plural, one {# doublon ignoré (déjà présent dans vos données)} other {# doublons ignorés (déjà présents dans vos données)}}",
       "goToDashboard": "Aller au tableau de bord",
       "importAnother": "Importer un autre fichier",
-      "fileTooLarge": "Le fichier est trop volumineux (max. {maxMb} Mo)"
+      "fileTooLarge": "Le fichier est trop volumineux (max. {maxMb} Mo)",
+      "fileUnreadable": "Impossible de lire ce fichier comme un export .xlsx",
+      "fileNoSheets": "Le fichier ne contient aucune feuille",
+      "fileMissingColumn": "Ceci ne ressemble pas à un export de Money Manager — colonne « {column} » manquante"
     },
     "upgradeGuest": {
       "label": "Créez votre compte",
@@ -515,6 +528,17 @@
       "button": "Vérifier l'e-mail",
       "ignoreNote": "Si vous n'avez pas créé ce compte, vous pouvez ignorer cet e-mail en toute sécurité.",
       "footer": "Expense Tracker"
+    }
+  },
+  "meta": {
+    "description": "Suivez et catégorisez vos revenus et dépenses personnels",
+    "shortName": "Dépenses",
+    "screenshots": {
+      "dashboard": "Aperçu mensuel avec revenus, dépenses et transactions",
+      "insights": "Répartition des revenus et dépenses par catégorie",
+      "categories": "Gérez les catégories de dépenses et de revenus",
+      "recurring": "Configurez des revenus et dépenses récurrents",
+      "settings": "Exportez et importez vos données en CSV"
     }
   }
 }

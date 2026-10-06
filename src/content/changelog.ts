@@ -12,6 +12,19 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.19.0",
+    date: "2026-10-06",
+    items: [
+      "Deleting a transaction, category or recurring transaction now asks for confirmation first.",
+      "A deleted category stays on the transactions that used it instead of turning them into Uncategorized, and you can create a new category with the same name.",
+      "Changing your password signs you out on all your other devices.",
+      "Bigger buttons for editing and deleting, the top menu and the month pickers, so they are easier to tap.",
+      "Easier to use with a screen reader: errors and confirmations are announced, loading spinners are labeled and the month pickers say which month they open.",
+      "The focus ring around text fields is clearer for keyboard users.",
+      "Import messages and the app description now follow your language.",
+    ],
+  },
+  {
     version: "1.18.0",
     date: "2026-10-06",
     items: [

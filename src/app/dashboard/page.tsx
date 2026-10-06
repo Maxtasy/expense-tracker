@@ -43,7 +43,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     db
       .select({ id: categories.id, name: categories.name, type: categories.type })
       .from(categories)
-      .where(or(isNull(categories.userId), eq(categories.userId, userId)))
+      .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), isNull(categories.archivedAt)))
       .orderBy(categories.name),
     db.select({ categoryId: hiddenCategories.categoryId }).from(hiddenCategories).where(eq(hiddenCategories.userId, userId)),
     db.$count(transactions, eq(transactions.userId, userId)),

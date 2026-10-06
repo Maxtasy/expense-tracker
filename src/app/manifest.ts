@@ -1,16 +1,21 @@
 import type { MetadataRoute } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
 
-export default function manifest(): MetadataRoute.Manifest {
+// Fetched by the browser without the user's cookies in most cases, so this is usually the default
+// locale; it follows the resolved locale where the request does carry one.
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const t = await getTranslations("meta");
+  const locale = await getLocale();
   return {
     // Stable identifier so browsers still recognize this as "the same app" if start_url
     // ever changes (e.g. moves off /dashboard). Without this, start_url doubles as the id.
     id: "/dashboard",
     name: "Expense Tracker",
-    short_name: "Expenses",
-    description: "Track and categorize your personal income and expenses",
+    short_name: t("shortName"),
+    description: t("description"),
     start_url: "/dashboard",
     scope: "/",
-    lang: "en",
+    lang: locale,
     dir: "ltr",
     display: "standalone",
     display_override: ["standalone", "minimal-ui"],
@@ -32,35 +37,35 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "780x1688",
         type: "image/png",
         form_factor: "narrow",
-        label: "Monthly overview with income, expenses, and transactions",
+        label: t("screenshots.dashboard"),
       },
       {
         src: "/screenshots/insights.png",
         sizes: "780x1688",
         type: "image/png",
         form_factor: "narrow",
-        label: "Income and expense breakdown by category",
+        label: t("screenshots.insights"),
       },
       {
         src: "/screenshots/categories.png",
         sizes: "780x1688",
         type: "image/png",
         form_factor: "narrow",
-        label: "Manage expense and income categories",
+        label: t("screenshots.categories"),
       },
       {
         src: "/screenshots/recurring.png",
         sizes: "780x1688",
         type: "image/png",
         form_factor: "narrow",
-        label: "Set up recurring income and expenses",
+        label: t("screenshots.recurring"),
       },
       {
         src: "/screenshots/settings.png",
         sizes: "780x1688",
         type: "image/png",
         form_factor: "narrow",
-        label: "Export and import your data as CSV",
+        label: t("screenshots.settings"),
       },
     ],
   };

@@ -42,7 +42,7 @@ export function Dialog({
       >
         <div className="mb-3 flex items-center justify-between">
           <h2 id={titleId} className="text-sm font-semibold text-fg">{title}</h2>
-          <button type="button" onClick={() => dialogRef.current?.close()} aria-label={t("close")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
+          <button type="button" onClick={() => dialogRef.current?.close()} aria-label={t("close")} className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:text-fg">
             <X size={18} />
           </button>
         </div>

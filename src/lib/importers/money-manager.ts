@@ -24,6 +24,17 @@ export type ParsedMoneyManagerFile = {
   skippedInvalid: number;
 };
 
+// Thrown for a file that can't be imported at all; the calling Server Action turns the code into a
+// translated message (this module has no access to the user's locale).
+export class MoneyManagerParseError extends Error {
+  constructor(
+    public code: "unreadable" | "noSheets" | "missingColumn",
+    public column?: string,
+  ) {
+    super(code);
+  }
+}
+
 const TYPE_MAP: Record<string, MoneyManagerType> = {
   Ausgabe: "expense",
   Einkommen: "income",
@@ -36,11 +47,11 @@ export async function parseMoneyManagerFile(buffer: ArrayBuffer): Promise<Parsed
   try {
     await workbook.xlsx.load(buffer);
   } catch {
-    throw new Error("Could not read this file as an .xlsx export");
+    throw new MoneyManagerParseError("unreadable");
   }
 
   const sheet = workbook.worksheets[0];
-  if (!sheet) throw new Error("The file has no sheets");
+  if (!sheet) throw new MoneyManagerParseError("noSheets");
 
   const columnIndex = new Map<string, number>();
   sheet.getRow(1).eachCell({ includeEmpty: true }, (cell, colNumber) => {
@@ -50,7 +61,7 @@ export async function parseMoneyManagerFile(buffer: ArrayBuffer): Promise<Parsed
 
   for (const header of REQUIRED_HEADERS) {
     if (!columnIndex.has(header)) {
-      throw new Error(`This doesn't look like a Money Manager export — missing column "${header}"`);
+      throw new MoneyManagerParseError("missingColumn", header);
     }
   }
 

@@ -106,7 +106,8 @@ h3 {
   background: oklch(0.59 0.2 277 / 0.4);
 }
 
-/* Focus: 2px gap + 2px indigo ring for buttons and links, a soft halo for text fields. */
+/* Focus: 2px gap + 2px indigo ring for buttons and links; text fields get the accent border plus a
+   solid 2px accent ring (a faint halo alone missed the 3:1 non-text contrast of WCAG 1.4.11). */
 :focus-visible {
   outline: none;
   box-shadow:
@@ -116,7 +117,7 @@ h3 {
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  box-shadow: 0 0 0 3px oklch(0.59 0.2 277 / 0.25);
+  box-shadow: 0 0 0 2px var(--color-accent);
 }
 
 button:not(:disabled) {

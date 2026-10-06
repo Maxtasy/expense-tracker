@@ -18,7 +18,7 @@ export function MonthPager({ current, category, sort }: { current: YearMonth; ca
         type="button"
         onClick={() => navigate(monthHref(prev, category, sort))}
         aria-label={t("previousMonth")}
-        className="rounded-lg p-1.5 text-fg-muted hover:text-fg"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:text-fg"
       >
         <ChevronLeft size={16} />
       </button>
@@ -26,15 +26,17 @@ export function MonthPager({ current, category, sort }: { current: YearMonth; ca
         <button
           type="button"
           onClick={() => navigate(monthHref(prev, category, sort))}
-          className="px-1 text-xs text-fg-muted hover:text-fg"
+          aria-label={t("goToMonth", { month: monthLabel(prev, locale) })}
+          className="min-h-11 px-2 text-xs text-fg-muted hover:text-fg"
         >
           {monthLabel(prev, locale, "short")}
         </button>
-        <span className="rounded-md bg-accent/15 px-3 py-1 text-center font-medium text-accent-text">{monthLabel(current, locale)}</span>
+        <span aria-live="polite" aria-atomic="true" className="rounded-md bg-accent/15 px-3 py-1 text-center font-medium text-accent-text">{monthLabel(current, locale)}</span>
         <button
           type="button"
           onClick={() => navigate(monthHref(next, category, sort))}
-          className="px-1 text-xs text-fg-muted hover:text-fg"
+          aria-label={t("goToMonth", { month: monthLabel(next, locale) })}
+          className="min-h-11 px-2 text-xs text-fg-muted hover:text-fg"
         >
           {monthLabel(next, locale, "short")}
         </button>
@@ -43,7 +45,7 @@ export function MonthPager({ current, category, sort }: { current: YearMonth; ca
         type="button"
         onClick={() => navigate(monthHref(next, category, sort))}
         aria-label={t("nextMonth")}
-        className="rounded-lg p-1.5 text-fg-muted hover:text-fg"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:text-fg"
       >
         <ChevronRight size={16} />
       </button>

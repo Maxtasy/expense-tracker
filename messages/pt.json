@@ -14,7 +14,8 @@
     "add": "Adicionar",
     "adding": "Adicionando...",
     "showPassword": "Mostrar palavra-passe",
-    "hidePassword": "Ocultar palavra-passe"
+    "hidePassword": "Ocultar palavra-passe",
+    "loading": "A carregar..."
   },
   "auth": {
     "login": {
@@ -280,7 +281,9 @@
     "row": {
       "fallbackName": "Transação",
       "recurringLabel": "Recorrente",
-      "editTitle": "Editar transação"
+      "editTitle": "Editar transação",
+      "deleteTitle": "Eliminar a transação?",
+      "deleteMessage": "Esta transação será eliminada. Não é possível anular."
     },
     "form": {
       "categoryLabel": "Categoria",
@@ -298,7 +301,8 @@
     "guestBanner": {
       "message": "Conta de convidado: os teus dados serão eliminados dentro de {days, plural, one {# dia} other {# dias}} se não criares uma conta.",
       "createAccount": "Criar conta"
-    }
+    },
+    "goToMonth": "Ir para {month}"
   },
   "categories": {
     "title": "Categorias",
@@ -313,7 +317,9 @@
     "unhide": "Mostrar",
     "autoColor": "Cor automática",
     "categoryColor": "Cor da categoria",
-    "categoryName": "Nome da categoria"
+    "categoryName": "Nome da categoria",
+    "deleteTitle": "Eliminar a categoria?",
+    "deleteMessage": "«{name}» será removida das suas categorias. As transações e regras recorrentes que a usam continuarão a mostrá-la."
   },
   "recurring": {
     "title": "Transações recorrentes",
@@ -326,7 +332,9 @@
     "until": " · até {date}",
     "startsOn": "Começa em",
     "endsOnOptional": "Termina em (opcional)",
-    "addButton": "Adicionar recorrência"
+    "addButton": "Adicionar recorrência",
+    "deleteTitle": "Eliminar a transação recorrente?",
+    "deleteMessage": "A regra e todas as ocorrências futuras serão eliminadas. As transações passadas são mantidas. Não é possível anular."
   },
   "insights": {
     "incomeByCategory": "Receitas por categoria",
@@ -338,7 +346,8 @@
     "previousMonth": "Mês anterior",
     "nextMonth": "Próximo mês",
     "previousYear": "Ano anterior",
-    "nextYear": "Próximo ano"
+    "nextYear": "Próximo ano",
+    "goToMonth": "Ir para {month}"
   },
   "settings": {
     "title": "Configurações",
@@ -423,7 +432,8 @@
       "unknownCategoryIdDuringImport": "category_id desconhecido \"{id}\"",
       "unknownRecurringIdDuringImport": "recurring_transaction_id desconhecido \"{id}\"",
       "importFailed": "Falha na importação",
-      "fileTooLarge": "{label} é demasiado grande (máx. {maxMb} MB)"
+      "fileTooLarge": "{label} é demasiado grande (máx. {maxMb} MB)",
+      "rowInvalid": "{label}, linha {row}: valor inválido para «{field}»"
     },
     "moneyManager": {
       "backToSettings": "Configurações",
@@ -460,7 +470,10 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicata ignorada (já está nos seus dados)} other {# duplicatas ignoradas (já estão nos seus dados)}}",
       "goToDashboard": "Ir para o painel",
       "importAnother": "Importar outro arquivo",
-      "fileTooLarge": "O ficheiro é demasiado grande (máx. {maxMb} MB)"
+      "fileTooLarge": "O ficheiro é demasiado grande (máx. {maxMb} MB)",
+      "fileUnreadable": "Não foi possível ler este ficheiro como exportação .xlsx",
+      "fileNoSheets": "O ficheiro não tem folhas",
+      "fileMissingColumn": "Isto não parece uma exportação do Money Manager — falta a coluna «{column}»"
     },
     "upgradeGuest": {
       "label": "Cria a tua conta",
@@ -515,6 +528,17 @@
       "button": "Verificar e-mail",
       "ignoreNote": "Se você não criou esta conta, pode ignorar este e-mail com segurança.",
       "footer": "Expense Tracker"
+    }
+  },
+  "meta": {
+    "description": "Registe e categorize os seus rendimentos e despesas pessoais",
+    "shortName": "Despesas",
+    "screenshots": {
+      "dashboard": "Resumo mensal com rendimentos, despesas e transações",
+      "insights": "Repartição de rendimentos e despesas por categoria",
+      "categories": "Gira as categorias de despesas e rendimentos",
+      "recurring": "Configure rendimentos e despesas recorrentes",
+      "settings": "Exporte e importe os seus dados como CSV"
     }
   }
 }

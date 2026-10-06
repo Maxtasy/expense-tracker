@@ -14,7 +14,8 @@
     "add": "Añadir",
     "adding": "Añadiendo...",
     "showPassword": "Mostrar contraseña",
-    "hidePassword": "Ocultar contraseña"
+    "hidePassword": "Ocultar contraseña",
+    "loading": "Cargando..."
   },
   "auth": {
     "login": {
@@ -280,7 +281,9 @@
     "row": {
       "fallbackName": "Transacción",
       "recurringLabel": "Recurrente",
-      "editTitle": "Editar transacción"
+      "editTitle": "Editar transacción",
+      "deleteTitle": "¿Eliminar la transacción?",
+      "deleteMessage": "Esta transacción se eliminará. No se puede deshacer."
     },
     "form": {
       "categoryLabel": "Categoría",
@@ -298,7 +301,8 @@
     "guestBanner": {
       "message": "Cuenta de invitado: tus datos se eliminarán en {days, plural, one {# día} other {# días}} si no creas una cuenta.",
       "createAccount": "Crear cuenta"
-    }
+    },
+    "goToMonth": "Ir a {month}"
   },
   "categories": {
     "title": "Categorías",
@@ -313,7 +317,9 @@
     "unhide": "Mostrar",
     "autoColor": "Color automático",
     "categoryColor": "Color de la categoría",
-    "categoryName": "Nombre de la categoría"
+    "categoryName": "Nombre de la categoría",
+    "deleteTitle": "¿Eliminar la categoría?",
+    "deleteMessage": "«{name}» se quitará de tus categorías. Las transacciones y reglas recurrentes que la usan seguirán mostrándola."
   },
   "recurring": {
     "title": "Transacciones recurrentes",
@@ -326,7 +332,9 @@
     "until": " · hasta el {date}",
     "startsOn": "Empieza el",
     "endsOnOptional": "Termina el (opcional)",
-    "addButton": "Añadir recurrente"
+    "addButton": "Añadir recurrente",
+    "deleteTitle": "¿Eliminar la transacción recurrente?",
+    "deleteMessage": "Se eliminarán la regla y todas las repeticiones futuras. Las transacciones pasadas se conservan. No se puede deshacer."
   },
   "insights": {
     "incomeByCategory": "Ingresos por categoría",
@@ -338,7 +346,8 @@
     "previousMonth": "Mes anterior",
     "nextMonth": "Mes siguiente",
     "previousYear": "Año anterior",
-    "nextYear": "Año siguiente"
+    "nextYear": "Año siguiente",
+    "goToMonth": "Ir a {month}"
   },
   "settings": {
     "title": "Ajustes",
@@ -423,7 +432,8 @@
       "unknownCategoryIdDuringImport": "category_id desconocido \"{id}\"",
       "unknownRecurringIdDuringImport": "recurring_transaction_id desconocido \"{id}\"",
       "importFailed": "Error en la importación",
-      "fileTooLarge": "{label} es demasiado grande (máx. {maxMb} MB)"
+      "fileTooLarge": "{label} es demasiado grande (máx. {maxMb} MB)",
+      "rowInvalid": "{label}, fila {row}: valor no válido para «{field}»"
     },
     "moneyManager": {
       "backToSettings": "Ajustes",
@@ -460,7 +470,10 @@
       "doneDuplicatesSkipped": "{count, plural, one {# duplicado omitido (ya está en tus datos)} other {# duplicados omitidos (ya están en tus datos)}}",
       "goToDashboard": "Ir al panel",
       "importAnother": "Importar otro archivo",
-      "fileTooLarge": "El archivo es demasiado grande (máx. {maxMb} MB)"
+      "fileTooLarge": "El archivo es demasiado grande (máx. {maxMb} MB)",
+      "fileUnreadable": "No se pudo leer este archivo como exportación .xlsx",
+      "fileNoSheets": "El archivo no tiene hojas",
+      "fileMissingColumn": "Esto no parece una exportación de Money Manager: falta la columna «{column}»"
     },
     "upgradeGuest": {
       "label": "Crea tu cuenta",
@@ -515,6 +528,17 @@
       "button": "Verificar correo",
       "ignoreNote": "Si no creaste esta cuenta, puedes ignorar este correo con tranquilidad.",
       "footer": "Expense Tracker"
+    }
+  },
+  "meta": {
+    "description": "Registra y categoriza tus ingresos y gastos personales",
+    "shortName": "Gastos",
+    "screenshots": {
+      "dashboard": "Resumen mensual con ingresos, gastos y transacciones",
+      "insights": "Desglose de ingresos y gastos por categoría",
+      "categories": "Gestiona las categorías de gastos e ingresos",
+      "recurring": "Configura ingresos y gastos recurrentes",
+      "settings": "Exporta e importa tus datos como CSV"
     }
   }
 }

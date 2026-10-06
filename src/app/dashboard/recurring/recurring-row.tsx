@@ -1,13 +1,13 @@
 "use client";
 
-import { useRef, useTransition } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { useRef } from "react";
+import { Pencil } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { deleteRecurring } from "./actions";
 import { categoryColor } from "@/lib/category-color";
 import { formatMoney } from "@/lib/currency";
 import { formatDate } from "@/lib/month";
-import { Spinner } from "@/components/spinner";
+import { ConfirmDelete } from "../confirm-delete";
 import { Dialog } from "../dialog";
 import { EditRecurringForm } from "./edit-recurring-form";
 
@@ -40,13 +40,6 @@ export function RecurringRow({
   const tCommon = useTranslations("common");
   const locale = useLocale();
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [isDeleting, startDelete] = useTransition();
-
-  function handleDelete(formData: FormData) {
-    startDelete(async () => {
-      await deleteRecurring(formData);
-    });
-  }
 
   const isIncome = recurring.type === "income";
   const day = recurring.startDate.split("-")[2];
@@ -69,16 +62,11 @@ export function RecurringRow({
         {isIncome ? "+" : "-"}
         {formatMoney(recurring.amount, currency, locale)}
       </span>
-      <div className="flex shrink-0 items-center gap-2 text-fg-muted">
-        <button type="button" onClick={() => dialogRef.current?.showModal()} aria-label={tCommon("edit")} className="rounded-lg p-1.5 hover:text-fg">
+      <div className="flex shrink-0 items-center text-fg-muted">
+        <button type="button" onClick={() => dialogRef.current?.showModal()} aria-label={tCommon("edit")} className="inline-flex h-11 w-11 items-center justify-center rounded-lg hover:text-fg">
           <Pencil size={15} />
         </button>
-        <form action={handleDelete} className="contents">
-          <input type="hidden" name="id" value={recurring.id} />
-          <button type="submit" disabled={isDeleting} aria-label={tCommon("delete")} className="rounded-lg p-1.5 hover:text-danger disabled:opacity-60">
-            {isDeleting ? <Spinner size={15} /> : <Trash2 size={15} />}
-          </button>
-        </form>
+        <ConfirmDelete action={deleteRecurring} id={recurring.id} title={t("deleteTitle")} message={t("deleteMessage")} />
       </div>
 
       <Dialog dialogRef={dialogRef} title={t("editTitle")}>

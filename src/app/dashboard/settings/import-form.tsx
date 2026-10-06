@@ -72,8 +72,8 @@ export function ImportForm() {
         {isPending && <Spinner size={14} />}
         {isPending ? t("importing") : t("replaceMyData")}
       </button>
-      {error && <p className="text-sm text-danger">{error}</p>}
-      {success && <p className="text-sm text-success">{t("importComplete")}</p>}
+      {error && <p role="alert" className="text-sm text-danger">{error}</p>}
+      {success && <p role="status" className="text-sm text-success">{t("importComplete")}</p>}
     </form>
   );
 }

@@ -44,7 +44,7 @@ export async function createCategory(_prevState: CategoryState, formData: FormDa
   const [existing] = await db
     .select({ id: categories.id })
     .from(categories)
-    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), sql`lower(${categories.name}) = lower(${name})`))
+    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), sql`lower(${categories.name}) = lower(${name})`, isNull(categories.archivedAt)))
     .limit(1);
 
   if (existing) {
@@ -92,7 +92,7 @@ export async function updateCategory(_prevState: CategoryState, formData: FormDa
   const [existing] = await db
     .select({ id: categories.id })
     .from(categories)
-    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), sql`lower(${categories.name}) = lower(${name})`))
+    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), sql`lower(${categories.name}) = lower(${name})`, isNull(categories.archivedAt)))
     .limit(1);
 
   if (existing && existing.id !== id) {
@@ -126,9 +126,14 @@ export async function deleteCategory(formData: FormData) {
   const id = formData.get("id");
   if (typeof id !== "string" || !id) return;
 
-  await db.delete(categories).where(and(eq(categories.id, id), eq(categories.userId, session.user.id)));
+  // archive instead of delete: transactions and recurring rules keep showing the category they were created under
+  await db
+    .update(categories)
+    .set({ archivedAt: new Date() })
+    .where(and(eq(categories.id, id), eq(categories.userId, session.user.id), isNull(categories.archivedAt)));
 
   revalidatePath("/dashboard/categories");
+  revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard");
 }
 

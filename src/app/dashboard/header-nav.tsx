@@ -17,7 +17,7 @@ export function HeaderNav() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label={t("ariaLabel")} className="flex items-center gap-2 text-fg-muted">
+    <nav aria-label={t("ariaLabel")} className="flex items-center gap-1 text-fg-muted">
       {LINKS.map(({ href, key, Icon }) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
@@ -26,7 +26,7 @@ export function HeaderNav() {
             href={href}
             aria-label={t(key)}
             aria-current={active ? "page" : undefined}
-            className={`rounded-lg p-1.5 hover:text-fg ${active ? "text-fg" : ""}`}
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-lg hover:text-fg ${active ? "text-fg" : ""}`}
           >
             <Icon size={18} />
           </Link>

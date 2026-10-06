@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 // Loading animation built from the logo mark: three coins drop in from the top one after another,
 // land and bounce on each other to form the stack, hold for a second, then all fall away through
 // the bottom, and the cycle repeats.
@@ -127,8 +129,10 @@ ${COINS.map((c) => `.coin-loader-${c.id} { animation-name: coin-loader-${c.id}; 
 `;
 
 export function CoinLoader({ size = 40 }: { size?: number }) {
+  const t = useTranslations("common");
   return (
-    <>
+    <span role="status" aria-busy="true" className="inline-flex">
+      <span className="sr-only">{t("loading")}</span>
       <style>{CSS}</style>
       <svg
         width={size}
@@ -145,6 +149,6 @@ export function CoinLoader({ size = 40 }: { size?: number }) {
           <path key={c.id} d={c.d} className={`coin-loader-coin coin-loader-${c.id}`} style={{ stroke: c.color }} />
         ))}
       </svg>
-    </>
+    </span>
   );
 }

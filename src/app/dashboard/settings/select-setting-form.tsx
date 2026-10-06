@@ -55,8 +55,8 @@ export function SelectSettingForm({
         ))}
       </select>
       {isPending && <Spinner size={14} />}
-      {saved && !isPending && <span className="shrink-0 text-xs text-success">{t("saved")}</span>}
-      {error && <span className="shrink-0 text-xs text-danger">{error}</span>}
+      {saved && !isPending && <span role="status" className="shrink-0 text-xs text-success">{t("saved")}</span>}
+      {error && <span role="alert" className="shrink-0 text-xs text-danger">{error}</span>}
     </form>
   );
 }

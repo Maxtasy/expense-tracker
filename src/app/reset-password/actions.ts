@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { hash } from "bcryptjs";
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { db } from "@/db";
@@ -50,7 +50,7 @@ export async function resetPassword(_prevState: ResetPasswordState, formData: Fo
 
   const passwordHash = await hash(parsed.data.newPassword, 10);
   await db.transaction(async (tx) => {
-    await tx.update(users).set({ passwordHash }).where(eq(users.id, resetToken.userId));
+    await tx.update(users).set({ passwordHash, sessionVersion: sql`${users.sessionVersion} + 1` }).where(eq(users.id, resetToken.userId));
     // The token (and any sibling ones from repeat requests) is single-use -- drop it now that it's spent.
     await tx.delete(passwordResetTokens).where(eq(passwordResetTokens.userId, resetToken.userId));
   });

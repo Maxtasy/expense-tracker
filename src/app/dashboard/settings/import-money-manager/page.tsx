@@ -1,4 +1,4 @@
-import { eq, isNull, or } from "drizzle-orm";
+import { and, eq, isNull, or } from "drizzle-orm";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -16,7 +16,7 @@ export default async function ImportMoneyManagerPage() {
   const existingCategories = await db
     .select({ id: categories.id, name: categories.name, type: categories.type })
     .from(categories)
-    .where(or(isNull(categories.userId), eq(categories.userId, userId)))
+    .where(and(or(isNull(categories.userId), eq(categories.userId, userId)), isNull(categories.archivedAt)))
     .orderBy(categories.name);
 
   return (
