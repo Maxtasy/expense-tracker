@@ -74,7 +74,7 @@ export function ResetPasswordForm({ token }: { token?: string }) {
               className={inputClass}
             />
           </div>
-          {state?.error && <p className="text-sm text-danger">{state.error}</p>}
+          {state?.error && <p role="alert" className="text-sm text-danger">{state.error}</p>}
           <button
             type="submit"
             disabled={pending}

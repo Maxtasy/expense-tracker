@@ -115,7 +115,7 @@ export function CategoryRow({ category }: { category: Category }) {
               {t("autoColor")}
             </button>
           )}
-          {error && <span className="text-xs text-danger">{error}</span>}
+          {error && <span role="alert" className="text-xs text-danger">{error}</span>}
         </div>
       </form>
     </div>

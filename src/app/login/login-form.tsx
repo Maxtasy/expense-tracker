@@ -38,9 +38,9 @@ export function LoginForm({
       <div className="w-full max-w-xs">
         <AuthBrand />
         <h1 className="mb-4 text-lg font-semibold text-fg">{t("title")}</h1>
-        {resetSuccess && <p className="mb-4 text-sm text-success">{t("resetSuccess")}</p>}
+        {resetSuccess && <p role="status" className="mb-4 text-sm text-success">{t("resetSuccess")}</p>}
         {guestExpired && <p className="mb-4 text-sm text-fg-muted">{t("guestExpired")}</p>}
-        {accountDeleted && <p className="mb-4 text-sm text-success">{t("accountDeleted")}</p>}
+        {accountDeleted && <p role="status" className="mb-4 text-sm text-success">{t("accountDeleted")}</p>}
         <form action={formAction} className="space-y-3">
           <div className="space-y-1">
             <label htmlFor="email" className="block text-xs text-fg-muted">
@@ -59,7 +59,7 @@ export function LoginForm({
             </div>
             <PasswordInput id="password" name="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className={inputClass} />
           </div>
-          {state?.error && <p className="text-sm text-danger">{state.error}</p>}
+          {state?.error && <p role="alert" className="text-sm text-danger">{state.error}</p>}
           <button
             type="submit"
             disabled={pending}
@@ -71,7 +71,7 @@ export function LoginForm({
         </form>
         {state?.needsVerification &&
           (resendSent ? (
-            <p className="mt-3 text-sm text-success">{t("resendSuccessMessage")}</p>
+            <p role="status" className="mt-3 text-sm text-success">{t("resendSuccessMessage")}</p>
           ) : (
             <button
               type="button"

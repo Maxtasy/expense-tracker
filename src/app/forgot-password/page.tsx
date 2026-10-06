@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
         <AuthBrand />
         <h1 className="mb-1 text-lg font-semibold text-fg">{t("title")}</h1>
         {state?.success ? (
-          <p className="mt-3 text-sm text-success">{t("successMessage")}</p>
+          <p role="status" className="mt-3 text-sm text-success">{t("successMessage")}</p>
         ) : (
           <>
             <p className="mb-4 text-sm text-fg-muted">{t("description")}</p>
@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
                 </label>
                 <input id="email" name="email" type="email" required autoComplete="email" className={inputClass} />
               </div>
-              {state?.error && <p className="text-sm text-danger">{state.error}</p>}
+              {state?.error && <p role="alert" className="text-sm text-danger">{state.error}</p>}
               <button
                 type="submit"
                 disabled={pending}

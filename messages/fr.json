@@ -14,7 +14,8 @@
     "add": "Ajouter",
     "adding": "Ajout en cours...",
     "showPassword": "Afficher le mot de passe",
-    "hidePassword": "Masquer le mot de passe"
+    "hidePassword": "Masquer le mot de passe",
+    "loading": "Chargement..."
   },
   "auth": {
     "login": {

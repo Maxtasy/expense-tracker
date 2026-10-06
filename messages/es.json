@@ -14,7 +14,8 @@
     "add": "Añadir",
     "adding": "Añadiendo...",
     "showPassword": "Mostrar contraseña",
-    "hidePassword": "Ocultar contraseña"
+    "hidePassword": "Ocultar contraseña",
+    "loading": "Cargando..."
   },
   "auth": {
     "login": {

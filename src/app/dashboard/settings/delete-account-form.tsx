@@ -89,7 +89,7 @@ export function DeleteAccountForm({ isGuest }: { isGuest: boolean }) {
               />
             </div>
           )}
-          {error && <p className="text-sm text-danger">{error}</p>}
+          {error && <p role="alert" className="text-sm text-danger">{error}</p>}
           <div className="flex gap-2">
             <button
               type="button"

@@ -95,7 +95,7 @@ export function AddTransactionForm({
         {isPending && <Spinner size={14} />}
         {isPending ? tCommon("adding") : tCommon("add")}
       </button>
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && <p role="alert" className="text-sm text-danger">{error}</p>}
     </form>
   );
 }

@@ -11,7 +11,7 @@ export function ResendButton({ email }: { email: string }) {
   const [isPending, startTransition] = useTransition();
 
   if (sent) {
-    return <p className="text-sm text-success">{t("resendSuccessMessage")}</p>;
+    return <p role="status" className="text-sm text-success">{t("resendSuccessMessage")}</p>;
   }
 
   return (
