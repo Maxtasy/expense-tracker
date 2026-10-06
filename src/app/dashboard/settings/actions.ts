@@ -2,11 +2,11 @@
 
 import { z } from "zod";
 import { compare, hash } from "bcryptjs";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { parse } from "csv-parse/sync";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
-import { auth, signOut } from "@/auth";
+import { auth, signOut, unstable_update } from "@/auth";
 import { db } from "@/db";
 import { categories, recurringTransactions, transactions, users } from "@/db/schema";
 import { CURRENCIES } from "@/lib/currency";
@@ -389,7 +389,13 @@ export async function changePassword(formData: FormData) {
   }
 
   const passwordHash = await hash(parsed.data.newPassword, 10);
-  await db.update(users).set({ passwordHash }).where(eq(users.id, userId));
+  const [updated] = await db
+    .update(users)
+    .set({ passwordHash, sessionVersion: sql`${users.sessionVersion} + 1` })
+    .where(eq(users.id, userId))
+    .returning({ sessionVersion: users.sessionVersion });
+  // every other signed-in device now carries a stale version and gets signed out; refresh this one's
+  await unstable_update({ user: { sessionVersion: updated.sessionVersion } });
 
   return { success: true };
 }

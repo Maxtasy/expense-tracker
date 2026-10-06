@@ -12,6 +12,8 @@ export const users = pgTable(
     // a "Try without an account" user: a real row (so all ownership scoping just works) that's
     // purged after GUEST_TTL_DAYS unless the person adds an email + password first
     isGuest: boolean("is_guest").notNull().default(false),
+    // bumped when the password changes/resets; a JWT carrying an older value is rejected (src/auth.ts)
+    sessionVersion: integer("session_version").notNull().default(0),
     name: text("name"),
     currency: text("currency").notNull().default("EUR"),
     locale: text("locale").notNull().default("en"),
