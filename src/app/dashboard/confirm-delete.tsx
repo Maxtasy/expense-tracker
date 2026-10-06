@@ -35,7 +35,7 @@ export function ConfirmDelete({
         type="button"
         onClick={() => dialogRef.current?.showModal()}
         aria-label={tCommon("delete")}
-        className="rounded-lg p-1.5 hover:text-danger"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-lg hover:text-danger"
       >
         <Trash2 size={15} />
       </button>

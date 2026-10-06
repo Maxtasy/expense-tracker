@@ -52,7 +52,7 @@ export function CategoryRow({ category }: { category: Category }) {
         <span className="text-xs text-fg-muted">{t("default")}</span>
         <form action={handleHide} className="contents">
           <input type="hidden" name="categoryId" value={category.id} />
-          <button type="submit" disabled={isPending} aria-label={t("hideCategory")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg disabled:opacity-60">
+          <button type="submit" disabled={isPending} aria-label={t("hideCategory")} className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:text-fg disabled:opacity-60">
             {isPending ? <Spinner size={15} /> : <EyeOff size={15} />}
           </button>
         </form>
@@ -69,8 +69,8 @@ export function CategoryRow({ category }: { category: Category }) {
           aria-hidden="true"
         />
         <span className="flex-1 text-sm text-fg">{category.name}</span>
-        <div className="flex shrink-0 items-center gap-2 text-fg-muted">
-          <button type="button" onClick={() => setIsEditing(true)} aria-label={tCommon("edit")} className="rounded-lg p-1.5 hover:text-fg">
+        <div className="flex shrink-0 items-center text-fg-muted">
+          <button type="button" onClick={() => setIsEditing(true)} aria-label={tCommon("edit")} className="inline-flex h-11 w-11 items-center justify-center rounded-lg hover:text-fg">
             <Pencil size={15} />
           </button>
           <ConfirmDelete action={deleteCategory} id={category.id} title={t("deleteTitle")} message={t("deleteMessage", { name: category.name })} />

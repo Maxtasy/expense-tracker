@@ -14,7 +14,7 @@ export async function YearPager({ current, type }: { current: YearMonth; type: "
 
   return (
     <div className="mb-3 flex items-center justify-between rounded-xl border border-border bg-surface/30 px-1 py-1.5">
-      <InsightsLink href={hrefFor(current, prevYear, type)} aria-label={t("previousYear")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
+      <InsightsLink href={hrefFor(current, prevYear, type)} aria-label={t("previousYear")} className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:text-fg">
         <ChevronLeft size={16} />
       </InsightsLink>
       <div className="flex items-center gap-2 text-sm">
@@ -26,7 +26,7 @@ export async function YearPager({ current, type }: { current: YearMonth; type: "
           {nextYear}
         </InsightsLink>
       </div>
-      <InsightsLink href={hrefFor(current, nextYear, type)} aria-label={t("nextYear")} className="rounded-lg p-1.5 text-fg-muted hover:text-fg">
+      <InsightsLink href={hrefFor(current, nextYear, type)} aria-label={t("nextYear")} className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:text-fg">
         <ChevronRight size={16} />
       </InsightsLink>
     </div>

@@ -62,8 +62,8 @@ export function RecurringRow({
         {isIncome ? "+" : "-"}
         {formatMoney(recurring.amount, currency, locale)}
       </span>
-      <div className="flex shrink-0 items-center gap-2 text-fg-muted">
-        <button type="button" onClick={() => dialogRef.current?.showModal()} aria-label={tCommon("edit")} className="rounded-lg p-1.5 hover:text-fg">
+      <div className="flex shrink-0 items-center text-fg-muted">
+        <button type="button" onClick={() => dialogRef.current?.showModal()} aria-label={tCommon("edit")} className="inline-flex h-11 w-11 items-center justify-center rounded-lg hover:text-fg">
           <Pencil size={15} />
         </button>
         <ConfirmDelete action={deleteRecurring} id={recurring.id} title={t("deleteTitle")} message={t("deleteMessage")} />

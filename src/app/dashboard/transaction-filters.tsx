@@ -67,7 +67,7 @@ export function TransactionFilters({
       {/* Plain <a>, not next/link: this should always be a full, guaranteed-fresh reset —
           Link's client-side prefetch/router cache has been observed serving a stale render
           for this route in dev. */}
-      <a href="/dashboard" aria-label={t("resetFilters")} className="shrink-0 rounded-lg p-1.5 text-fg-muted hover:text-fg">
+      <a href="/dashboard" aria-label={t("resetFilters")} className="shrink-0 inline-flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:text-fg">
         <RotateCcw size={16} />
       </a>
     </div>
