@@ -12,6 +12,16 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.18.0",
+    date: "2026-10-06",
+    items: [
+      "Selecting text in a form field and releasing the mouse outside the window no longer closes it.",
+      "Confirming your email now takes one extra tap on the verification page, so email scanners can no longer use up your link.",
+      "Easier to use with a keyboard or screen reader: the top menu is labeled and marks the current page, there is a skip to content link, windows are named, the tour steps are announced and the Expense and Income buttons show where the focus is.",
+      "Exported CSV files can no longer run formulas when opened in a spreadsheet, and importing them restores your original text.",
+    ],
+  },
+  {
     version: "1.17.0",
     date: "2026-10-05",
     items: [

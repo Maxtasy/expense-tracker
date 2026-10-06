@@ -7,6 +7,7 @@ import { users } from "@/db/schema";
 import { getClientIp } from "@/lib/client-ip";
 import { isRateLimited, recordAttempt } from "@/lib/rate-limit";
 import { normalizeEmail } from "@/lib/email-address";
+import { consumeVerificationToken } from "./verify-token";
 import { issueAndSendVerificationEmail } from "@/lib/verification";
 
 // Shared by the /verify-email page's "request a new link" form, the login form's post-block
@@ -37,4 +38,9 @@ export async function resendVerificationEmail(rawEmail: string): Promise<void> {
       }
     }
   });
+}
+
+// The confirm button on /verify-email: spends the token (a POST, so link scanners can't trigger it).
+export async function confirmVerification(token: string): Promise<boolean> {
+  return consumeVerificationToken(token);
 }

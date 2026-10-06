@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PieChart, Plus, Repeat, Settings, Tags, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Logo } from "@/components/logo";
-import { Spinner } from "@/components/spinner";
 import { completeOnboarding } from "./actions";
 
 const STEPS: { key: string; icon: LucideIcon | null }[] = [
@@ -22,7 +21,6 @@ export function OnboardingTour({ autoOpen = false, trigger = false }: { autoOpen
   const t = useTranslations("onboarding");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [step, setStep] = useState(0);
-  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     if (autoOpen) dialogRef.current?.showModal();
@@ -37,15 +35,12 @@ export function OnboardingTour({ autoOpen = false, trigger = false }: { autoOpen
     dialogRef.current?.showModal();
   }
 
+  // Done, Skip, Escape and backdrop all end up in the dialog's close event, which records the tour as seen.
   function finish() {
-    startTransition(async () => {
-      if (autoOpen) await completeOnboarding();
-      dialogRef.current?.close();
-    });
+    dialogRef.current?.close();
   }
 
   function handleClose() {
-    // Escape / backdrop close bypasses finish(); still record that the tour was seen.
     if (autoOpen) void completeOnboarding();
   }
 
@@ -81,11 +76,14 @@ export function OnboardingTour({ autoOpen = false, trigger = false }: { autoOpen
         style={{ position: "fixed", inset: 0, margin: "auto", width: "calc(100% - 2rem)", maxWidth: "24rem" }}
         className="onboarding-dialog rounded-xl border border-border bg-surface text-fg"
       >
-        <div className="onboarding-icon rounded-xl border border-border bg-background text-accent-text">
+        <div className="onboarding-icon rounded-xl border border-border bg-background text-accent-text" aria-hidden="true">
           {Icon ? <Icon size={22} /> : <Logo size={24} />}
         </div>
-        <h2 className="onboarding-title text-base font-semibold text-fg">{t(`steps.${current.key}.title`)}</h2>
-        <p className="onboarding-body text-sm text-fg-muted">{t(`steps.${current.key}.body`)}</p>
+        {/* live region so a screen reader hears each step as it changes */}
+        <div aria-live="polite">
+          <h2 className="onboarding-title text-base font-semibold text-fg">{t(`steps.${current.key}.title`)}</h2>
+          <p className="onboarding-body text-sm text-fg-muted">{t(`steps.${current.key}.body`)}</p>
+        </div>
 
         <div className="onboarding-dots" aria-hidden="true">
           {STEPS.map((s, i) => (
@@ -101,7 +99,7 @@ export function OnboardingTour({ autoOpen = false, trigger = false }: { autoOpen
           {isLast ? (
             <span className="text-xs text-fg-muted">{t("progress", { current: step + 1, total: STEPS.length })}</span>
           ) : (
-            <button type="button" disabled={isPending} onClick={finish} className="text-xs text-fg-muted hover:text-fg">
+            <button type="button" onClick={finish} className="text-xs text-fg-muted hover:text-fg">
               {t("skip")}
             </button>
           )}
@@ -109,7 +107,6 @@ export function OnboardingTour({ autoOpen = false, trigger = false }: { autoOpen
             {step > 0 && (
               <button
                 type="button"
-                disabled={isPending}
                 onClick={() => setStep(step - 1)}
                 className="rounded-lg border border-border px-3 py-1.5 text-sm text-fg hover:bg-surface-hover"
               >
@@ -118,11 +115,9 @@ export function OnboardingTour({ autoOpen = false, trigger = false }: { autoOpen
             )}
             <button
               type="button"
-              disabled={isPending}
               onClick={isLast ? finish : () => setStep(step + 1)}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg transition hover:bg-accent-hover disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg transition hover:bg-accent-hover"
             >
-              {isPending && <Spinner size={14} />}
               {isLast ? t("done") : t("next")}
             </button>
           </div>

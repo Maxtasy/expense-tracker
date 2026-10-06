@@ -4,13 +4,12 @@ import { createContext, useContext, useEffect, useRef, useTransition } from "rea
 import { useRouter } from "next/navigation";
 import { CoinLoader } from "@/components/coin-loader";
 import { monthHref, shiftMonth, type YearMonth } from "@/lib/month";
-// PrefetchKind isn't part of next/navigation's public API, but router.prefetch()'s default
-// "auto" kind only prefetches the shared shell for a fully dynamic route like this one (it
-// reads the session per request) — confirmed by checking the network tab, no request fired
-// for the adjacent month's data at all. Type-only import so nothing internal ships at runtime.
-import type { PrefetchKind } from "next/dist/client/components/router-reducer/router-reducer-types";
 
 const SWIPE_THRESHOLD_PX = 60;
+// router.prefetch()'s default "auto" kind only prefetches the shared shell for a fully dynamic route
+// like this one (it reads the session per request), so ask for "full". The PrefetchKind enum isn't
+// public API, so derive the option type from the router instead of importing it from next/dist.
+const PREFETCH_FULL = { kind: "full" } as unknown as Parameters<ReturnType<typeof useRouter>["prefetch"]>[1];
 
 // Falls back to setTimeout since requestIdleCallback isn't available in Safari/iOS,
 // which matters here since this is a PWA.
@@ -51,8 +50,8 @@ export function SwipeMonthNav({
   // main thread is idle instead of waiting for the user to actually navigate.
   useEffect(() => {
     return onIdle(() => {
-      router.prefetch(monthHref(shiftMonth(current, -1), category, sort), { kind: "full" as PrefetchKind });
-      router.prefetch(monthHref(shiftMonth(current, 1), category, sort), { kind: "full" as PrefetchKind });
+      router.prefetch(monthHref(shiftMonth(current, -1), category, sort), PREFETCH_FULL);
+      router.prefetch(monthHref(shiftMonth(current, 1), category, sort), PREFETCH_FULL);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- primitives so an equal-but-new `current` object doesn't reschedule
   }, [router, current.year, current.month, category, sort]);

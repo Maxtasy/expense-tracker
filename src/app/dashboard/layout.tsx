@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Tags, Repeat, PieChart, Settings } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
@@ -13,6 +12,7 @@ import { Logo } from "@/components/logo";
 import { hasCompletedOnboarding } from "@/lib/preferences-server";
 import { TIMEZONE_COOKIE } from "@/lib/timezone";
 import { OnboardingTour } from "./onboarding-tour";
+import { HeaderNav } from "./header-nav";
 import { TimezoneSync } from "./timezone-sync";
 import { DateFormatProvider } from "./date-format-context";
 import { getUserDateFormat } from "@/lib/preferences-server";
@@ -52,25 +52,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <DateFormatProvider dateFormat={dateFormat}>
     <div className="flex min-h-dvh flex-col">
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-20 focus:rounded-lg focus:bg-surface focus:px-3 focus:py-2 focus:text-sm focus:text-fg">
+        {t("skipToContent")}
+      </a>
       <header className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
         <Link href="/dashboard" className="flex items-center gap-2 text-sm font-semibold">
           <Logo size={18} />
           {t("overview")}
         </Link>
-        <nav className="flex items-center gap-2 text-fg-muted">
-          <Link href="/dashboard/recurring" aria-label={t("recurring")} className="rounded-lg p-1.5 hover:text-fg">
-            <Repeat size={18} />
-          </Link>
-          <Link href="/dashboard/insights" aria-label={t("insights")} className="rounded-lg p-1.5 hover:text-fg">
-            <PieChart size={18} />
-          </Link>
-          <Link href="/dashboard/categories" aria-label={t("categories")} className="rounded-lg p-1.5 hover:text-fg">
-            <Tags size={18} />
-          </Link>
-          <Link href="/dashboard/settings" aria-label={t("settings")} className="rounded-lg p-1.5 hover:text-fg">
-            <Settings size={18} />
-          </Link>
-        </nav>
+        <HeaderNav />
       </header>
       {/* Raw CSS, not Tailwind's `md:`/`lg:` responsive utilities: this project's Turbopack dev
           server has been confirmed (via a direct `next build` + computed-style comparison) to
@@ -88,7 +78,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           .md-wide { max-width: 64rem !important; }
         }
       `}</style>
-      <main className="md-wide mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-4">
+      <main id="main" className="md-wide mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-4">
         {verification.isGuest && <GuestBanner daysLeft={guestDaysLeft(verification.createdAt)} />}
         {isUnverified && verification.email && <VerifyEmailBanner email={verification.email} />}
         {children}
