@@ -4,7 +4,7 @@ How to ship a new version of this app, including to the Android app on Google Pl
 
 ## What "version" means here
 
-`package.json`'s `version` (semver, e.g. `1.2.0`) is the source of truth. It's shown in-app on the Settings page footer, imported directly from `package.json` — there's no second place to edit it.
+`package.json`'s `version` (semver, e.g. `1.2.0`) is the source of truth. It's shown in-app on the Settings page footer, imported directly from `package.json` — there's no second place to edit it. Settings labels it "Web version" because the Play Store listing's version (`versionName`, e.g. `1.15.0.1`) tracks repackages, not web releases; when a tester or bug report mentions a version, **the number in Settings is the one to quote**.
 
 Play Console additionally needs its own:
 
