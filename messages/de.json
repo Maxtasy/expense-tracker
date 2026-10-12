@@ -334,7 +334,9 @@
     "endsOnOptional": "Endet am (optional)",
     "addButton": "Wiederkehrend hinzufügen",
     "deleteTitle": "Wiederkehrende Transaktion löschen?",
-    "deleteMessage": "Die Regel und alle künftigen Buchungen werden gelöscht. Vergangene Transaktionen bleiben erhalten. Das kann nicht rückgängig gemacht werden."
+    "deleteMessage": "Die Regel und alle künftigen Buchungen werden gelöscht. Vergangene Transaktionen bleiben erhalten. Das kann nicht rückgängig gemacht werden.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Name (z. B. Miete)"
   },
   "insights": {
     "incomeByCategory": "Einnahmen nach Kategorie",

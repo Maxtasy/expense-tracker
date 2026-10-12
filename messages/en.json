@@ -334,7 +334,9 @@
     "endsOnOptional": "Ends on (optional)",
     "addButton": "Add recurring",
     "deleteTitle": "Delete recurring transaction?",
-    "deleteMessage": "The rule and all future occurrences will be deleted. Past transactions are kept. This can't be undone."
+    "deleteMessage": "The rule and all future occurrences will be deleted. Past transactions are kept. This can't be undone.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Name (e.g. Rent)"
   },
   "insights": {
     "incomeByCategory": "Income by category",

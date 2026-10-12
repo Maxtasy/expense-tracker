@@ -334,7 +334,9 @@
     "endsOnOptional": "Se termine le (facultatif)",
     "addButton": "Ajouter la récurrence",
     "deleteTitle": "Supprimer la transaction récurrente ?",
-    "deleteMessage": "La règle et toutes les occurrences futures seront supprimées. Les transactions passées sont conservées. Cette action est irréversible."
+    "deleteMessage": "La règle et toutes les occurrences futures seront supprimées. Les transactions passées sont conservées. Cette action est irréversible.",
+    "nameLabel": "Nom",
+    "namePlaceholder": "Nom (p. ex. Loyer)"
   },
   "insights": {
     "incomeByCategory": "Revenus par catégorie",
