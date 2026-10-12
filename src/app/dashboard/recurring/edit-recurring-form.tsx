@@ -7,6 +7,7 @@ import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 import { Spinner } from "@/components/spinner";
+import { CategoryCombobox } from "@/components/category-combobox";
 import { DateInput } from "@/components/date-input";
 
 type TxType = "expense" | "income";
@@ -86,20 +87,13 @@ export function EditRecurringForm({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <AmountInput symbol={currencySymbol(currency)} required defaultValue={recurring.amount} />
-        <select
+        <CategoryCombobox
           key={type}
-          name="categoryId"
+          categories={filteredCategories}
           defaultValue={recurring.type === type ? (recurring.categoryId ?? "") : ""}
-          aria-label={tDashboardForm("categoryLabel")}
+          ariaLabel={tDashboardForm("categoryLabel")}
           className={inputClass}
-        >
-          <option value="">{tCommon("uncategorized")}</option>
-          {filteredCategories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        />
       </div>
       <input name="description" type="text" autoComplete="off" aria-label={t("nameLabel")} placeholder={t("namePlaceholder")} defaultValue={recurring.description ?? ""} className={inputClass} />
       <div className="grid grid-cols-2 gap-2">

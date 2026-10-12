@@ -8,6 +8,7 @@ import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 import { useLocalToday } from "@/lib/use-local-today";
 import { Spinner } from "@/components/spinner";
+import { CategoryCombobox } from "@/components/category-combobox";
 import { DateInput } from "@/components/date-input";
 
 type Category = { id: string; name: string; type: "expense" | "income" };
@@ -74,14 +75,7 @@ export function AddTransactionForm({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <AmountInput symbol={currencySymbol(currency)} required />
-        <select key={`${type}-${defaultCategoryId}`} name="categoryId" defaultValue={defaultCategoryId} aria-label={t("categoryLabel")} className={inputClass}>
-          <option value="">{tCommon("uncategorized")}</option>
-          {filteredCategories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        <CategoryCombobox key={`${type}-${defaultCategoryId}`} categories={filteredCategories} defaultValue={defaultCategoryId} ariaLabel={t("categoryLabel")} className={inputClass} />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <DateInput name="date" required ariaLabel={t("dateLabel")} defaultValue={today} className={inputClass} />

@@ -291,7 +291,8 @@
       "descriptionPlaceholder": "Description",
       "descriptionLabel": "Description",
       "addTitle": "Ajouter une transaction",
-      "addFabLabel": "Ajouter une transaction"
+      "addFabLabel": "Ajouter une transaction",
+      "noMatchingCategory": "Aucune catégorie correspondante"
     },
     "verifyEmailBanner": {
       "message": "Vérifiez votre e-mail pour conserver l'accès · envoyé à {email}",
