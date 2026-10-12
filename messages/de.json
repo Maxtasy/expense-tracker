@@ -367,7 +367,7 @@
     "dateFormat": {
       "label": "Datumsformat",
       "ariaLabel": "Datumsformat",
-      "auto": "Automatisch (nach Sprache)"
+      "auto": "Automatisch ({language}: {pattern})"
     },
     "tour": {
       "label": "App-Rundgang",
@@ -509,8 +509,11 @@
       "guestTitle": "Vom Gastkonto abmelden?",
       "guestWarning": "Du nutzt ein Gastkonto. Wenn du dich abmeldest, kannst du dich nicht wieder anmelden und deine Daten gehen verloren.",
       "guestCreateAccount": "Stattdessen ein Konto erstellen",
-      "guestConfirm": "Trotzdem abmelden"
-    }
+      "guestConfirm": "Trotzdem abmelden",
+      "guestDescription": "Mit einem Gastkonto kannst du dich nicht erneut anmelden. Beim Abmelden werden deine Daten gelöscht."
+    },
+    "webVersion": "Webversion {version}",
+    "webVersionNote": "Die App aktualisiert sich selbst, ohne dass ein Play-Store-Update nötig ist. Diese Nummer kann daher von der in Google Play angezeigten Version abweichen."
   },
   "email": {
     "passwordReset": {

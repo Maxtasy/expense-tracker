@@ -367,7 +367,7 @@
     "dateFormat": {
       "label": "Format de date",
       "ariaLabel": "Format de date",
-      "auto": "Automatique (selon la langue)"
+      "auto": "Automatique ({language} : {pattern})"
     },
     "tour": {
       "label": "Visite de l’appli",
@@ -509,8 +509,11 @@
       "guestTitle": "Se déconnecter du compte invité ?",
       "guestWarning": "Vous utilisez un compte invité. Si vous vous déconnectez, vous ne pourrez plus vous reconnecter et vos données seront perdues.",
       "guestCreateAccount": "Créer un compte à la place",
-      "guestConfirm": "Se déconnecter quand même"
-    }
+      "guestConfirm": "Se déconnecter quand même",
+      "guestDescription": "Un compte invité ne permet pas de se reconnecter. Se déconnecter supprime vos données."
+    },
+    "webVersion": "Version web {version}",
+    "webVersionNote": "L'application se met à jour d'elle-même, sans mise à jour du Play Store ; ce numéro peut donc différer de la version affichée sur Google Play."
   },
   "email": {
     "passwordReset": {

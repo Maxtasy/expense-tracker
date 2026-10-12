@@ -14,7 +14,7 @@ import { LogoutSection } from "./logout-section";
 import { SelectSettingForm } from "./select-setting-form";
 import { updateDateFormat, updateRememberLastCategory, updateTheme } from "./actions";
 import { getUserDateFormat, getUserRememberLastCategory, getUserTheme } from "@/lib/preferences-server";
-import { DATE_FORMATS } from "@/lib/date-format";
+import { DATE_FORMATS, getDatePattern } from "@/lib/date-format";
 import { THEMES } from "@/lib/theme";
 import { ChangePasswordForm } from "./change-password-form";
 import { UpgradeGuestForm } from "./upgrade-guest-form";
@@ -37,6 +37,10 @@ export default async function SettingsPage() {
     getVerificationStatus(session.user.id),
   ]);
   const isGuest = account?.isGuest ?? false;
+  const autoDateLabel = t("dateFormat.auto", {
+    language: new Intl.DisplayNames(locale, { type: "language" }).of(locale) ?? locale,
+    pattern: getDatePattern("auto", locale),
+  });
 
   const exportLinks = [
     { href: "/dashboard/settings/export/categories", label: t("csvImport.categoriesFileLabel") },
@@ -88,7 +92,7 @@ export default async function SettingsPage() {
           name="dateFormat"
           value={dateFormat}
           ariaLabel={t("dateFormat.ariaLabel")}
-          options={DATE_FORMATS.map((f) => ({ value: f.code, label: f.pattern ?? t("dateFormat.auto") }))}
+          options={DATE_FORMATS.map((f) => ({ value: f.code, label: f.pattern ?? autoDateLabel }))}
         />
       </div>
 
@@ -149,7 +153,7 @@ export default async function SettingsPage() {
 
       <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("logout.label")}</h2>
       <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-3 text-xs text-fg-muted">{t("logout.description")}</p>
+        <p className="mb-3 text-xs text-fg-muted">{isGuest ? t("logout.guestDescription") : t("logout.description")}</p>
         <LogoutSection isGuest={isGuest} />
       </div>
 
@@ -173,7 +177,8 @@ export default async function SettingsPage() {
         </a>
       </div>
 
-      <p className="mt-4 text-center text-xs text-fg-muted">v{version}</p>
+      <p className="mt-4 text-center text-xs text-fg-muted">{t("webVersion", { version: `v${version}` })}</p>
+      <p className="mt-1 text-center text-xs text-fg-muted">{t("webVersionNote")}</p>
     </div>
   );
 }

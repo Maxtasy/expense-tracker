@@ -367,7 +367,7 @@
     "dateFormat": {
       "label": "Formato de fecha",
       "ariaLabel": "Formato de fecha",
-      "auto": "Automático (según el idioma)"
+      "auto": "Automático ({language}: {pattern})"
     },
     "tour": {
       "label": "Recorrido de la app",
@@ -509,8 +509,11 @@
       "guestTitle": "¿Cerrar sesión de la cuenta de invitado?",
       "guestWarning": "Estás usando una cuenta de invitado. Si cierras sesión no podrás volver a entrar y perderás tus datos.",
       "guestCreateAccount": "Crear una cuenta en su lugar",
-      "guestConfirm": "Cerrar sesión de todos modos"
-    }
+      "guestConfirm": "Cerrar sesión de todos modos",
+      "guestDescription": "Las cuentas de invitado no pueden volver a iniciar sesión. Al cerrar sesión se borran tus datos."
+    },
+    "webVersion": "Versión web {version}",
+    "webVersionNote": "La app se actualiza sola, sin una actualización de Play Store, por lo que este número puede diferir de la versión que muestra Google Play."
   },
   "email": {
     "passwordReset": {
