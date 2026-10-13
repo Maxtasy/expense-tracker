@@ -12,6 +12,20 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.20.0",
+    date: "2026-10-13",
+    items: [
+      "Choosing a category now opens a window with all your categories to tap, and you can add a new category right there.",
+      "Insights now includes recurring transactions for every month in the period, even months you have not opened yet.",
+      "Recurring transactions now have a Name instead of a Description.",
+      "Guests are now told next to the log out button that logging out deletes their data.",
+      "The date format setting now shows what Automatic means in your language.",
+      "Settings now says Web version and explains why it can differ from the version shown on Google Play.",
+      "Placeholders added to the edit forms so empty fields say what to enter.",
+      "The landing page header and the free and ad-free badge now fit on small phones in longer languages such as German.",
+    ],
+  },
+  {
     version: "1.19.0",
     date: "2026-10-06",
     items: [
