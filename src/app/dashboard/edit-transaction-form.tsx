@@ -7,7 +7,7 @@ import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 import { Spinner } from "@/components/spinner";
-import { CategoryCombobox } from "@/components/category-combobox";
+import { CategoryPicker } from "@/components/category-picker";
 import { DateInput } from "@/components/date-input";
 
 type TxType = "expense" | "income";
@@ -85,8 +85,9 @@ export function EditTransactionForm({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <AmountInput symbol={currencySymbol(currency)} required defaultValue={transaction.amount} />
-        <CategoryCombobox
+        <CategoryPicker
           key={type}
+          type={type}
           categories={filteredCategories}
           defaultValue={transaction.type === type ? (transaction.categoryId ?? "") : ""}
           ariaLabel={t("categoryLabel")}

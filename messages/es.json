@@ -292,7 +292,8 @@
       "descriptionLabel": "Descripción",
       "addTitle": "Añadir transacción",
       "addFabLabel": "Añadir transacción",
-      "noMatchingCategory": "Ninguna categoría coincide"
+      "categoryPickerTitle": "Elegir categoría",
+      "newCategory": "Nueva categoría"
     },
     "verifyEmailBanner": {
       "message": "Verifica tu correo para conservar el acceso · enviado a {email}",
