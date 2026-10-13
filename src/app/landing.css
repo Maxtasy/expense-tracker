@@ -79,9 +79,38 @@
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
+.lp-header .lp-wrap > * {
+  min-width: 0;
+}
 @media (max-width: 479px) {
+  /* longer translations (e.g. German "Registrieren") would push the header past the screen width,
+     so tighten it up on phones */
+  .lp-header .lp-wrap {
+    padding: 0 16px;
+    gap: 8px;
+  }
+  .lp-brand {
+    gap: 8px;
+    font-size: 15px;
+  }
+  .lp .lp-nav select {
+    max-width: 96px;
+    padding: 0 6px;
+    font-size: 12px;
+    margin-right: 0;
+  }
+  .lp-nav .lp-btn {
+    padding: 0 10px;
+    font-size: 13px;
+  }
   /* the hero repeats Log in, so the header drops it to keep brand, language and Sign up on one line */
   .lp-nav .lp-btn--ghost {
+    display: none;
+  }
+}
+@media (max-width: 359px) {
+  /* very narrow phones: keep just the logo mark */
+  .lp-brand-name {
     display: none;
   }
 }
@@ -212,14 +241,20 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 28px;
-  padding: 0 10px;
+  max-width: 100%;
+  /* min-height, not height: the tagline wraps to two lines in longer translations */
+  min-height: 28px;
+  padding: 5px 10px;
+  line-height: 1.35;
   border-radius: 4px;
   border: 1px solid var(--lp-success-border);
   background: var(--lp-success-subtle);
   color: var(--lp-success);
   font-size: 13px;
   font-weight: 500;
+}
+.lp-chip svg {
+  flex-shrink: 0;
 }
 .lp-actions {
   display: flex;
