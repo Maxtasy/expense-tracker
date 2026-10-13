@@ -7,10 +7,12 @@ import { useTranslations } from "next-intl";
 export function Dialog({
   dialogRef,
   title,
+  placement = "center",
   children,
 }: {
   dialogRef: RefObject<HTMLDialogElement | null>;
   title: string;
+  placement?: "center" | "top";
   children: React.ReactNode;
 }) {
   const t = useTranslations("common");
@@ -37,7 +39,7 @@ export function Dialog({
         }}
         onClick={handleBackdropClick}
         aria-labelledby={titleId}
-        style={{ position: "fixed", inset: 0, margin: "auto", width: "calc(100% - 2rem)", maxWidth: "28rem", maxHeight: "calc(100dvh - 1rem)", overflowY: "auto" }}
+        style={{ position: "fixed", inset: 0, margin: placement === "top" ? "0.5rem auto auto" : "auto", width: "calc(100% - 2rem)", maxWidth: "28rem", maxHeight: "calc(100dvh - 1rem)", overflowY: "auto" }}
         className="app-dialog rounded-xl border border-border bg-surface p-4 text-fg"
       >
         <div className="mb-3 flex items-center justify-between">

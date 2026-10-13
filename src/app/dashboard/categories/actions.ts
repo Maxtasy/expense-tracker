@@ -18,7 +18,7 @@ async function buildSchemas() {
   };
 }
 
-export type CategoryState = { error?: string } | null;
+export type CategoryState = { error?: string; id?: string } | null;
 
 export async function createCategory(_prevState: CategoryState, formData: FormData): Promise<CategoryState> {
   const session = await auth();
@@ -51,8 +51,9 @@ export async function createCategory(_prevState: CategoryState, formData: FormDa
     return { error: tEntities("categoryExists") };
   }
 
+  let id: string;
   try {
-    await db.insert(categories).values({ name, type, userId });
+    [{ id }] = await db.insert(categories).values({ name, type, userId }).returning({ id: categories.id });
   } catch {
     // lost a race with a concurrent create of the same name (categories_user_name_unique)
     return { error: tEntities("categoryExists") };
@@ -60,7 +61,7 @@ export async function createCategory(_prevState: CategoryState, formData: FormDa
 
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard");
-  return { error: undefined };
+  return { error: undefined, id };
 }
 
 export async function updateCategory(_prevState: CategoryState, formData: FormData): Promise<CategoryState> {

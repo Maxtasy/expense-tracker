@@ -43,7 +43,7 @@ export default async function Home() {
         <div className="lp-wrap">
           <Link href="/" className="lp-brand">
             <Logo size={24} />
-            Expense Tracker
+            <span className="lp-brand-name">Expense Tracker</span>
           </Link>
           <nav className="lp-nav">
             <LocaleSwitcher />

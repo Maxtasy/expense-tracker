@@ -291,7 +291,9 @@
       "descriptionPlaceholder": "Descrição",
       "descriptionLabel": "Descrição",
       "addTitle": "Adicionar transação",
-      "addFabLabel": "Adicionar transação"
+      "addFabLabel": "Adicionar transação",
+      "categoryPickerTitle": "Escolher categoria",
+      "newCategory": "Nova categoria"
     },
     "verifyEmailBanner": {
       "message": "Verifique seu e-mail para manter o acesso · enviado para {email}",
@@ -334,7 +336,9 @@
     "endsOnOptional": "Termina em (opcional)",
     "addButton": "Adicionar recorrência",
     "deleteTitle": "Eliminar a transação recorrente?",
-    "deleteMessage": "A regra e todas as ocorrências futuras serão eliminadas. As transações passadas são mantidas. Não é possível anular."
+    "deleteMessage": "A regra e todas as ocorrências futuras serão eliminadas. As transações passadas são mantidas. Não é possível anular.",
+    "nameLabel": "Nome",
+    "namePlaceholder": "Nome (p. ex. Renda)"
   },
   "insights": {
     "incomeByCategory": "Receitas por categoria",
@@ -367,7 +371,7 @@
     "dateFormat": {
       "label": "Formato de data",
       "ariaLabel": "Formato de data",
-      "auto": "Automático (conforme o idioma)"
+      "auto": "Automático ({language}: {pattern})"
     },
     "tour": {
       "label": "Tour da app",
@@ -509,8 +513,11 @@
       "guestTitle": "Sair da conta de convidado?",
       "guestWarning": "Estás a usar uma conta de convidado. Se terminares a sessão, não poderás voltar a entrar e perderás os teus dados.",
       "guestCreateAccount": "Criar uma conta em vez disso",
-      "guestConfirm": "Sair mesmo assim"
-    }
+      "guestConfirm": "Sair mesmo assim",
+      "guestDescription": "Contas de convidado não podem voltar a iniciar sessão. Terminar a sessão apaga os seus dados."
+    },
+    "webVersion": "Versão web {version}",
+    "webVersionNote": "A app atualiza-se sozinha, sem uma atualização da Play Store, por isso este número pode diferir da versão apresentada no Google Play."
   },
   "email": {
     "passwordReset": {

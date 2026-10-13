@@ -7,6 +7,7 @@ import { currencySymbol } from "@/lib/currency";
 import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 import { Spinner } from "@/components/spinner";
+import { CategoryPicker } from "@/components/category-picker";
 import { DateInput } from "@/components/date-input";
 
 type TxType = "expense" | "income";
@@ -84,24 +85,18 @@ export function EditTransactionForm({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <AmountInput symbol={currencySymbol(currency)} required defaultValue={transaction.amount} />
-        <select
+        <CategoryPicker
           key={type}
-          name="categoryId"
+          type={type}
+          categories={filteredCategories}
           defaultValue={transaction.type === type ? (transaction.categoryId ?? "") : ""}
-          aria-label={t("categoryLabel")}
+          ariaLabel={t("categoryLabel")}
           className={inputClass}
-        >
-          <option value="">{tCommon("uncategorized")}</option>
-          {filteredCategories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <DateInput name="date" required ariaLabel={t("dateLabel")} defaultValue={transaction.date} className={inputClass} />
-        <input name="description" type="text" autoComplete="off" aria-label={t("descriptionLabel")} defaultValue={transaction.description ?? ""} className={inputClass} />
+        <input name="description" type="text" autoComplete="off" aria-label={t("descriptionLabel")} placeholder={t("descriptionPlaceholder")} defaultValue={transaction.description ?? ""} className={inputClass} />
       </div>
       <button
         type="submit"
