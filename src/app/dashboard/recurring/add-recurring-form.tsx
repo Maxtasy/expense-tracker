@@ -8,6 +8,7 @@ import { AmountInput } from "@/components/amount-input";
 import { typeButtonClass, typeChipClass } from "@/lib/type-theme";
 import { useLocalToday } from "@/lib/use-local-today";
 import { Spinner } from "@/components/spinner";
+import { CategoryPicker } from "@/components/category-picker";
 import { DateInput } from "@/components/date-input";
 
 type TxType = "expense" | "income";
@@ -71,16 +72,9 @@ export function AddRecurringForm({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <AmountInput symbol={currencySymbol(currency)} required />
-        <select key={type} name="categoryId" defaultValue="" aria-label={tDashboardForm("categoryLabel")} className={inputClass}>
-          <option value="">{tCommon("uncategorized")}</option>
-          {filteredCategories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        <CategoryPicker key={type} type={type} categories={filteredCategories} ariaLabel={tDashboardForm("categoryLabel")} className={inputClass} />
       </div>
-      <input name="description" type="text" autoComplete="off" placeholder={tDashboardForm("descriptionPlaceholder")} className={inputClass} />
+      <input name="description" type="text" autoComplete="off" placeholder={t("namePlaceholder")} className={inputClass} />
       <div className="grid grid-cols-2 gap-2">
         <label className="space-y-1">
           <span className="block text-[11px] text-fg-muted">{t("startsOn")}</span>

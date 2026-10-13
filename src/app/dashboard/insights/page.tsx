@@ -4,7 +4,8 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
 import { categoryColor, PALETTE } from "@/lib/category-color";
-import { monthKey, monthRange, parseMonth, yearRange } from "@/lib/month";
+import { monthKey, monthRange, parseMonth, yearRange, type YearMonth } from "@/lib/month";
+import { ensureRecurringGenerated } from "../generate-recurring";
 import { getUserToday } from "@/lib/timezone-server";
 import { getUserCurrency } from "@/lib/currency-server";
 import { InsightsNav } from "./insights-nav";
@@ -26,7 +27,20 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
   const params = await searchParams;
   const mode = params.mode === "year" ? "year" : "month";
   const type = params.type === "income" ? "income" : params.type === "all" ? "all" : "expense";
-  const current = parseMonth(params.month, await getUserToday());
+  const today = await getUserToday();
+  const current = parseMonth(params.month, today);
+  // Recurring rows are only materialized lazily, so make sure they exist for everything the
+  // totals cover. Year mode counts January up to the current month (future months don't count
+  // yet; a past year counts all twelve, a future year none).
+  const todayMonth = parseMonth(undefined, today);
+  const monthsToGenerate: YearMonth[] =
+    mode === "month"
+      ? [current]
+      : Array.from(
+          { length: current.year < todayMonth.year ? 12 : current.year === todayMonth.year ? todayMonth.month : 0 },
+          (_, i) => ({ year: current.year, month: i + 1 }),
+        );
+  for (const m of monthsToGenerate) await ensureRecurringGenerated(userId, m);
   const { from, to } = mode === "year" ? yearRange(current.year) : monthRange(current);
 
   const [breakdown, currency, t] = await Promise.all([

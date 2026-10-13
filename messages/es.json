@@ -291,7 +291,9 @@
       "descriptionPlaceholder": "Descripción",
       "descriptionLabel": "Descripción",
       "addTitle": "Añadir transacción",
-      "addFabLabel": "Añadir transacción"
+      "addFabLabel": "Añadir transacción",
+      "categoryPickerTitle": "Elegir categoría",
+      "newCategory": "Nueva categoría"
     },
     "verifyEmailBanner": {
       "message": "Verifica tu correo para conservar el acceso · enviado a {email}",
@@ -334,7 +336,9 @@
     "endsOnOptional": "Termina el (opcional)",
     "addButton": "Añadir recurrente",
     "deleteTitle": "¿Eliminar la transacción recurrente?",
-    "deleteMessage": "Se eliminarán la regla y todas las repeticiones futuras. Las transacciones pasadas se conservan. No se puede deshacer."
+    "deleteMessage": "Se eliminarán la regla y todas las repeticiones futuras. Las transacciones pasadas se conservan. No se puede deshacer.",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Nombre (p. ej. Alquiler)"
   },
   "insights": {
     "incomeByCategory": "Ingresos por categoría",
@@ -367,7 +371,7 @@
     "dateFormat": {
       "label": "Formato de fecha",
       "ariaLabel": "Formato de fecha",
-      "auto": "Automático (según el idioma)"
+      "auto": "Automático ({language}: {pattern})"
     },
     "tour": {
       "label": "Recorrido de la app",
@@ -509,8 +513,11 @@
       "guestTitle": "¿Cerrar sesión de la cuenta de invitado?",
       "guestWarning": "Estás usando una cuenta de invitado. Si cierras sesión no podrás volver a entrar y perderás tus datos.",
       "guestCreateAccount": "Crear una cuenta en su lugar",
-      "guestConfirm": "Cerrar sesión de todos modos"
-    }
+      "guestConfirm": "Cerrar sesión de todos modos",
+      "guestDescription": "Las cuentas de invitado no pueden volver a iniciar sesión. Al cerrar sesión se borran tus datos."
+    },
+    "webVersion": "Versión web {version}",
+    "webVersionNote": "La app se actualiza sola, sin una actualización de Play Store, por lo que este número puede diferir de la versión que muestra Google Play."
   },
   "email": {
     "passwordReset": {

@@ -291,7 +291,9 @@
       "descriptionPlaceholder": "Description",
       "descriptionLabel": "Description",
       "addTitle": "Add transaction",
-      "addFabLabel": "Add transaction"
+      "addFabLabel": "Add transaction",
+      "categoryPickerTitle": "Choose category",
+      "newCategory": "New category"
     },
     "verifyEmailBanner": {
       "message": "Verify your email to keep access · sent to {email}",
@@ -334,7 +336,9 @@
     "endsOnOptional": "Ends on (optional)",
     "addButton": "Add recurring",
     "deleteTitle": "Delete recurring transaction?",
-    "deleteMessage": "The rule and all future occurrences will be deleted. Past transactions are kept. This can't be undone."
+    "deleteMessage": "The rule and all future occurrences will be deleted. Past transactions are kept. This can't be undone.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Name (e.g. Rent)"
   },
   "insights": {
     "incomeByCategory": "Income by category",
@@ -367,7 +371,7 @@
     "dateFormat": {
       "label": "Date format",
       "ariaLabel": "Date format",
-      "auto": "Automatic (from language)"
+      "auto": "Automatic ({language}: {pattern})"
     },
     "tour": {
       "label": "App tour",
@@ -509,8 +513,11 @@
       "guestTitle": "Log out of guest account?",
       "guestWarning": "You are using a guest account. If you log out you can't log back in and your data will be lost.",
       "guestCreateAccount": "Create an account instead",
-      "guestConfirm": "Log out anyway"
-    }
+      "guestConfirm": "Log out anyway",
+      "guestDescription": "Guest accounts can't log back in. Logging out deletes your data."
+    },
+    "webVersion": "Web version {version}",
+    "webVersionNote": "The app updates itself without a Play Store update, so this number can differ from the version shown on Google Play."
   },
   "email": {
     "passwordReset": {

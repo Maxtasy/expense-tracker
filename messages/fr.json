@@ -291,7 +291,9 @@
       "descriptionPlaceholder": "Description",
       "descriptionLabel": "Description",
       "addTitle": "Ajouter une transaction",
-      "addFabLabel": "Ajouter une transaction"
+      "addFabLabel": "Ajouter une transaction",
+      "categoryPickerTitle": "Choisir une catégorie",
+      "newCategory": "Nouvelle catégorie"
     },
     "verifyEmailBanner": {
       "message": "Vérifiez votre e-mail pour conserver l'accès · envoyé à {email}",
@@ -334,7 +336,9 @@
     "endsOnOptional": "Se termine le (facultatif)",
     "addButton": "Ajouter la récurrence",
     "deleteTitle": "Supprimer la transaction récurrente ?",
-    "deleteMessage": "La règle et toutes les occurrences futures seront supprimées. Les transactions passées sont conservées. Cette action est irréversible."
+    "deleteMessage": "La règle et toutes les occurrences futures seront supprimées. Les transactions passées sont conservées. Cette action est irréversible.",
+    "nameLabel": "Nom",
+    "namePlaceholder": "Nom (p. ex. Loyer)"
   },
   "insights": {
     "incomeByCategory": "Revenus par catégorie",
@@ -367,7 +371,7 @@
     "dateFormat": {
       "label": "Format de date",
       "ariaLabel": "Format de date",
-      "auto": "Automatique (selon la langue)"
+      "auto": "Automatique ({language} : {pattern})"
     },
     "tour": {
       "label": "Visite de l’appli",
@@ -509,8 +513,11 @@
       "guestTitle": "Se déconnecter du compte invité ?",
       "guestWarning": "Vous utilisez un compte invité. Si vous vous déconnectez, vous ne pourrez plus vous reconnecter et vos données seront perdues.",
       "guestCreateAccount": "Créer un compte à la place",
-      "guestConfirm": "Se déconnecter quand même"
-    }
+      "guestConfirm": "Se déconnecter quand même",
+      "guestDescription": "Un compte invité ne permet pas de se reconnecter. Se déconnecter supprime vos données."
+    },
+    "webVersion": "Version web {version}",
+    "webVersionNote": "L'application se met à jour d'elle-même, sans mise à jour du Play Store ; ce numéro peut donc différer de la version affichée sur Google Play."
   },
   "email": {
     "passwordReset": {
