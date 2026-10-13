@@ -116,7 +116,9 @@ export function CategoryPicker({
       {open &&
         createPortal(
           <Dialog dialogRef={dialogRef} title={t("categoryPickerTitle")} placement="top">
-            <div style={{ maxHeight: "calc(100dvh - 11rem)", overflowY: "auto" }} className="-mx-1 px-1">
+            <div // while the name field is showing, keep the list short so the field and Add button stay in the
+            // top half of the screen, above an on-screen keyboard (which doesn't shrink dvh units)
+            style={{ maxHeight: creating ? "35dvh" : "calc(100dvh - 11rem)", overflowY: "auto" }} className="-mx-1 px-1">
               <div className="grid grid-cols-2 gap-2">
                 {options.map((o) => (
                   <button key={o.id || "none"} type="button" aria-pressed={o.id === selectedId} onClick={() => choose(o.id)} className={chipClass(o.id === selectedId)}>
