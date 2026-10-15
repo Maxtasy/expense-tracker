@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { ArrowDownLeft, ArrowUpRight, Pencil } from "lucide-react";
+import { Pencil, TrendingDown, TrendingUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { deleteRecurring } from "./actions";
 import { categoryColor } from "@/lib/category-color";
@@ -59,7 +59,7 @@ export function RecurringRow({
         </p>
       </div>
       <span className={`inline-flex shrink-0 items-center gap-1 text-sm font-medium ${isIncome ? "text-success" : "text-fg"}`}>
-        {isIncome ? <ArrowDownLeft size={12} aria-hidden="true" /> : <ArrowUpRight size={12} aria-hidden="true" />}
+        {isIncome ? <TrendingUp size={12} aria-hidden="true" /> : <TrendingDown size={12} aria-hidden="true" />}
         <span className="sr-only">{isIncome ? tCommon("income") : tCommon("expense")}: </span>
         {isIncome ? "+" : "-"}
         {formatMoney(recurring.amount, currency, locale)}

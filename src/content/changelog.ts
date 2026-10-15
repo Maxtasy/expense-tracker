@@ -12,6 +12,13 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.21.1",
+    date: "2026-10-15",
+    items: [
+      "Income now shows an upward trend icon and expenses a downward trend icon, so the direction is clear at a glance.",
+    ],
+  },
+  {
     version: "1.21.0",
     date: "2026-10-15",
     items: [
