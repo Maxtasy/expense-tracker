@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Spinner } from "@/components/spinner";
+import { Switch } from "@/components/switch";
 
 type Result = { error?: string; success?: boolean } | undefined;
 
@@ -10,13 +11,11 @@ export function ToggleSettingForm({
   action,
   name,
   checked,
-  label,
   ariaLabel,
 }: {
   action: (formData: FormData) => Promise<Result>;
   name: string;
   checked: boolean;
-  label: string;
   ariaLabel: string;
 }) {
   const t = useTranslations("settings");
@@ -38,20 +37,15 @@ export function ToggleSettingForm({
   }
 
   return (
-    <form action={handleChange} className="flex items-center gap-2">
-      <label className="flex flex-1 cursor-pointer items-start gap-2 text-xs text-fg-muted">
-        <input
-          key={String(checked)}
-          type="checkbox"
-          name={name}
-          defaultChecked={checked}
-          onChange={(e) => e.currentTarget.form?.requestSubmit()}
-          disabled={isPending}
-          aria-label={ariaLabel}
-          className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-accent)]"
-        />
-        <span>{label}</span>
-      </label>
+    <form action={handleChange} className="flex items-center justify-end gap-2">
+      <Switch
+        key={String(checked)}
+        name={name}
+        defaultChecked={checked}
+        onChange={(e) => e.currentTarget.form?.requestSubmit()}
+        disabled={isPending}
+        ariaLabel={ariaLabel}
+      />
       {isPending && <Spinner size={14} />}
       {saved && !isPending && <span role="status" className="shrink-0 text-xs text-success">{t("saved")}</span>}
       {error && <span role="alert" className="shrink-0 text-xs text-danger">{error}</span>}
