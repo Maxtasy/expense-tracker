@@ -12,6 +12,15 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.22.0",
+    date: "2026-10-15",
+    items: [
+      "Settings is now organized into Preferences, Data, Account and Help and support, instead of one long list.",
+      "On/off options in Settings, and the confirmation steps for risky actions, are now toggle switches.",
+      "Exporting and re-importing your data as CSV now keeps your category colors, hidden default categories and skipped recurring months.",
+    ],
+  },
+  {
     version: "1.21.1",
     date: "2026-10-15",
     items: [
