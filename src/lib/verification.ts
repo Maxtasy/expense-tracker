@@ -4,6 +4,7 @@ import { users, emailVerificationTokens } from "@/db/schema";
 import { generateToken, hashToken, EMAIL_VERIFICATION_TOKEN_TTL_MS } from "@/lib/token";
 import { getBaseUrl } from "@/lib/base-url";
 import { sendVerificationEmail } from "@/lib/email";
+import { getUserSettingsRow } from "@/lib/user-settings-server";
 
 // Full access continues immediately after signup; login is only blocked once BOTH the account is
 // unverified AND this much time has passed -- see authorize() in src/auth.ts (blocks a *new*
@@ -20,12 +21,7 @@ export function needsVerification(account: { isGuest: boolean; emailVerifiedAt: 
 }
 
 export async function getVerificationStatus(userId: string) {
-  const [row] = await db
-    .select({ email: users.email, emailVerifiedAt: users.emailVerifiedAt, createdAt: users.createdAt, isGuest: users.isGuest })
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
-  return row;
+  return getUserSettingsRow(userId);
 }
 
 // Shared by signup, the dashboard banner's resend button, and the blocked-login resend flow.

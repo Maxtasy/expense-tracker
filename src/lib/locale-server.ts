@@ -1,11 +1,9 @@
-import { eq } from "drizzle-orm";
 import { cookies, headers } from "next/headers";
-import { db } from "@/db";
-import { users } from "@/db/schema";
+import { getUserSettingsRow } from "@/lib/user-settings-server";
 import { DEFAULT_LOCALE, LOCALES, PRE_AUTH_LOCALE_COOKIE, matchAcceptLanguage } from "@/lib/locale";
 
 export async function getUserLocale(userId: string): Promise<string> {
-  const [row] = await db.select({ locale: users.locale }).from(users).where(eq(users.id, userId)).limit(1);
+  const row = await getUserSettingsRow(userId);
   return row?.locale ?? DEFAULT_LOCALE;
 }
 
