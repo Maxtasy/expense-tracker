@@ -23,8 +23,15 @@ export const CURRENCIES = [
 
 export const DEFAULT_CURRENCY = "EUR";
 
+// USD keeps "$" and JPY "¥"; every other currency whose symbol is shared ("$", "¥", "kr") shows
+// its code instead, so e.g. CAD and AUD aren't indistinguishable from USD in the amount field.
+const CANONICAL_SYMBOL_CODES: readonly string[] = ["USD", "JPY"];
+
 export function currencySymbol(code: string): string {
-  return CURRENCIES.find((c) => c.code === code)?.symbol ?? code;
+  const entry = CURRENCIES.find((c) => c.code === code);
+  if (!entry) return code;
+  const shared = CURRENCIES.some((c) => c.code !== code && c.symbol === entry.symbol);
+  return shared && !CANONICAL_SYMBOL_CODES.includes(code) ? code : entry.symbol;
 }
 
 export function currencyName(code: string, locale: string): string {

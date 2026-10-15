@@ -342,6 +342,22 @@ export async function updateRememberLastCategory(formData: FormData) {
   return { success: true };
 }
 
+export async function updateSwipeNavigation(formData: FormData) {
+  const session = await auth();
+  const t = await getTranslations("settings");
+  if (!session?.user) return { error: t("notSignedIn") };
+
+  await db
+    .update(users)
+    .set({ swipeNavigation: formData.get("swipeNavigation") === "on" })
+    .where(eq(users.id, session.user.id));
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/insights");
+  revalidatePath("/dashboard/settings");
+  return { success: true };
+}
+
 export async function changePassword(formData: FormData) {
   const session = await auth();
   const tSettings = await getTranslations("settings");
