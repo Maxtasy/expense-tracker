@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LogOut } from "lucide-react";
 import { logout } from "../actions";
@@ -11,6 +12,7 @@ import { Spinner } from "@/components/spinner";
 // through a dialog that repeats the warning and offers creating an account instead.
 export function LogoutSection({ isGuest }: { isGuest: boolean }) {
   const t = useTranslations("settings.logout");
+  const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -22,7 +24,8 @@ export function LogoutSection({ isGuest }: { isGuest: boolean }) {
 
   function handleCreateAccount() {
     dialogRef.current?.close();
-    document.getElementById("create-account")?.scrollIntoView({ behavior: "smooth" });
+    // the sign-up card lives on the top-level Settings page, not on this sub-page
+    router.push("/dashboard/settings#create-account");
   }
 
   const buttonClass =

@@ -355,6 +355,13 @@
   },
   "settings": {
     "title": "Settings",
+    "backToSettings": "Settings",
+    "groups": {
+      "preferences": { "title": "Preferences", "description": "Currency, language, theme, date format and more" },
+      "data": { "title": "Data", "description": "Export, import and reset your data" },
+      "account": { "title": "Account", "description": "Password, log out and delete account" },
+      "help": { "title": "Help & support", "description": "Tour, donations and app version" }
+    },
     "currency": "Currency",
     "currencyAriaLabel": "Currency",
     "language": "Language",
@@ -440,7 +447,7 @@
       "rowInvalid": "{label}, row {row}: invalid value for \"{field}\""
     },
     "moneyManager": {
-      "backToSettings": "Settings",
+      "backToSettings": "Data",
       "title": "Import from Money Manager",
       "description": "Upload a Money Manager .xlsx export. This adds to your existing categories and transactions — nothing is deleted or overwritten, and re-importing the same file won't create duplicates.",
       "fileLabel": "Money Manager .xlsx export",
