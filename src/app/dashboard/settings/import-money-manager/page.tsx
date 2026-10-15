@@ -21,7 +21,7 @@ export default async function ImportMoneyManagerPage() {
 
   return (
     <div>
-      <Link href="/dashboard/settings" className="mb-3 flex items-center gap-1 text-xs text-fg-muted hover:text-fg">
+      <Link href="/dashboard/settings/data" className="mb-3 flex items-center gap-1 text-xs text-fg-muted hover:text-fg">
         <ChevronLeft size={14} />
         {t("backToSettings")}
       </Link>

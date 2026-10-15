@@ -355,6 +355,13 @@
   },
   "settings": {
     "title": "Paramètres",
+    "backToSettings": "Paramètres",
+    "groups": {
+      "preferences": { "title": "Préférences", "description": "Devise, langue, thème, format de date et plus" },
+      "data": { "title": "Données", "description": "Exporter, importer et réinitialiser vos données" },
+      "account": { "title": "Compte", "description": "Mot de passe, déconnexion et suppression du compte" },
+      "help": { "title": "Aide et assistance", "description": "Visite guidée, dons et version de l'appli" }
+    },
     "currency": "Devise",
     "currencyAriaLabel": "Devise",
     "language": "Langue",
@@ -440,7 +447,7 @@
       "rowInvalid": "{label}, ligne {row} : valeur invalide pour « {field} »"
     },
     "moneyManager": {
-      "backToSettings": "Paramètres",
+      "backToSettings": "Données",
       "title": "Importer depuis Money Manager",
       "description": "Importez un export .xlsx de Money Manager. Cela s'ajoute à vos catégories et transactions existantes — rien n'est supprimé ni écrasé, et réimporter le même fichier ne crée pas de doublons.",
       "fileLabel": "Export .xlsx de Money Manager",

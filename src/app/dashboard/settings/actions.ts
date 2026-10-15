@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { auth, signOut, unstable_update } from "@/auth";
 import { db } from "@/db";
-import { categories, recurringTransactions, transactions, users } from "@/db/schema";
+import { categories, hiddenCategories, recurringTransactionSkips, recurringTransactions, transactions, users } from "@/db/schema";
 import { CURRENCIES } from "@/lib/currency";
 import { LOCALES } from "@/lib/locale";
 import { DATE_FORMATS } from "@/lib/date-format";
@@ -36,6 +36,9 @@ function buildCsvSchemas(amountMustBePositiveNumberMessage: string, invalidDateM
     name: z.string().transform(unguardCsvCell).pipe(z.string().trim().min(1).max(50)),
     type: typeSchema,
     is_global: z.enum(["true", "false"]),
+    // optional so CSVs exported before these columns existed still import
+    color: z.union([z.string().regex(/^#[0-9a-fA-F]{6}$/), z.literal("")]).optional(),
+    is_hidden: z.enum(["true", "false"]).optional(),
   });
 
   const recurringRowSchema = z.object({
@@ -46,6 +49,11 @@ function buildCsvSchemas(amountMustBePositiveNumberMessage: string, invalidDateM
     description: z.string().transform(unguardCsvCell),
     start_date: dateSchema,
     end_date: optionalDateSchema,
+    // "YYYY-MM;YYYY-MM": months whose occurrence was deleted on purpose (optional for older exports)
+    skipped_months: z
+      .string()
+      .regex(/^(\d{4}-(0[1-9]|1[0-2])(;\d{4}-(0[1-9]|1[0-2]))*)?$/)
+      .optional(),
   });
 
   const transactionRowSchema = z.object({
@@ -182,6 +190,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
       await tx.delete(transactions).where(eq(transactions.userId, userId));
       await tx.delete(recurringTransactions).where(eq(recurringTransactions.userId, userId));
       await tx.delete(categories).where(eq(categories.userId, userId));
+      await tx.delete(hiddenCategories).where(eq(hiddenCategories.userId, userId));
 
       const categoryIdMap = new Map<string, string>();
       for (const row of categoryRows) {
@@ -191,10 +200,11 @@ export async function importData(_prevState: ImportState, formData: FormData): P
           );
           if (!match) throw new ImportError(t("globalCategoryNotFoundDuringImport", { name: row.name, type: row.type }));
           categoryIdMap.set(row.id, match.id);
+          if (row.is_hidden === "true") await tx.insert(hiddenCategories).values({ userId, categoryId: match.id });
         } else {
           const [inserted] = await tx
             .insert(categories)
-            .values({ name: row.name, type: row.type, userId })
+            .values({ name: row.name, type: row.type, userId, color: row.color || null })
             .returning({ id: categories.id });
           categoryIdMap.set(row.id, inserted.id);
         }
@@ -217,6 +227,10 @@ export async function importData(_prevState: ImportState, formData: FormData): P
           })
           .returning({ id: recurringTransactions.id });
         recurringIdMap.set(row.id, inserted.id);
+        for (const ym of (row.skipped_months ?? "").split(";").filter(Boolean)) {
+          const [year, month] = ym.split("-").map(Number);
+          await tx.insert(recurringTransactionSkips).values({ recurringTransactionId: inserted.id, year, month }).onConflictDoNothing();
+        }
       }
 
       for (const row of transactionRows) {

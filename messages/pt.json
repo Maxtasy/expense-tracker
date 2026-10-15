@@ -355,6 +355,13 @@
   },
   "settings": {
     "title": "Configurações",
+    "backToSettings": "Configurações",
+    "groups": {
+      "preferences": { "title": "Preferências", "description": "Moeda, idioma, tema, formato de data e mais" },
+      "data": { "title": "Dados", "description": "Exporte, importe e redefina seus dados" },
+      "account": { "title": "Conta", "description": "Senha, sair e excluir a conta" },
+      "help": { "title": "Ajuda e suporte", "description": "Tour, doações e versão do app" }
+    },
     "currency": "Moeda",
     "currencyAriaLabel": "Moeda",
     "language": "Idioma",
@@ -440,7 +447,7 @@
       "rowInvalid": "{label}, linha {row}: valor inválido para «{field}»"
     },
     "moneyManager": {
-      "backToSettings": "Configurações",
+      "backToSettings": "Dados",
       "title": "Importar do Money Manager",
       "description": "Envie uma exportação .xlsx do Money Manager. Isso é adicionado às suas categorias e transações existentes — nada é excluído ou substituído, e reimportar o mesmo arquivo não cria duplicatas.",
       "fileLabel": "Exportação .xlsx do Money Manager",
