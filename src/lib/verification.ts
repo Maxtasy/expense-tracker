@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { users, emailVerificationTokens } from "@/db/schema";
+import { emailVerificationTokens } from "@/db/schema";
 import { generateToken, hashToken, EMAIL_VERIFICATION_TOKEN_TTL_MS } from "@/lib/token";
 import { getBaseUrl } from "@/lib/base-url";
 import { sendVerificationEmail } from "@/lib/email";

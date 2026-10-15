@@ -8,6 +8,7 @@ import { monthKey, monthRange, parseMonth, yearRange, type YearMonth } from "@/l
 import { ensureRecurringGenerated } from "../generate-recurring";
 import { getUserToday } from "@/lib/timezone-server";
 import { getUserCurrency } from "@/lib/currency-server";
+import { getUserSwipeNavigation } from "@/lib/preferences-server";
 import { InsightsNav } from "./insights-nav";
 import { PeriodToggle } from "./period-toggle";
 import { TypeToggle } from "./type-toggle";
@@ -43,7 +44,7 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
   for (const m of monthsToGenerate) await ensureRecurringGenerated(userId, m);
   const { from, to } = mode === "year" ? yearRange(current.year) : monthRange(current);
 
-  const [breakdown, currency, t] = await Promise.all([
+  const [breakdown, currency, swipeEnabled, t] = await Promise.all([
     db
       .select({
         categoryName: categories.name,
@@ -56,6 +57,7 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
       .where(and(eq(transactions.userId, userId), gte(transactions.date, from), lte(transactions.date, to)))
       .groupBy(transactions.categoryId, categories.name, categories.color, transactions.type),
     getUserCurrency(userId),
+    getUserSwipeNavigation(userId),
     getTranslations("insights"),
   ]);
 
@@ -93,7 +95,7 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
   const sum = (slices: { value: number }[]) => slices.reduce((total, slice) => total + slice.value, 0);
 
   return (
-    <InsightsNav mode={mode} current={current} type={type}>
+    <InsightsNav mode={mode} current={current} type={type} swipeEnabled={swipeEnabled}>
       <TypeToggle mode={mode} month={monthKey(current)} type={type} />
       <PeriodToggle mode={mode} month={monthKey(current)} type={type} />
       {mode === "month" ? (

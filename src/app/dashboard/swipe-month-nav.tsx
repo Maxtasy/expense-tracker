@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CoinLoader } from "@/components/coin-loader";
+import { canStartSwipe, hasTextSelection } from "@/lib/swipe";
 import { monthHref, shiftMonth, type YearMonth } from "@/lib/month";
 
 const SWIPE_THRESHOLD_PX = 60;
@@ -34,11 +35,13 @@ export function SwipeMonthNav({
   current,
   category,
   sort,
+  swipeEnabled = true,
   children,
 }: {
   current: YearMonth;
   category: string;
   sort: string;
+  swipeEnabled?: boolean;
   children: React.ReactNode;
 }) {
   const router = useRouter();
@@ -61,7 +64,7 @@ export function SwipeMonthNav({
   }
 
   function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
-    if (e.touches.length > 1 || (e.target as Element).closest("dialog")) {
+    if (!swipeEnabled || e.touches.length > 1 || !canStartSwipe(e.target)) {
       start.current = null;
       return;
     }
@@ -73,6 +76,7 @@ export function SwipeMonthNav({
     const dx = e.changedTouches[0].clientX - start.current.x;
     const dy = e.changedTouches[0].clientY - start.current.y;
     start.current = null;
+    if (hasTextSelection()) return;
 
     if (Math.abs(dx) > SWIPE_THRESHOLD_PX && Math.abs(dx) > Math.abs(dy) * 1.5) {
       navigate(monthHref(shiftMonth(current, dx < 0 ? 1 : -1), category, sort));

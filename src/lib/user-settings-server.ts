@@ -18,6 +18,7 @@ export const getUserSettingsRow = cache(async (userId: string) => {
       theme: users.theme,
       rememberLastCategory: users.rememberLastCategory,
       onboardedAt: users.onboardedAt,
+      swipeNavigation: users.swipeNavigation,
     })
     .from(users)
     .where(eq(users.id, userId))

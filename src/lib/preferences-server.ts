@@ -21,3 +21,8 @@ export async function getUserTheme(userId: string): Promise<Theme> {
   const row = await getUserSettingsRow(userId);
   return THEMES.find((t) => t === row?.theme) ?? DEFAULT_THEME;
 }
+
+export async function getUserSwipeNavigation(userId: string): Promise<boolean> {
+  const row = await getUserSettingsRow(userId);
+  return row?.swipeNavigation ?? true;
+}

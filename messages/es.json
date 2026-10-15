@@ -506,6 +506,11 @@
       "description": "Al añadir una transacción, preselecciona la última categoría que usaste para ese tipo.",
       "ariaLabel": "Recordar la última categoría"
     },
+    "swipeNavigation": {
+      "label": "Deslizar para cambiar de mes",
+      "description": "Desliza a izquierda o derecha para moverte entre meses (y periodos en Análisis). Desactívalo si se activa sin querer.",
+      "ariaLabel": "Deslizar para cambiar de mes"
+    },
     "logout": {
       "label": "Cerrar sesión",
       "description": "Cerrar sesión en este dispositivo.",

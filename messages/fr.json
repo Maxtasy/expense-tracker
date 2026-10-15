@@ -506,6 +506,11 @@
       "description": "Lors de l'ajout d'une transaction, présélectionne la dernière catégorie utilisée pour ce type.",
       "ariaLabel": "Mémoriser la dernière catégorie"
     },
+    "swipeNavigation": {
+      "label": "Balayer pour changer de mois",
+      "description": "Balayez vers la gauche ou la droite pour passer d'un mois à l'autre (et d'une période à l'autre dans Analyses). Désactivez si cela se déclenche par erreur.",
+      "ariaLabel": "Balayer pour changer de mois"
+    },
     "logout": {
       "label": "Se déconnecter",
       "description": "Se déconnecter de cet appareil.",
