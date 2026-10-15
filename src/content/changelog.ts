@@ -12,6 +12,18 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.21.0",
+    date: "2026-10-15",
+    items: [
+      "New setting to turn off swiping left and right to change the month.",
+      "Swiping no longer triggers while you select text or scroll sideways inside a list.",
+      "Income and expenses now also show an arrow icon and are announced as income or expense by screen readers, not just by color and sign.",
+      "Currencies that share a symbol, such as the Canadian and Australian dollar, now show their code in the amount field.",
+      "Secondary text is easier to read in both light and dark mode.",
+      "The dashboard loads faster because your settings are fetched in one request.",
+    ],
+  },
+  {
     version: "1.20.0",
     date: "2026-10-13",
     items: [
