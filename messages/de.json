@@ -506,6 +506,11 @@
       "description": "Wählt beim Hinzufügen einer Buchung die zuletzt für diesen Typ verwendete Kategorie vor.",
       "ariaLabel": "Letzte Kategorie merken"
     },
+    "swipeNavigation": {
+      "label": "Wischen zum Monatswechsel",
+      "description": "Nach links oder rechts wischen, um zwischen Monaten (und Zeiträumen in den Insights) zu wechseln. Ausschalten, falls es versehentlich ausgelöst wird.",
+      "ariaLabel": "Wischen zum Monatswechsel"
+    },
     "logout": {
       "label": "Abmelden",
       "description": "Auf diesem Gerät abmelden.",

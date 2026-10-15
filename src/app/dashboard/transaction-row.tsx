@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Pencil, Repeat } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, Pencil, Repeat } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { deleteTransaction } from "./actions";
 import { categoryColor } from "@/lib/category-color";
@@ -60,7 +60,9 @@ export function TransactionRow({
           {transaction.categoryName ?? tCommon("uncategorized")} &middot; {formatDate(transaction.date, locale, dateFormat)}
         </p>
       </div>
-      <span className={`shrink-0 text-sm font-medium ${isIncome ? "text-success" : "text-fg"}`}>
+      <span className={`inline-flex shrink-0 items-center gap-1 text-sm font-medium ${isIncome ? "text-success" : "text-fg"}`}>
+        {isIncome ? <ArrowDownLeft size={12} aria-hidden="true" /> : <ArrowUpRight size={12} aria-hidden="true" />}
+        <span className="sr-only">{isIncome ? tCommon("income") : tCommon("expense")}: </span>
         {isIncome ? "+" : "-"}
         {formatMoney(transaction.amount, currency, locale)}
       </span>

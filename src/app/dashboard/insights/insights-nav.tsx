@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CoinLoader } from "@/components/coin-loader";
+import { canStartSwipe, hasTextSelection } from "@/lib/swipe";
 import { shiftMonth, type YearMonth } from "@/lib/month";
 
 export type InsightsType = "expense" | "income" | "all";
@@ -35,11 +36,13 @@ export function InsightsNav({
   mode,
   current,
   type,
+  swipeEnabled = true,
   children,
 }: {
   mode: "month" | "year";
   current: YearMonth;
   type: InsightsType;
+  swipeEnabled?: boolean;
   children: React.ReactNode;
 }) {
   const router = useRouter();
@@ -65,7 +68,7 @@ export function InsightsNav({
 
   function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
     // ignore pinch gestures and anything inside a dialog
-    if (e.touches.length > 1 || (e.target as Element).closest("dialog")) {
+    if (!swipeEnabled || e.touches.length > 1 || !canStartSwipe(e.target)) {
       start.current = null;
       return;
     }
@@ -77,6 +80,7 @@ export function InsightsNav({
     const dx = e.changedTouches[0].clientX - start.current.x;
     const dy = e.changedTouches[0].clientY - start.current.y;
     start.current = null;
+    if (hasTextSelection()) return;
 
     if (Math.abs(dx) > SWIPE_THRESHOLD_PX && Math.abs(dx) > Math.abs(dy) * 1.5) {
       navigate(step(dx < 0 ? 1 : -1));

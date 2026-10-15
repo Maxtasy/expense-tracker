@@ -14,7 +14,7 @@ import { isUuid } from "@/lib/validation";
 import { monthKey, monthLabel, monthRange, parseMonth } from "@/lib/month";
 import { getUserToday } from "@/lib/timezone-server";
 import { getUserCurrency } from "@/lib/currency-server";
-import { getUserDateFormat, getUserRememberLastCategory } from "@/lib/preferences-server";
+import { getUserDateFormat, getUserRememberLastCategory, getUserSwipeNavigation } from "@/lib/preferences-server";
 
 type SearchParams = { category?: string; sort?: string; month?: string };
 
@@ -39,7 +39,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   await ensureRecurringGenerated(userId, current);
 
-  const [availableCategories, hiddenIds, allTransactionCount, monthTotals, currency, dateFormat, locale, t] = await Promise.all([
+  const [availableCategories, hiddenIds, allTransactionCount, monthTotals, currency, dateFormat, swipeEnabled, locale, t] = await Promise.all([
     db
       .select({ id: categories.id, name: categories.name, type: categories.type })
       .from(categories)
@@ -54,6 +54,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       .groupBy(transactions.type),
     getUserCurrency(userId),
     getUserDateFormat(userId),
+    getUserSwipeNavigation(userId),
     getLocale(),
     getTranslations("dashboard"),
   ]);
@@ -102,7 +103,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     .orderBy(...SORT_OPTIONS[sort]);
 
   return (
-    <SwipeMonthNav current={current} category={category} sort={sort}>
+    <SwipeMonthNav current={current} category={category} sort={sort} swipeEnabled={swipeEnabled}>
       <div className="dashboard-grid">
         <div className="dashboard-sidebar">
           <MonthPager current={current} category={category} sort={sort} />

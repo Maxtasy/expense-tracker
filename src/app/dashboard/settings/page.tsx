@@ -12,8 +12,8 @@ import { LocaleForm } from "./locale-form";
 import { ToggleSettingForm } from "./toggle-setting-form";
 import { LogoutSection } from "./logout-section";
 import { SelectSettingForm } from "./select-setting-form";
-import { updateDateFormat, updateRememberLastCategory, updateTheme } from "./actions";
-import { getUserDateFormat, getUserRememberLastCategory, getUserTheme } from "@/lib/preferences-server";
+import { updateDateFormat, updateRememberLastCategory, updateSwipeNavigation, updateTheme } from "./actions";
+import { getUserDateFormat, getUserRememberLastCategory, getUserSwipeNavigation, getUserTheme } from "@/lib/preferences-server";
 import { DATE_FORMATS, getDatePattern } from "@/lib/date-format";
 import { THEMES } from "@/lib/theme";
 import { ChangePasswordForm } from "./change-password-form";
@@ -27,12 +27,13 @@ import { version } from "../../../../package.json";
 export default async function SettingsPage() {
   const session = await auth();
   if (!session?.user) return null;
-  const [currency, locale, dateFormat, theme, rememberLastCategory, t, account] = await Promise.all([
+  const [currency, locale, dateFormat, theme, rememberLastCategory, swipeNavigation, t, account] = await Promise.all([
     getUserCurrency(session.user.id),
     getUserLocale(session.user.id),
     getUserDateFormat(session.user.id),
     getUserTheme(session.user.id),
     getUserRememberLastCategory(session.user.id),
+    getUserSwipeNavigation(session.user.id),
     getTranslations("settings"),
     getVerificationStatus(session.user.id),
   ]);
@@ -104,6 +105,17 @@ export default async function SettingsPage() {
           checked={rememberLastCategory}
           label={t("rememberCategory.description")}
           ariaLabel={t("rememberCategory.ariaLabel")}
+        />
+      </div>
+
+      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("swipeNavigation.label")}</h2>
+      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
+        <ToggleSettingForm
+          action={updateSwipeNavigation}
+          name="swipeNavigation"
+          checked={swipeNavigation}
+          label={t("swipeNavigation.description")}
+          ariaLabel={t("swipeNavigation.ariaLabel")}
         />
       </div>
 

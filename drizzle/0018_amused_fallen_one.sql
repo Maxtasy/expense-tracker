@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "swipe_navigation" boolean DEFAULT true NOT NULL;
