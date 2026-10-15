@@ -1,196 +1,47 @@
-import { Heart, Upload } from "lucide-react";
+import { ChevronRight, Database, HelpCircle, SlidersHorizontal, User } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
-import { getUserCurrency } from "@/lib/currency-server";
-import { getUserLocale } from "@/lib/locale-server";
-import { ImportForm } from "./import-form";
-import { StartFreshForm } from "./start-fresh-form";
-import { DeleteAccountForm } from "./delete-account-form";
-import { CurrencyForm } from "./currency-form";
-import { LocaleForm } from "./locale-form";
-import { ToggleSettingForm } from "./toggle-setting-form";
-import { LogoutSection } from "./logout-section";
-import { SelectSettingForm } from "./select-setting-form";
-import { updateDateFormat, updateRememberLastCategory, updateSwipeNavigation, updateTheme } from "./actions";
-import { getUserDateFormat, getUserRememberLastCategory, getUserSwipeNavigation, getUserTheme } from "@/lib/preferences-server";
-import { DATE_FORMATS, getDatePattern } from "@/lib/date-format";
-import { THEMES } from "@/lib/theme";
-import { ChangePasswordForm } from "./change-password-form";
-import { UpgradeGuestForm } from "./upgrade-guest-form";
 import { getVerificationStatus } from "@/lib/verification";
 import { GUEST_TTL_DAYS } from "@/lib/guest";
-import { ExportLinks } from "./export-links";
-import { OnboardingTour } from "../onboarding-tour";
-import { version } from "../../../../package.json";
+import { UpgradeGuestForm } from "./upgrade-guest-form";
+import { SettingsSection } from "./settings-section";
+
+const GROUPS = [
+  { key: "preferences", href: "/dashboard/settings/preferences", Icon: SlidersHorizontal },
+  { key: "data", href: "/dashboard/settings/data", Icon: Database },
+  { key: "account", href: "/dashboard/settings/account", Icon: User },
+  { key: "help", href: "/dashboard/settings/help", Icon: HelpCircle },
+] as const;
 
 export default async function SettingsPage() {
   const session = await auth();
   if (!session?.user) return null;
-  const [currency, locale, dateFormat, theme, rememberLastCategory, swipeNavigation, t, account] = await Promise.all([
-    getUserCurrency(session.user.id),
-    getUserLocale(session.user.id),
-    getUserDateFormat(session.user.id),
-    getUserTheme(session.user.id),
-    getUserRememberLastCategory(session.user.id),
-    getUserSwipeNavigation(session.user.id),
-    getTranslations("settings"),
-    getVerificationStatus(session.user.id),
-  ]);
+  const [t, account] = await Promise.all([getTranslations("settings"), getVerificationStatus(session.user.id)]);
   const isGuest = account?.isGuest ?? false;
-  const autoDateLabel = t("dateFormat.auto", {
-    language: new Intl.DisplayNames(locale, { type: "language" }).of(locale) ?? locale,
-    pattern: getDatePattern("auto", locale),
-  });
-
-  const exportLinks = [
-    { href: "/dashboard/settings/export/categories", label: t("csvImport.categoriesFileLabel") },
-    { href: "/dashboard/settings/export/recurring-transactions", label: t("csvImport.recurringFileLabel") },
-    { href: "/dashboard/settings/export/transactions", label: t("csvImport.transactionsFileLabel") },
-  ];
 
   return (
     <div>
       <h1 className="mb-3 text-sm font-semibold text-fg">{t("title")}</h1>
 
       {isGuest && (
-        <>
-          <h2 id="create-account" className="mb-1.5 scroll-mt-20 text-xs font-medium text-fg-muted">
-            {t("upgradeGuest.label")}
-          </h2>
-          <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-            <p className="mb-3 text-xs text-fg-muted">{t("upgradeGuest.description", { days: GUEST_TTL_DAYS })}</p>
-            <UpgradeGuestForm />
-          </div>
-        </>
+        <SettingsSection id="create-account" title={t("upgradeGuest.label")} description={t("upgradeGuest.description", { days: GUEST_TTL_DAYS })}>
+          <UpgradeGuestForm />
+        </SettingsSection>
       )}
 
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("currency")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <CurrencyForm currency={currency} locale={locale} />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("language")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <LocaleForm locale={locale} />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("theme.label")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <SelectSettingForm
-          action={updateTheme}
-          name="theme"
-          value={theme}
-          ariaLabel={t("theme.ariaLabel")}
-          options={THEMES.map((code) => ({ value: code, label: t(`theme.options.${code}`) }))}
-        />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("dateFormat.label")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <SelectSettingForm
-          action={updateDateFormat}
-          name="dateFormat"
-          value={dateFormat}
-          ariaLabel={t("dateFormat.ariaLabel")}
-          options={DATE_FORMATS.map((f) => ({ value: f.code, label: f.pattern ?? autoDateLabel }))}
-        />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("rememberCategory.label")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <ToggleSettingForm
-          action={updateRememberLastCategory}
-          name="rememberLastCategory"
-          checked={rememberLastCategory}
-          label={t("rememberCategory.description")}
-          ariaLabel={t("rememberCategory.ariaLabel")}
-        />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("swipeNavigation.label")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <ToggleSettingForm
-          action={updateSwipeNavigation}
-          name="swipeNavigation"
-          checked={swipeNavigation}
-          label={t("swipeNavigation.description")}
-          ariaLabel={t("swipeNavigation.ariaLabel")}
-        />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("tour.label")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-3 text-xs text-fg-muted">{t("tour.description")}</p>
-        <OnboardingTour trigger />
-      </div>
-
-      {!isGuest && (
-        <>
-          <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("changePassword.label")}</h2>
-          <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-            <ChangePasswordForm />
-          </div>
-        </>
-      )}
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("export")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <ExportLinks links={exportLinks} />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("importMoneyManagerLabel")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-3 text-xs text-fg-muted">{t("importMoneyManagerDescription")}</p>
-        <Link
-          href="/dashboard/settings/import-money-manager"
-          className="flex items-center justify-between rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg hover:bg-surface-hover"
-        >
-          {t("importMoneyManagerLink")}
-          <Upload size={16} className="text-fg-muted" />
-        </Link>
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("import")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-3 text-xs text-fg-muted">{t("importDescription")}</p>
-        <ImportForm />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("startFresh.label")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-3 text-xs text-fg-muted">{t("startFresh.description")}</p>
-        <StartFreshForm />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("logout.label")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-3 text-xs text-fg-muted">{isGuest ? t("logout.guestDescription") : t("logout.description")}</p>
-        <LogoutSection isGuest={isGuest} />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("deleteAccount.label")}</h2>
-      <div className="mb-4 rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-3 text-xs text-fg-muted">{t("deleteAccount.description")}</p>
-        <DeleteAccountForm isGuest={isGuest} />
-      </div>
-
-      <h2 className="mb-1.5 text-xs font-medium text-fg-muted">{t("support")}</h2>
-      <div className="rounded-xl border border-border bg-surface/30 p-3">
-        <p className="mb-3 text-xs text-fg-muted">{t("supportDescription")}</p>
-        <a
-          href="https://paypal.me/maxtasy"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg transition hover:bg-accent-hover"
-        >
-          <Heart size={16} />
-          {t("donateButton")}
-        </a>
-      </div>
-
-      <p className="mt-4 text-center text-xs text-fg-muted">{t("webVersion", { version: `v${version}` })}</p>
-      <p className="mt-1 text-center text-xs text-fg-muted">{t("webVersionNote")}</p>
+      <nav aria-label={t("title")} className="mb-4 divide-y divide-border rounded-xl border border-border bg-surface/30">
+        {GROUPS.map(({ key, href, Icon }) => (
+          <Link key={key} href={href} className="flex min-h-14 items-center gap-3 px-3 py-2.5 hover:bg-surface-hover">
+            <Icon size={18} className="shrink-0 text-fg-muted" aria-hidden="true" />
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm text-fg">{t(`groups.${key}.title`)}</span>
+              <span className="block text-xs text-fg-muted">{t(`groups.${key}.description`)}</span>
+            </span>
+            <ChevronRight size={16} className="shrink-0 text-fg-muted" aria-hidden="true" />
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

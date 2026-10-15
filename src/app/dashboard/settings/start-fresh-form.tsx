@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { startFresh } from "./actions";
 import { Dialog } from "../dialog";
 import { Spinner } from "@/components/spinner";
+import { Switch } from "@/components/switch";
 
 export function StartFreshForm() {
   const t = useTranslations("settings.startFresh");
@@ -53,8 +54,8 @@ export function StartFreshForm() {
       <Dialog dialogRef={dialogRef} title={t("modalTitle")}>
         <form action={handleSubmit} className="space-y-3">
           <p className="text-sm text-fg-muted">{t("modalWarning")}</p>
-          <label className="flex items-start gap-2 text-xs text-fg-muted">
-            <input type="checkbox" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} className="mt-0.5" />
+          <label className="flex items-center gap-2 text-xs text-fg-muted">
+            <Switch checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} ariaLabel={t("confirmCheckbox")} />
             {t("confirmCheckbox")}
           </label>
           <div className="space-y-1">

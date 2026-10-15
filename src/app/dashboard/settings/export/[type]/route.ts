@@ -1,9 +1,9 @@
-import { eq, isNull, or } from "drizzle-orm";
+import { eq, inArray, isNull, or } from "drizzle-orm";
 import { stringify } from "csv-stringify/sync";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { guardCsvCell } from "@/lib/csv-safe";
-import { categories, recurringTransactions, transactions } from "@/db/schema";
+import { categories, hiddenCategories, recurringTransactionSkips, recurringTransactions, transactions } from "@/db/schema";
 
 export async function GET(request: Request, { params }: { params: Promise<{ type: string }> }) {
   const session = await auth();
@@ -17,13 +17,25 @@ export async function GET(request: Request, { params }: { params: Promise<{ type
 
   if (type === "categories") {
     const rows = await db
-      .select({ id: categories.id, name: categories.name, type: categories.type, userId: categories.userId })
+      .select({ id: categories.id, name: categories.name, type: categories.type, userId: categories.userId, color: categories.color })
       .from(categories)
       .where(or(isNull(categories.userId), eq(categories.userId, userId)))
       .orderBy(categories.name);
+    const hidden = new Set(
+      (await db.select({ categoryId: hiddenCategories.categoryId }).from(hiddenCategories).where(eq(hiddenCategories.userId, userId))).map(
+        (h) => h.categoryId,
+      ),
+    );
     csv = stringify(
-      rows.map((r) => ({ id: r.id, name: guardCsvCell(r.name), type: r.type, is_global: r.userId === null ? "true" : "false" })),
-      { header: true, columns: ["id", "name", "type", "is_global"] },
+      rows.map((r) => ({
+        id: r.id,
+        name: guardCsvCell(r.name),
+        type: r.type,
+        is_global: r.userId === null ? "true" : "false",
+        color: r.color ?? "",
+        is_hidden: hidden.has(r.id) ? "true" : "false",
+      })),
+      { header: true, columns: ["id", "name", "type", "is_global", "color", "is_hidden"] },
     );
   } else if (type === "recurring-transactions") {
     const rows = await db
@@ -31,6 +43,18 @@ export async function GET(request: Request, { params }: { params: Promise<{ type
       .from(recurringTransactions)
       .where(eq(recurringTransactions.userId, userId))
       .orderBy(recurringTransactions.startDate);
+    const skips = rows.length
+      ? await db
+          .select()
+          .from(recurringTransactionSkips)
+          .where(inArray(recurringTransactionSkips.recurringTransactionId, rows.map((r) => r.id)))
+      : [];
+    const skippedByRule = new Map<string, string[]>();
+    for (const s of skips) {
+      const list = skippedByRule.get(s.recurringTransactionId) ?? [];
+      list.push(`${s.year}-${String(s.month).padStart(2, "0")}`);
+      skippedByRule.set(s.recurringTransactionId, list);
+    }
     csv = stringify(
       rows.map((r) => ({
         id: r.id,
@@ -40,8 +64,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ type
         description: guardCsvCell(r.description ?? ""),
         start_date: r.startDate,
         end_date: r.endDate ?? "",
+        skipped_months: (skippedByRule.get(r.id) ?? []).sort().join(";"),
       })),
-      { header: true, columns: ["id", "type", "category_id", "amount", "description", "start_date", "end_date"] },
+      { header: true, columns: ["id", "type", "category_id", "amount", "description", "start_date", "end_date", "skipped_months"] },
     );
   } else if (type === "transactions") {
     const rows = await db.select().from(transactions).where(eq(transactions.userId, userId)).orderBy(transactions.date);

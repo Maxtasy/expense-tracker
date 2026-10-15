@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { importData } from "./actions";
 import { Spinner } from "@/components/spinner";
+import { Switch } from "@/components/switch";
 
 const inputClass =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-fg file:mr-2 file:rounded-md file:border-0 file:bg-accent file:px-2 file:py-1 file:text-xs file:font-medium file:text-accent-fg";
@@ -55,13 +56,8 @@ export function ImportForm() {
         </label>
         <input id="transactionsFile" name="transactionsFile" type="file" accept=".csv,text/csv" required className={inputClass} />
       </div>
-      <label className="flex items-start gap-2 text-xs text-fg-muted">
-        <input
-          type="checkbox"
-          checked={confirmed}
-          onChange={(e) => setConfirmed(e.target.checked)}
-          className="mt-0.5"
-        />
+      <label className="flex items-center gap-2 text-xs text-fg-muted">
+        <Switch checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} ariaLabel={t("confirmText")} />
         {t("confirmText")}
       </label>
       <button
