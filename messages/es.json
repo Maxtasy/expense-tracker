@@ -464,7 +464,7 @@
       "importFailed": "Error en la importación",
       "summaryCount": "{count, plural, one {# transacción} other {# transacciones}}",
       "summaryDateRange": " del {min} al {max}",
-      "summaryNonEurSkipped": " {count, plural, one {# fila que no es EUR omitida.} other {# filas que no son EUR omitidas.}}",
+      "summaryOtherCurrencySkipped": " {count, plural, one {# fila que no está en {currency} omitida.} other {# filas que no están en {currency} omitidas.}}",
       "summaryInvalidSkipped": " {count, plural, one {# fila no se pudo leer y se omitió.} other {# filas no se pudieron leer y se omitieron.}}",
       "reviewHeading": "Revisar categorías ({count}) antes de importar",
       "countAndType": "{count} · {type}",

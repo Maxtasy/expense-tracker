@@ -20,7 +20,7 @@ export type ParsedMoneyManagerFile = {
   rows: ParsedMoneyManagerRow[];
   categorySummary: CategorySummaryEntry[];
   dateRange: { min: string; max: string } | null;
-  skippedNonEur: number;
+  skippedOtherCurrency: number;
   skippedInvalid: number;
 };
 
@@ -35,14 +35,33 @@ export class MoneyManagerParseError extends Error {
   }
 }
 
+// Money Manager writes its column headers and the Expense/Income labels in the language of the phone
+// it was exported from, so each field accepts the known spellings (lowercased) for our five locales.
+// The amount column is named after the currency code itself ("EUR", "USD", ...).
+const HEADER_ALIASES = {
+  date: ["datum", "date", "fecha", "data"],
+  category: ["kategorie", "category", "categoría", "categoria", "catégorie"],
+  note: ["notiz", "note", "notes", "nota", "notas"],
+  type: ["einnahmen/ausgaben", "income/expense", "ingreso/gasto", "ingresos/gastos", "revenu/dépense", "receita/despesa", "receitas/despesas"],
+  currency: ["währung", "currency", "moneda", "devise", "moeda"],
+} as const;
+
 const TYPE_MAP: Record<string, MoneyManagerType> = {
-  Ausgabe: "expense",
-  Einkommen: "income",
+  ausgabe: "expense",
+  einkommen: "income",
+  expense: "expense",
+  income: "income",
+  gasto: "expense",
+  ingreso: "income",
+  dépense: "expense",
+  depense: "expense",
+  revenu: "income",
+  despesa: "expense",
+  receita: "income",
 };
 
-const REQUIRED_HEADERS = ["Datum", "Kategorie", "EUR", "Einnahmen/Ausgaben", "Währung"] as const;
-
-export async function parseMoneyManagerFile(buffer: ArrayBuffer): Promise<ParsedMoneyManagerFile> {
+// currencyCode is the user's currency setting: rows in any other currency are skipped.
+export async function parseMoneyManagerFile(buffer: ArrayBuffer, currencyCode: string): Promise<ParsedMoneyManagerFile> {
   const workbook = new ExcelJS.Workbook();
   try {
     await workbook.xlsx.load(buffer);
@@ -55,26 +74,34 @@ export async function parseMoneyManagerFile(buffer: ArrayBuffer): Promise<Parsed
 
   const columnIndex = new Map<string, number>();
   sheet.getRow(1).eachCell({ includeEmpty: true }, (cell, colNumber) => {
-    const value = typeof cell.value === "string" ? cell.value.trim() : "";
+    const value = typeof cell.value === "string" ? cell.value.trim().toLowerCase() : "";
     if (value && !columnIndex.has(value)) columnIndex.set(value, colNumber);
   });
 
-  for (const header of REQUIRED_HEADERS) {
-    if (!columnIndex.has(header)) {
-      throw new MoneyManagerParseError("missingColumn", header);
+  const findColumn = (aliases: readonly string[]) => {
+    for (const alias of aliases) {
+      const col = columnIndex.get(alias);
+      if (col) return col;
     }
-  }
+    return undefined;
+  };
 
-  const dateCol = columnIndex.get("Datum")!;
-  const categoryCol = columnIndex.get("Kategorie")!;
-  const noteCol = columnIndex.get("Notiz");
-  const amountCol = columnIndex.get("EUR")!;
-  const typeCol = columnIndex.get("Einnahmen/Ausgaben")!;
-  const currencyCol = columnIndex.get("Währung")!;
+  const dateCol = findColumn(HEADER_ALIASES.date);
+  const categoryCol = findColumn(HEADER_ALIASES.category);
+  const noteCol = findColumn(HEADER_ALIASES.note);
+  const typeCol = findColumn(HEADER_ALIASES.type);
+  const currencyCol = findColumn(HEADER_ALIASES.currency);
+  const amountCol = columnIndex.get(currencyCode.toLowerCase());
+
+  if (!dateCol) throw new MoneyManagerParseError("missingColumn", HEADER_ALIASES.date[1]);
+  if (!categoryCol) throw new MoneyManagerParseError("missingColumn", HEADER_ALIASES.category[1]);
+  if (!typeCol) throw new MoneyManagerParseError("missingColumn", HEADER_ALIASES.type[1]);
+  if (!currencyCol) throw new MoneyManagerParseError("missingColumn", HEADER_ALIASES.currency[1]);
+  if (!amountCol) throw new MoneyManagerParseError("missingColumn", currencyCode);
 
   const rows: ParsedMoneyManagerRow[] = [];
   const categoryCounts = new Map<string, CategorySummaryEntry>();
-  let skippedNonEur = 0;
+  let skippedOtherCurrency = 0;
   let skippedInvalid = 0;
   let minDate: string | null = null;
   let maxDate: string | null = null;
@@ -90,12 +117,12 @@ export async function parseMoneyManagerFile(buffer: ArrayBuffer): Promise<Parsed
 
     if (!dateValue && !categoryValue && !amountValue) continue; // fully blank row
 
-    if (typeof currencyValue === "string" && currencyValue.trim() !== "EUR") {
-      skippedNonEur++;
+    if (typeof currencyValue === "string" && currencyValue.trim().toUpperCase() !== currencyCode.toUpperCase()) {
+      skippedOtherCurrency++;
       continue;
     }
 
-    const type = typeof typeValue === "string" ? TYPE_MAP[typeValue.trim()] : undefined;
+    const type = typeof typeValue === "string" ? TYPE_MAP[typeValue.trim().toLowerCase()] : undefined;
     const categoryName = typeof categoryValue === "string" ? categoryValue.trim() : "";
     const amountNumber = typeof amountValue === "number" ? amountValue : Number(amountValue);
     const date = dateValue instanceof Date ? toDateString(dateValue) : null;
@@ -122,7 +149,7 @@ export async function parseMoneyManagerFile(buffer: ArrayBuffer): Promise<Parsed
     rows,
     categorySummary: [...categoryCounts.values()].sort((a, b) => b.count - a.count),
     dateRange: minDate && maxDate ? { min: minDate, max: maxDate } : null,
-    skippedNonEur,
+    skippedOtherCurrency,
     skippedInvalid,
   };
 }
