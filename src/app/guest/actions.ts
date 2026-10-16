@@ -4,8 +4,9 @@ import { AuthError, CredentialsSignin } from "next-auth";
 import { getTranslations } from "next-intl/server";
 import { signIn } from "@/auth";
 import { getPreAuthLocale } from "@/lib/locale-server";
+import type { ActionState } from "@/lib/action-result";
 
-export type GuestState = { error: string } | undefined;
+export type GuestState = ActionState;
 
 export async function startGuestSession(): Promise<GuestState> {
   const t = await getTranslations("auth.guest");

@@ -24,7 +24,7 @@ export function CategoryRow({ category }: { category: Category }) {
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
-      const result = await updateCategory(null, formData);
+      const result = await updateCategory(undefined, formData);
       if (result?.error) {
         setError(result.error);
       } else {
@@ -36,7 +36,8 @@ export function CategoryRow({ category }: { category: Category }) {
 
   function handleHide(formData: FormData) {
     startTransition(async () => {
-      await hideCategory(formData);
+      const result = await hideCategory(formData);
+      setError(result.error);
     });
   }
 
@@ -50,6 +51,7 @@ export function CategoryRow({ category }: { category: Category }) {
         />
         <span className="flex-1 text-sm text-fg">{category.name}</span>
         <span className="text-xs text-fg-muted">{t("default")}</span>
+        {error && <span role="alert" className="text-xs text-danger">{error}</span>}
         <form action={handleHide} className="contents">
           <input type="hidden" name="categoryId" value={category.id} />
           <button type="submit" disabled={isPending} aria-label={t("hideCategory")} className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-fg-muted hover:text-fg disabled:opacity-60">

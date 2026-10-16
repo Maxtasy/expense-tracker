@@ -8,18 +8,21 @@ import { auth, signOut } from "@/auth";
 import { db } from "@/db";
 import { recurringTransactionSkips, transactions, users } from "@/db/schema";
 import { amountField, dateField, isUsableCategory } from "@/lib/validation";
+import type { ActionResult, ActionState } from "@/lib/action-result";
 
 export async function logout() {
   await signOut({ redirectTo: "/login" });
 }
 
-export async function completeOnboarding() {
+export async function completeOnboarding(): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user) return;
+  const t = await getTranslations("validation");
+  if (!session?.user) return { error: t("notLoggedIn") };
   await db
     .update(users)
     .set({ onboardedAt: new Date() })
     .where(and(eq(users.id, session.user.id), isNull(users.onboardedAt)));
+  return { success: true };
 }
 
 async function buildTransactionSchema() {
@@ -33,7 +36,7 @@ async function buildTransactionSchema() {
   });
 }
 
-export type TransactionState = { error?: string } | undefined;
+export type TransactionState = ActionState;
 
 export async function createTransaction(_prevState: TransactionState, formData: FormData): Promise<TransactionState> {
   const session = await auth();
@@ -71,6 +74,7 @@ export async function createTransaction(_prevState: TransactionState, formData: 
   });
 
   revalidatePath("/dashboard");
+  return { success: true };
 }
 
 export async function updateTransaction(_prevState: TransactionState, formData: FormData): Promise<TransactionState> {
@@ -158,16 +162,18 @@ export async function updateTransaction(_prevState: TransactionState, formData: 
   }
 
   revalidatePath("/dashboard");
-  return { error: undefined };
+  return { success: true };
 }
 
-export async function deleteTransaction(formData: FormData) {
+export async function deleteTransaction(formData: FormData): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user) return;
+  const t = await getTranslations("validation");
+  const tEntities = await getTranslations("entities");
+  if (!session?.user) return { error: t("notLoggedIn") };
   const userId = session.user.id;
 
   const id = formData.get("id");
-  if (typeof id !== "string" || !id) return;
+  if (typeof id !== "string" || !id) return { error: tEntities("missingTransactionId") };
 
   await db.transaction(async (tx) => {
     const [deleted] = await tx
@@ -187,4 +193,5 @@ export async function deleteTransaction(formData: FormData) {
   });
 
   revalidatePath("/dashboard");
+  return { success: true };
 }

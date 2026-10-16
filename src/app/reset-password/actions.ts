@@ -8,8 +8,9 @@ import { getTranslations } from "next-intl/server";
 import { db } from "@/db";
 import { users, passwordResetTokens } from "@/db/schema";
 import { hashToken } from "@/lib/token";
+import type { ActionState } from "@/lib/action-result";
 
-export type ResetPasswordState = { error: string } | undefined;
+export type ResetPasswordState = ActionState;
 
 export async function resetPassword(_prevState: ResetPasswordState, formData: FormData): Promise<ResetPasswordState> {
   const t = await getTranslations("auth.resetPassword");

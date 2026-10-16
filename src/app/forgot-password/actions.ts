@@ -12,8 +12,9 @@ import { getClientIp } from "@/lib/client-ip";
 import { isRateLimited, recordAttempt } from "@/lib/rate-limit";
 import { emailField } from "@/lib/email-address";
 import { sendPasswordResetEmail } from "@/lib/email";
+import type { ActionState } from "@/lib/action-result";
 
-export type ForgotPasswordState = { error?: string; success?: boolean } | undefined;
+export type ForgotPasswordState = ActionState;
 
 export async function requestPasswordReset(
   _prevState: ForgotPasswordState,
