@@ -84,12 +84,12 @@ export function CategoryPicker({
     formData.set("name", newName);
     formData.set("type", type);
     startTransition(async () => {
-      const result = await createCategory(null, formData);
-      if (result?.error || !result?.id) {
+      const result = await createCategory(undefined, formData);
+      if (!result?.success) {
         setError(result?.error);
         return;
       }
-      setCreated((prev) => [...prev, { id: result.id!, name: newName.trim() }]);
+      setCreated((prev) => [...prev, { id: result.id, name: newName.trim() }]);
       choose(result.id);
     });
   }

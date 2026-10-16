@@ -18,7 +18,7 @@ export function AddCategoryForm({ onSuccess }: { onSuccess?: () => void }) {
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
-      const result = await createCategory(null, formData);
+      const result = await createCategory(undefined, formData);
       if (result?.error) {
         setError(result.error);
       } else {

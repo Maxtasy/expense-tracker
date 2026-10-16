@@ -21,6 +21,7 @@ import { ImportError, MAX_IMPORT_FILE_BYTES, MAX_IMPORT_FILE_MB } from "@/lib/im
 import { isValidDateString } from "@/lib/validation";
 import { unguardCsvCell } from "@/lib/csv-safe";
 import { issueAndSendVerificationEmail } from "@/lib/verification";
+import type { ActionResult, ActionState } from "@/lib/action-result";
 
 const typeSchema = z.enum(["expense", "income"]);
 
@@ -87,7 +88,7 @@ function checkDuplicateIds(rows: { id: string }[], label: string, t: CsvImportTr
   }
 }
 
-export type ImportState = { error?: string; success?: boolean } | null;
+export type ImportState = ActionState;
 
 export async function importData(_prevState: ImportState, formData: FormData): Promise<ImportState> {
   const session = await auth();
@@ -266,7 +267,7 @@ export async function importData(_prevState: ImportState, formData: FormData): P
   return { success: true };
 }
 
-export async function updateCurrency(formData: FormData) {
+export async function updateCurrency(formData: FormData): Promise<ActionResult> {
   const session = await auth();
   const t = await getTranslations("settings");
   if (!session?.user) return { error: t("notSignedIn") };
@@ -286,7 +287,7 @@ export async function updateCurrency(formData: FormData) {
   return { success: true };
 }
 
-export async function updateLocale(formData: FormData) {
+export async function updateLocale(formData: FormData): Promise<ActionResult> {
   const session = await auth();
   const t = await getTranslations("settings");
   if (!session?.user) return { error: t("notSignedIn") };
@@ -306,7 +307,7 @@ export async function updateLocale(formData: FormData) {
   return { success: true };
 }
 
-export async function updateDateFormat(formData: FormData) {
+export async function updateDateFormat(formData: FormData): Promise<ActionResult> {
   const session = await auth();
   const t = await getTranslations("settings");
   if (!session?.user) return { error: t("notSignedIn") };
@@ -324,7 +325,7 @@ export async function updateDateFormat(formData: FormData) {
   return { success: true };
 }
 
-export async function updateTheme(formData: FormData) {
+export async function updateTheme(formData: FormData): Promise<ActionResult> {
   const session = await auth();
   const t = await getTranslations("settings");
   if (!session?.user) return { error: t("notSignedIn") };
@@ -341,7 +342,7 @@ export async function updateTheme(formData: FormData) {
   return { success: true };
 }
 
-export async function updateRememberLastCategory(formData: FormData) {
+export async function updateRememberLastCategory(formData: FormData): Promise<ActionResult> {
   const session = await auth();
   const t = await getTranslations("settings");
   if (!session?.user) return { error: t("notSignedIn") };
@@ -356,7 +357,7 @@ export async function updateRememberLastCategory(formData: FormData) {
   return { success: true };
 }
 
-export async function updateSwipeNavigation(formData: FormData) {
+export async function updateSwipeNavigation(formData: FormData): Promise<ActionResult> {
   const session = await auth();
   const t = await getTranslations("settings");
   if (!session?.user) return { error: t("notSignedIn") };
@@ -372,7 +373,7 @@ export async function updateSwipeNavigation(formData: FormData) {
   return { success: true };
 }
 
-export async function changePassword(formData: FormData) {
+export async function changePassword(formData: FormData): Promise<ActionResult> {
   const session = await auth();
   const tSettings = await getTranslations("settings");
   if (!session?.user) return { error: tSettings("notSignedIn") };
@@ -430,7 +431,7 @@ export async function changePassword(formData: FormData) {
   return { success: true };
 }
 
-export async function startFresh() {
+export async function startFresh(): Promise<ActionResult> {
   const session = await auth();
   const tValidation = await getTranslations("validation");
   if (!session?.user) return { error: tValidation("notLoggedIn") };
@@ -452,7 +453,7 @@ export async function startFresh() {
 
 // Turns the signed-in guest account into a regular one in place -- same users row, so every
 // transaction/category/rule stays attached with nothing to migrate.
-export async function upgradeGuestAccount(formData: FormData) {
+export async function upgradeGuestAccount(formData: FormData): Promise<ActionResult> {
   const session = await auth();
   const tSettings = await getTranslations("settings");
   if (!session?.user) return { error: tSettings("notSignedIn") };
@@ -505,7 +506,7 @@ export async function upgradeGuestAccount(formData: FormData) {
 // Permanently deletes the signed-in account. Every table that holds user data references users.id
 // with ON DELETE CASCADE, so removing the one row removes everything. Regular accounts must
 // re-enter their password (so an unattended open session can't wipe an account); guests have none.
-export async function deleteAccount(formData: FormData) {
+export async function deleteAccount(formData: FormData): Promise<ActionResult> {
   const session = await auth();
   const tSettings = await getTranslations("settings");
   if (!session?.user) return { error: tSettings("notSignedIn") };
@@ -535,4 +536,5 @@ export async function deleteAccount(formData: FormData) {
   await db.delete(users).where(eq(users.id, userId));
   // clears the session cookie; throws a redirect, so nothing after this runs
   await signOut({ redirectTo: "/login?deleted=1" });
+  return { success: true };
 }

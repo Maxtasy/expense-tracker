@@ -54,7 +54,7 @@ export function EditRecurringForm({
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
-      const result = await updateRecurring(null, formData);
+      const result = await updateRecurring(undefined, formData);
       if (result?.error) {
         setError(result.error);
       } else {

@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Spinner } from "@/components/spinner";
+import type { ActionResult } from "@/lib/action-result";
 import { Dialog } from "./dialog";
 
 // Trash button that asks before running a delete Server Action (taking an `id` form field).
@@ -13,7 +14,7 @@ export function ConfirmDelete({
   title,
   message,
 }: {
-  action: (formData: FormData) => Promise<unknown>;
+  action: (formData: FormData) => Promise<ActionResult>;
   id: string;
   title: string;
   message: string;
@@ -21,10 +22,15 @@ export function ConfirmDelete({
   const tCommon = useTranslations("common");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>();
 
   function handleDelete(formData: FormData) {
     startTransition(async () => {
-      await action(formData);
+      const result = await action(formData);
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
       dialogRef.current?.close();
     });
   }
@@ -33,7 +39,10 @@ export function ConfirmDelete({
     <>
       <button
         type="button"
-        onClick={() => dialogRef.current?.showModal()}
+        onClick={() => {
+          setError(undefined);
+          dialogRef.current?.showModal();
+        }}
         aria-label={tCommon("delete")}
         className="inline-flex h-11 w-11 items-center justify-center rounded-lg hover:text-danger"
       >
@@ -43,6 +52,7 @@ export function ConfirmDelete({
         <form action={handleDelete} className="space-y-3">
           <input type="hidden" name="id" value={id} />
           <p className="text-sm text-fg-muted">{message}</p>
+          {error && <p role="alert" className="text-xs text-danger">{error}</p>}
           <div className="flex items-center gap-2">
             <button
               type="submit"

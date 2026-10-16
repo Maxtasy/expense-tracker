@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { unhideCategory } from "./actions";
@@ -12,10 +12,12 @@ type Category = { id: string; name: string; type: "expense" | "income"; color: s
 export function HiddenCategoryRow({ category }: { category: Category }) {
   const t = useTranslations("categories");
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>();
 
   function handleUnhide(formData: FormData) {
     startTransition(async () => {
-      await unhideCategory(formData);
+      const result = await unhideCategory(formData);
+      setError(result.error);
     });
   }
 
@@ -27,6 +29,7 @@ export function HiddenCategoryRow({ category }: { category: Category }) {
         aria-hidden="true"
       />
       <span className="flex-1 text-sm text-fg-muted">{category.name}</span>
+      {error && <span role="alert" className="text-xs text-danger">{error}</span>}
       <form action={handleUnhide} className="contents">
         <input type="hidden" name="categoryId" value={category.id} />
         <button

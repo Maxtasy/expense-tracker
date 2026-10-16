@@ -12,8 +12,9 @@ import { isRateLimited, recordAttempt } from "@/lib/rate-limit";
 import { issueAndSendVerificationEmail } from "@/lib/verification";
 import { emailField } from "@/lib/email-address";
 import { getPreAuthLocale } from "@/lib/locale-server";
+import type { ActionState } from "@/lib/action-result";
 
-export type SignupState = { error: string } | undefined;
+export type SignupState = ActionState;
 
 export async function signup(_prevState: SignupState, formData: FormData): Promise<SignupState> {
   const t = await getTranslations("auth.signup");

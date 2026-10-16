@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, hiddenCategories } from "@/db/schema";
+import type { ActionResult, ActionState } from "@/lib/action-result";
 
 const typeSchema = z.enum(["expense", "income"]);
 
@@ -18,9 +19,10 @@ async function buildSchemas() {
   };
 }
 
-export type CategoryState = { error?: string; id?: string } | null;
+export type CategoryState = ActionState;
+export type CreateCategoryState = ActionState<{ id: string }>;
 
-export async function createCategory(_prevState: CategoryState, formData: FormData): Promise<CategoryState> {
+export async function createCategory(_prevState: CreateCategoryState, formData: FormData): Promise<CreateCategoryState> {
   const session = await auth();
   const t = await getTranslations("validation");
   const tEntities = await getTranslations("entities");
@@ -61,7 +63,7 @@ export async function createCategory(_prevState: CategoryState, formData: FormDa
 
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard");
-  return { error: undefined, id };
+  return { success: true, id };
 }
 
 export async function updateCategory(_prevState: CategoryState, formData: FormData): Promise<CategoryState> {
@@ -117,15 +119,17 @@ export async function updateCategory(_prevState: CategoryState, formData: FormDa
 
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard");
-  return { error: undefined };
+  return { success: true };
 }
 
-export async function deleteCategory(formData: FormData) {
+export async function deleteCategory(formData: FormData): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user) return;
+  const t = await getTranslations("validation");
+  const tEntities = await getTranslations("entities");
+  if (!session?.user) return { error: t("notLoggedIn") };
 
   const id = formData.get("id");
-  if (typeof id !== "string" || !id) return;
+  if (typeof id !== "string" || !id) return { error: tEntities("missingCategoryId") };
 
   // archive instead of delete: transactions and recurring rules keep showing the category they were created under
   await db
@@ -136,33 +140,39 @@ export async function deleteCategory(formData: FormData) {
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard");
+  return { success: true };
 }
 
-export async function hideCategory(formData: FormData) {
+export async function hideCategory(formData: FormData): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user) return;
+  const t = await getTranslations("validation");
+  const tEntities = await getTranslations("entities");
+  if (!session?.user) return { error: t("notLoggedIn") };
 
   const categoryId = formData.get("categoryId");
-  if (typeof categoryId !== "string" || !categoryId) return;
+  if (typeof categoryId !== "string" || !categoryId) return { error: tEntities("missingCategoryId") };
 
   // only global categories can be hidden — hiding is how you "delete" a default category
   // without removing it for every other user; a personal category is deleted outright instead
   const [category] = await db.select({ id: categories.id }).from(categories).where(and(eq(categories.id, categoryId), isNull(categories.userId)));
-  if (!category) return;
+  if (!category) return { error: tEntities("categoryNotFound") };
 
   await db.insert(hiddenCategories).values({ userId: session.user.id, categoryId }).onConflictDoNothing();
 
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/recurring");
+  return { success: true };
 }
 
-export async function unhideCategory(formData: FormData) {
+export async function unhideCategory(formData: FormData): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user) return;
+  const t = await getTranslations("validation");
+  const tEntities = await getTranslations("entities");
+  if (!session?.user) return { error: t("notLoggedIn") };
 
   const categoryId = formData.get("categoryId");
-  if (typeof categoryId !== "string" || !categoryId) return;
+  if (typeof categoryId !== "string" || !categoryId) return { error: tEntities("missingCategoryId") };
 
   await db
     .delete(hiddenCategories)
@@ -171,4 +181,5 @@ export async function unhideCategory(formData: FormData) {
   revalidatePath("/dashboard/categories");
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/recurring");
+  return { success: true };
 }

@@ -12,6 +12,13 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.24.0",
+    date: "2026-10-16",
+    items: [
+      "Deleting a transaction, category or recurring rule, and hiding or showing a default category, now tell you when something goes wrong instead of failing silently.",
+    ],
+  },
+  {
     version: "1.23.0",
     date: "2026-10-16",
     items: [

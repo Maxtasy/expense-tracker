@@ -9,6 +9,7 @@ import { db } from "@/db";
 import { recurringTransactions, transactions } from "@/db/schema";
 import { getUserToday } from "@/lib/timezone-server";
 import { amountField, dateField, isUsableCategory } from "@/lib/validation";
+import type { ActionResult, ActionState } from "@/lib/action-result";
 
 async function buildRecurringSchema() {
   const t = await getTranslations("validation");
@@ -27,7 +28,7 @@ async function buildRecurringSchema() {
     });
 }
 
-export type RecurringState = { error?: string } | null;
+export type RecurringState = ActionState;
 
 async function parseForm(formData: FormData) {
   const recurringSchema = await buildRecurringSchema();
@@ -71,7 +72,7 @@ export async function createRecurring(_prevState: RecurringState, formData: Form
 
   revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard");
-  return { error: undefined };
+  return { success: true };
 }
 
 export async function updateRecurring(_prevState: RecurringState, formData: FormData): Promise<RecurringState> {
@@ -117,16 +118,18 @@ export async function updateRecurring(_prevState: RecurringState, formData: Form
 
   revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard");
-  return { error: undefined };
+  return { success: true };
 }
 
-export async function deleteRecurring(formData: FormData) {
+export async function deleteRecurring(formData: FormData): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user) return;
+  const t = await getTranslations("validation");
+  const tEntities = await getTranslations("entities");
+  if (!session?.user) return { error: t("notLoggedIn") };
   const userId = session.user.id;
 
   const id = formData.get("id");
-  if (typeof id !== "string" || !id) return;
+  if (typeof id !== "string" || !id) return { error: tEntities("missingRecurringId") };
 
   const today = await getUserToday();
 
@@ -143,4 +146,5 @@ export async function deleteRecurring(formData: FormData) {
 
   revalidatePath("/dashboard/recurring");
   revalidatePath("/dashboard");
+  return { success: true };
 }

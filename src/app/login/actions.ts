@@ -3,8 +3,9 @@
 import { AuthError, CredentialsSignin } from "next-auth";
 import { getTranslations } from "next-intl/server";
 import { signIn } from "@/auth";
+import type { ActionResult } from "@/lib/action-result";
 
-export type LoginState = { error: string; needsVerification?: boolean; email?: string } | undefined;
+export type LoginState = (ActionResult & { needsVerification?: boolean; email?: string }) | undefined;
 
 export async function login(_prevState: LoginState, formData: FormData): Promise<LoginState> {
   const t = await getTranslations("auth.login");
