@@ -464,7 +464,7 @@
       "importFailed": "Échec de l'importation",
       "summaryCount": "{count, plural, one {# transaction} other {# transactions}}",
       "summaryDateRange": " du {min} au {max}",
-      "summaryNonEurSkipped": " {count, plural, one {# ligne non-EUR ignorée.} other {# lignes non-EUR ignorées.}}",
+      "summaryOtherCurrencySkipped": " {count, plural, one {# ligne pas en {currency} ignorée.} other {# lignes pas en {currency} ignorées.}}",
       "summaryInvalidSkipped": " {count, plural, one {# ligne n'a pas pu être lue et a été ignorée.} other {# lignes n'ont pas pu être lues et ont été ignorées.}}",
       "reviewHeading": "Vérifier les catégories ({count}) avant l'import",
       "countAndType": "{count} · {type}",

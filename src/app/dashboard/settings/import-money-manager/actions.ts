@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
+import { getUserCurrency } from "@/lib/currency-server";
 import { ImportError, MAX_IMPORT_FILE_BYTES, MAX_IMPORT_FILE_MB } from "@/lib/import-error";
 import { MoneyManagerParseError, parseMoneyManagerFile, type CategorySummaryEntry } from "@/lib/importers/money-manager";
 
@@ -19,7 +20,8 @@ export type PreviewState = {
   result?: {
     rowCount: number;
     dateRange: { min: string; max: string } | null;
-    skippedNonEur: number;
+    skippedOtherCurrency: number;
+    currency: string;
     skippedInvalid: number;
     categories: CategorySuggestion[];
   };
@@ -51,6 +53,7 @@ export async function previewMoneyManagerImport(_prevState: PreviewState, formDa
   if (!session?.user) return { error: tValidation("notLoggedIn") };
   const userId = session.user.id;
   const t = await getTranslations("settings.moneyManager");
+  const currency = await getUserCurrency(userId);
 
   let buffer: ArrayBuffer;
   try {
@@ -61,7 +64,7 @@ export async function previewMoneyManagerImport(_prevState: PreviewState, formDa
 
   let parsed;
   try {
-    parsed = await parseMoneyManagerFile(buffer);
+    parsed = await parseMoneyManagerFile(buffer, currency);
   } catch (err) {
     return { error: parseErrorMessage(err, t) };
   }
@@ -84,7 +87,8 @@ export async function previewMoneyManagerImport(_prevState: PreviewState, formDa
     result: {
       rowCount: parsed.rows.length,
       dateRange: parsed.dateRange,
-      skippedNonEur: parsed.skippedNonEur,
+      skippedOtherCurrency: parsed.skippedOtherCurrency,
+      currency,
       skippedInvalid: parsed.skippedInvalid,
       categories: categorySuggestions,
     },
@@ -114,6 +118,7 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
   if (!session?.user) return { error: tValidation("notLoggedIn") };
   const userId = session.user.id;
   const t = await getTranslations("settings.moneyManager");
+  const currency = await getUserCurrency(userId);
 
   let buffer: ArrayBuffer;
   try {
@@ -133,7 +138,7 @@ export async function commitMoneyManagerImport(_prevState: CommitState, formData
 
   let parsed;
   try {
-    parsed = await parseMoneyManagerFile(buffer);
+    parsed = await parseMoneyManagerFile(buffer, currency);
   } catch (err) {
     return { error: parseErrorMessage(err, t) };
   }

@@ -12,6 +12,13 @@ export type ChangelogEntry = {
 // Newest first.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.23.0",
+    date: "2026-10-16",
+    items: [
+      "Importing from Money Manager now follows your currency setting and also reads exports made in English, German, Spanish, French or Portuguese, instead of expecting euros and German column names.",
+    ],
+  },
+  {
     version: "1.22.0",
     date: "2026-10-15",
     items: [
