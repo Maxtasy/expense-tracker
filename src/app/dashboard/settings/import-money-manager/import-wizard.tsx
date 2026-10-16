@@ -51,7 +51,8 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
   const [summary, setSummary] = useState<{
     rowCount: number;
     dateRange: { min: string; max: string } | null;
-    skippedNonEur: number;
+    skippedOtherCurrency: number;
+    currency: string;
     skippedInvalid: number;
   } | null>(null);
   const [mapping, setMapping] = useState<Map<string, MappingEntry>>(new Map());
@@ -78,7 +79,8 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
         setSummary({
           rowCount: res.result.rowCount,
           dateRange: res.result.dateRange,
-          skippedNonEur: res.result.skippedNonEur,
+          skippedOtherCurrency: res.result.skippedOtherCurrency,
+          currency: res.result.currency,
           skippedInvalid: res.result.skippedInvalid,
         });
         setMapping(buildInitialMapping(res.result.categories));
@@ -160,7 +162,9 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
               <>{t("summaryDateRange", { min: summary.dateRange.min, max: summary.dateRange.max })}</>
             )}
             .
-            {summary.skippedNonEur > 0 && <>{t("summaryNonEurSkipped", { count: summary.skippedNonEur })}</>}
+            {summary.skippedOtherCurrency > 0 && (
+              <>{t("summaryOtherCurrencySkipped", { count: summary.skippedOtherCurrency, currency: summary.currency })}</>
+            )}
             {summary.skippedInvalid > 0 && <>{t("summaryInvalidSkipped", { count: summary.skippedInvalid })}</>}
           </p>
         </div>
