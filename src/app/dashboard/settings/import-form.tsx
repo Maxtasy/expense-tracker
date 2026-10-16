@@ -19,7 +19,7 @@ export function ImportForm() {
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
-      const result = await importData(null, formData);
+      const result = await importData(undefined, formData);
       if (result?.error) {
         setError(result.error);
         setSuccess(false);

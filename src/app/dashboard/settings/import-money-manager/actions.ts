@@ -10,14 +10,14 @@ import { categories, transactions } from "@/db/schema";
 import { getUserCurrency } from "@/lib/currency-server";
 import { ImportError, MAX_IMPORT_FILE_BYTES, MAX_IMPORT_FILE_MB } from "@/lib/import-error";
 import { MoneyManagerParseError, parseMoneyManagerFile, type CategorySummaryEntry } from "@/lib/importers/money-manager";
+import type { ActionState } from "@/lib/action-result";
 
 export type CategorySuggestion = CategorySummaryEntry & {
   matchedCategoryId: string | null;
 };
 
-export type PreviewState = {
-  error?: string;
-  result?: {
+export type PreviewState = ActionState<{
+  result: {
     rowCount: number;
     dateRange: { min: string; max: string } | null;
     skippedOtherCurrency: number;
@@ -25,7 +25,7 @@ export type PreviewState = {
     skippedInvalid: number;
     categories: CategorySuggestion[];
   };
-} | null;
+}>;
 
 async function readFile(formData: FormData, chooseFileMessage: string, tooLargeMessage: string): Promise<ArrayBuffer> {
   const file = formData.get("file");
@@ -84,6 +84,7 @@ export async function previewMoneyManagerImport(_prevState: PreviewState, formDa
   });
 
   return {
+    success: true,
     result: {
       rowCount: parsed.rows.length,
       dateRange: parsed.dateRange,
@@ -104,13 +105,11 @@ const mappingEntrySchema = z.object({
 });
 const mappingSchema = z.array(mappingEntrySchema);
 
-export type CommitState = {
-  error?: string;
-  success?: boolean;
-  imported?: number;
-  skippedDuplicates?: number;
-  categoriesCreated?: number;
-} | null;
+export type CommitState = ActionState<{
+  imported: number;
+  skippedDuplicates: number;
+  categoriesCreated: number;
+}>;
 
 export async function commitMoneyManagerImport(_prevState: CommitState, formData: FormData): Promise<CommitState> {
   const session = await auth();

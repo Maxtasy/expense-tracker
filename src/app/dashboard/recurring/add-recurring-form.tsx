@@ -38,7 +38,7 @@ export function AddRecurringForm({
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
-      const result = await createRecurring(null, formData);
+      const result = await createRecurring(undefined, formData);
       if (result?.error) {
         setError(result.error);
       } else {

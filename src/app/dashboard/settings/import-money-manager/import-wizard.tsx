@@ -70,12 +70,12 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
   function handlePreview(formData: FormData) {
     setPreviewError(undefined);
     startTransition(async () => {
-      const res = await previewMoneyManagerImport(null, formData);
+      const res = await previewMoneyManagerImport(undefined, formData);
       if (res?.error) {
         setPreviewError(res.error);
         return;
       }
-      if (res?.result) {
+      if (res?.success) {
         setSummary({
           rowCount: res.result.rowCount,
           dateRange: res.result.dateRange,
@@ -105,16 +105,16 @@ export function ImportWizard({ existingCategories }: { existingCategories: Exist
       const formData = new FormData();
       formData.set("file", file);
       formData.set("mapping", JSON.stringify([...mapping.values()]));
-      const res = await commitMoneyManagerImport(null, formData);
+      const res = await commitMoneyManagerImport(undefined, formData);
       if (res?.error) {
         setCommitError(res.error);
         return;
       }
       if (res?.success) {
         setResult({
-          imported: res.imported ?? 0,
-          skippedDuplicates: res.skippedDuplicates ?? 0,
-          categoriesCreated: res.categoriesCreated ?? 0,
+          imported: res.imported,
+          skippedDuplicates: res.skippedDuplicates,
+          categoriesCreated: res.categoriesCreated,
         });
         setStep("done");
       }

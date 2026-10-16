@@ -45,7 +45,7 @@ export function ConfirmVerificationForm({ token }: { token: string }) {
         disabled={isPending}
         onClick={() =>
           startTransition(async () => {
-            setResult((await confirmVerification(token)) ? "verified" : "failed");
+            setResult((await confirmVerification(token)).success ? "verified" : "failed");
           })
         }
         className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover disabled:opacity-60"
